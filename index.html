@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>모기지아재 | BC주 전문 엔지니어 모기지 브로커</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            light: '#f0f3fa',   // 아주 밝은 배경용
+                            DEFAULT: '#334da9', // 요청하신 메인 테마색
+                            dark: '#253880',    // 버튼 hover 등을 위한 어두운 톤
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        html { scroll-behavior: smooth; }
+        /* 히어로 섹션 배경을 테마색(#334da9) 기반 그라데이션으로 업데이트 */
+        .gradient-bg { background: linear-gradient(135deg, #0f172a 0%, #334da9 100%); }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans">
+
+    <nav class="bg-white shadow-md fixed w-full z-10 top-0">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+            <div class="text-2xl font-bold text-brand">🏠 모기지아재</div>
+            <div class="hidden md:flex space-x-6 text-sm font-medium">
+                <a href="#tools" class="hover:text-brand">핵심 도구</a>
+                <a href="#info" class="hover:text-brand">유용한 정보</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="gradient-bg text-white pt-32 pb-20 px-4 text-center">
+        <div class="max-w-3xl mx-auto">
+            <span class="bg-brand-dark text-white text-xs font-bold px-3 py-1 rounded-full mb-4 inline-block border border-brand-light/30">P.Eng & BCFSA Registered Broker</span>
+            <h1 class="text-4xl md:text-5xl font-extrabold mb-6 leading-tight">엔지니어의 정밀함으로 분석하는<br>최적의 모기지 솔루션</h1>
+            <p class="text-lg text-blue-100 mb-8">복잡한 숫자와 약관, 공학적인 정밀함으로 검토해 드립니다.</p>
+            <a href="https://mortgageajae.ca/check" target="_blank" class="bg-yellow-500 hover:bg-yellow-400 text-brand-dark font-bold py-3 px-8 rounded-lg shadow-lg transition duration-300 text-lg">🚀 3분 만에 내 금리 진단받기</a>
+        </div>
+    </section>
+
+    <section id="tools" class="py-16 px-4 max-w-7xl mx-auto">
+        <h2 class="text-3xl font-bold text-center mb-12 text-brand">엔지니어링 모기지 도구함</h2>
+        
+        <div class="grid md:grid-cols-2 gap-8 mb-12">
+            <div class="bg-white p-8 rounded-xl shadow-md border-t-4 border-brand">
+                <h3 class="text-xl font-bold mb-4">📊 대출 한도 계산기 (GDS/TDS 최적화)</h3>
+                <div class="space-y-4 text-sm">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block font-medium text-gray-700">연 소득 ($)</label>
+                            <input type="number" id="calc1-income" class="mt-1 block w-full border border-gray-300 focus:border-brand focus:ring-brand rounded-md p-2 outline-none">
+                        </div>
+                        <div>
+                            <label class="block font-medium text-gray-700">현재 예상 금리 (%)</label>
+                            <input type="number" id="calc1-rate" class="mt-1 block w-full border border-gray-300 focus:border-brand focus:ring-brand rounded-md p-2 outline-none" step="0.1">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block font-medium text-gray-700">연간 재산세 ($)</label>
+                            <input type="number" id="calc1-tax" class="mt-1 block w-full border border-gray-300 focus:border-brand focus:ring-brand rounded-md p-2 outline-none" placeholder="예: 3000">
+                        </div>
+                        <div>
+                            <label class="block font-medium text-gray-700">월 스트라타 피 ($)</label>
+                            <input type="number" id="calc1-strata" class="mt-1 block w-full border border-gray-300 focus:border-brand focus:ring-brand rounded-md p-2 outline-none" placeholder="예: 400 (50%만 적용됨)">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block font-medium text-gray-700">월 난방비 ($)</label>
+                            <input type="number" id="calc1-heat" class="mt-1 block w-full border border-gray-300 focus:border-brand focus:ring-brand rounded-md p-2 outline-none" placeholder="예: 100" value="100">
+                        </div>
+                        <div>
+                            <label class="block font-medium text-gray-700">월 기타 부채 ($)</label>
+                            <input type="number" id="calc1-debt" class="mt-1 block w-full border border-gray-300 focus:border-brand focus:ring-brand rounded-md p-2 outline-none" placeholder="자동차 등">
+                        </div>
+                    </div>
+                    <button onclick="calculateMaxLoan()" class="w-full bg-brand hover:bg-brand-dark text-white font-bold py-2 rounded-md transition mt-2">최대 한도 계산</button>
+                    
+                    <div id="calc1-result" class="mt-4 p-4 bg-brand-light rounded-md text-center hidden border border-brand/20">
+                        <p class="text-sm text-gray-600">스트레스 테스트 및 GDS 39% / TDS 44% 적용 한도</p>
+                        <p class="text-3xl font-bold text-brand mt-1" id="calc1-output">$0</p>
+                        <p class="text-xs text-gray-500 mt-2" id="calc1-limiting-factor">제한 요인: -</p>
+                        
+                        <a href="https://calendar.app.google/zWG82EqskeBtwyeU7" target="_blank" class="mt-6 inline-block w-full bg-brand hover:bg-brand-dark text-white font-bold py-3 px-4 rounded-md transition shadow-md">
+                            📅 이 결과로 심층 상담 예약하기 (무료)
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white p-8 rounded-xl shadow-md border-t-4 border-yellow-500">
+                <h3 class="text-xl font-bold mb-4">💰 상환액 및 기간 잔액 분석기</h3>
+                <div class="space-y-4 text-sm">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block font-medium text-gray-700">대출 금액 ($)</label>
+                            <input type="number" id="calc2-amount" class="mt-1 block w-full border border-gray-300 focus:border-yellow-500 focus:ring-yellow-500 rounded-md p-2 outline-none">
+                        </div>
+                        <div>
+                            <label class="block font-medium text-gray-700">이자율 (%)</label>
+                            <input type="number" id="calc2-rate" class="mt-1 block w-full border border-gray-300 focus:border-yellow-500 focus:ring-yellow-500 rounded-md p-2 outline-none" step="0.1">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block font-medium text-gray-700">Amortization</label>
+                            <select id="calc2-amortization" class="mt-1 block w-full border border-gray-300 focus:border-yellow-500 focus:ring-yellow-500 rounded-md p-2 outline-none">
+                                <option value="25">25년</option>
+                                <option value="30">30년</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block font-medium text-gray-700">계약 텀 (Term)</label>
+                            <select id="calc2-term" class="mt-1 block w-full border border-gray-300 focus:border-yellow-500 focus:ring-yellow-500 rounded-md p-2 outline-none">
+                                <option value="3">3년</option>
+                                <option value="5" selected>5년</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block font-medium text-gray-700">상환 주기 (Payment Frequency)</label>
+                        <select id="calc2-frequency" class="mt-1 block w-full border border-gray-300 focus:border-yellow-500 focus:ring-yellow-500 rounded-md p-2 outline-none">
+                            <option value="monthly" selected>Monthly (월납)</option>
+                            <option value="biweekly">Bi-weekly (격주납)</option>
+                            <option value="accel_biweekly">Accelerated Bi-weekly (빠른 격주납)</option>
+                        </select>
+                    </div>
+                    <button onclick="calculatePayment()" class="w-full bg-yellow-500 hover:bg-yellow-600 text-brand-dark font-bold py-2 rounded-md transition mt-2">상세 재무 분석하기</button>
+                    
+                    <div id="calc2-result" class="mt-4 hidden space-y-2">
+                        <div class="p-3 bg-brand-light border border-brand/20 rounded-md flex justify-between">
+                            <span class="font-medium text-gray-800">1회 납부액:</span>
+                            <span class="font-bold text-brand" id="calc2-pmt">$0</span>
+                        </div>
+                        <div class="p-3 bg-gray-50 border border-gray-200 rounded-md flex justify-between">
+                            <span class="font-medium text-sm text-gray-800" id="calc2-balance-label">텀 종료 후 남은 원금:</span>
+                            <span class="font-bold text-gray-800" id="calc2-balance">$0</span>
+                        </div>
+                        <div class="p-3 bg-red-50 border border-red-200 rounded-md flex justify-between mb-4">
+                            <span class="font-medium text-sm text-red-600" id="calc2-interest-label">텀 기간 낸 총 이자:</span>
+                            <span class="font-bold text-red-800" id="calc2-interest">$0</span>
+                        </div>
+                        
+                        <a href="https://calendar.app.google/zWG82EqskeBtwyeU7" target="_blank" class="mt-2 inline-block w-full bg-brand hover:bg-brand-dark text-white font-bold py-3 px-4 rounded-md transition shadow-md text-center">
+                            📅 엔지니어와 맞춤 상환 전략 상담하기
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bg-brand-light border-2 border-brand/20 rounded-xl p-8 text-center shadow-sm max-w-4xl mx-auto">
+            <h3 class="text-2xl font-bold text-brand mb-2">계산 결과가 복잡하게 느껴지시나요?</h3>
+            <p class="text-gray-600 mb-6">엔지니어의 시각으로 고객님의 상황에 맞는 정확한 언더라이팅과 금리를 찾아드립니다.</p>
+            <a href="https://calendar.app.google/zWG82EqskeBtwyeU7" target="_blank" class="inline-block bg-brand hover:bg-brand-dark text-white font-bold text-lg py-4 px-10 rounded-full transition shadow-lg">
+                🎥 Google Meet 화상 상담 예약하기
+            </a>
+        </div>
+    </section>
+
+    <footer class="bg-gray-900 text-gray-400 py-8 text-center text-sm mt-12">
+        <p>Justin Bae | P.Eng, Registered Mortgage Broker (BCFSA)</p>
+        <p class="mt-2">Email: jb@mortgageajae.ca | Phone: 250-581-6862 | KakaoTalk: mortgageajae</p>
+    </footer>
+
+    <script>
+        function formatCurrency(num) {
+            return new Intl.NumberFormat('en-CA', { style: 'currency', currency: 'CAD' }).format(num);
+        }
+
+        function calculateMaxLoan() {
+            const income = parseFloat(document.getElementById('calc1-income').value) || 0;
+            const rate = parseFloat(document.getElementById('calc1-rate').value) || 0;
+            const propertyTaxYearly = parseFloat(document.getElementById('calc1-tax').value) || 0;
+            const strataMonthly = parseFloat(document.getElementById('calc1-strata').value) || 0;
+            const heatingMonthly = parseFloat(document.getElementById('calc1-heat').value) || 0;
+            const otherDebtMonthly = parseFloat(document.getElementById('calc1-debt').value) || 0;
+
+            if (!income || !rate) return alert("연 소득과 현재 예상 금리를 입력해주세요.");
+
+            const stressRate = Math.max(rate + 2.0, 5.25) / 100;
+            const monthlyIncome = income / 12;
+            const propertyTaxMonthly = propertyTaxYearly / 12;
+            const housingCosts = propertyTaxMonthly + heatingMonthly + (strataMonthly * 0.5);
+
+            const maxPiGDS = (monthlyIncome * 0.39) - housingCosts;
+            const maxPiTDS = (monthlyIncome * 0.44) - housingCosts - otherDebtMonthly;
+
+            const actualMaxPi = Math.min(maxPiGDS, maxPiTDS);
+            
+            if (actualMaxPi <= 0) {
+                document.getElementById('calc1-output').innerText = "$0";
+                document.getElementById('calc1-limiting-factor').innerText = "부채 및 유지비가 기준을 초과하여 대출이 어렵습니다.";
+                document.getElementById('calc1-result').classList.remove('hidden');
+                return;
+            }
+
+            const monthlyRate = Math.pow(1 + (stressRate / 2), 2 / 12) - 1;
+            const months = 25 * 12; 
+            
+            const maxLoan = actualMaxPi * ((Math.pow(1 + monthlyRate, months) - 1) / (monthlyRate * Math.pow(1 + monthlyRate, months)));
+
+            document.getElementById('calc1-output').innerText = formatCurrency(Math.max(0, maxLoan));
+            
+            let limitReason = maxPiGDS < maxPiTDS ? "GDS (39%) 기준에 의해 한도가 결정되었습니다." : "TDS (44%) 기준에 의해 한도가 결정되었습니다.";
+            document.getElementById('calc1-limiting-factor').innerText = limitReason;
+            document.getElementById('calc1-result').classList.remove('hidden');
+        }
+
+        function calculatePayment() {
+            const principal = parseFloat(document.getElementById('calc2-amount').value);
+            const rate = parseFloat(document.getElementById('calc2-rate').value);
+            const amzYears = parseInt(document.getElementById('calc2-amortization').value);
+            const termYears = parseInt(document.getElementById('calc2-term').value);
+            const frequency = document.getElementById('calc2-frequency').value;
+
+            if (!principal || !rate) return alert("대출 금액과 금리를 입력해주세요.");
+
+            const annualRate = rate / 100;
+            const monthlyRate = Math.pow(1 + (annualRate / 2), 2 / 12) - 1;
+            const biweeklyRate = Math.pow(1 + (annualRate / 2), 2 / 26) - 1;
+
+            const pmtMonthly = principal * (monthlyRate * Math.pow(1 + monthlyRate, amzYears * 12)) / (Math.pow(1 + monthlyRate, amzYears * 12) - 1);
+
+            let payment = 0;
+            let periodRate = 0;
+            let periodsInTerm = 0;
+
+            if (frequency === 'monthly') {
+                payment = pmtMonthly;
+                periodRate = monthlyRate;
+                periodsInTerm = termYears * 12;
+            } else if (frequency === 'biweekly') {
+                payment = principal * (biweeklyRate * Math.pow(1 + biweeklyRate, amzYears * 26)) / (Math.pow(1 + biweeklyRate, amzYears * 26) - 1);
+                periodRate = biweeklyRate;
+                periodsInTerm = termYears * 26;
+            } else if (frequency === 'accel_biweekly') {
+                payment = pmtMonthly / 2;
+                periodRate = biweeklyRate;
+                periodsInTerm = termYears * 26;
+            }
+
+            let balance = principal;
+            let totalInterest = 0;
+
+            for (let i = 0; i < periodsInTerm; i++) {
+                let interestForPeriod = balance * periodRate;
+                let principalForPeriod = payment - interestForPeriod;
+                
+                totalInterest += interestForPeriod;
+                balance -= principalForPeriod;
+                
+                if (balance < 0) { balance = 0; break; }
+            }
+
+            document.getElementById('calc2-pmt').innerText = formatCurrency(payment);
+            document.getElementById('calc2-balance-label').innerText = `${termYears}년 텀 종료 후 남은 원금:`;
+            document.getElementById('calc2-balance').innerText = formatCurrency(balance);
+            document.getElementById('calc2-interest-label').innerText = `${termYears}년 동안 낸 총 이자:`;
+            document.getElementById('calc2-interest').innerText = formatCurrency(totalInterest);
+            document.getElementById('calc2-result').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
