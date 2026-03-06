@@ -12,9 +12,9 @@
                 extend: {
                     colors: {
                         brand: {
-                            light: '#f0f3fa',   // 아주 밝은 배경용
-                            DEFAULT: '#334da9', // 요청하신 메인 테마색
-                            dark: '#253880',    // 버튼 hover 등을 위한 어두운 톤
+                            light: '#f0f3fa',   
+                            DEFAULT: '#334da9', 
+                            dark: '#253880',    
                         }
                     }
                 }
@@ -24,35 +24,49 @@
 
     <style>
         html { scroll-behavior: smooth; }
-        /* 히어로 섹션 배경을 테마색(#334da9) 기반 그라데이션으로 업데이트 */
         .gradient-bg { background: linear-gradient(135deg, #0f172a 0%, #334da9 100%); }
+        .benefit-card { transition: all 0.3s ease; }
+        .benefit-card:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800 font-sans">
+<body class="bg-gray-50 text-gray-800 font-sans pt-32 md:pt-40">
 
-    <nav class="bg-white shadow-md fixed w-full z-10 top-0">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-            <div class="text-2xl font-bold text-brand">🏠 모기지아재</div>
-            <div class="hidden md:flex space-x-6 text-sm font-medium">
-                <a href="#tools" class="hover:text-brand">핵심 도구</a>
-                <a href="#info" class="hover:text-brand">유용한 정보</a>
+    <header class="bg-white shadow-md fixed w-full z-20 top-0">
+        <div class="w-full flex justify-center bg-white">
+            <a href="#" class="w-full max-w-[1400px] flex justify-center">
+                <img src="./images/mortgageajae-banner.jpg" alt="모기지아재 로고 배너" class="w-full h-auto max-h-24 md:max-h-32 object-contain" onerror="this.style.display='none'">
+            </a>
+        </div>
+        <div class="border-t border-gray-100 py-2 md:py-3 bg-white">
+            <div class="max-w-7xl mx-auto px-4 flex justify-center space-x-8 md:space-x-12 text-sm md:text-base font-bold text-gray-700">
+                <a href="#tools" class="hover:text-brand transition">핵심 도구</a>
+                <a href="#benefits" class="hover:text-brand transition">혜택 진단기</a>
+                <a href="#info" class="hover:text-brand transition">유용한 정보</a>
             </div>
         </div>
-    </nav>
+    </header>
 
-    <section class="gradient-bg text-white pt-32 pb-20 px-4 text-center">
-        <div class="max-w-3xl mx-auto">
-            <span class="bg-brand-dark text-white text-xs font-bold px-3 py-1 rounded-full mb-4 inline-block border border-brand-light/30">P.Eng & BCFSA Registered Broker</span>
-            <h1 class="text-4xl md:text-5xl font-extrabold mb-6 leading-tight">엔지니어의 정밀함으로 분석하는<br>최적의 모기지 솔루션</h1>
-            <p class="text-lg text-blue-100 mb-8">복잡한 숫자와 약관, 공학적인 정밀함으로 검토해 드립니다.</p>
-            <a href="https://mortgageajae.ca/check" target="_blank" class="bg-yellow-500 hover:bg-yellow-400 text-brand-dark font-bold py-3 px-8 rounded-lg shadow-lg transition duration-300 text-lg">🚀 3분 만에 내 금리 진단받기</a>
+    <section class="gradient-bg text-white pb-20 pt-10 px-4">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-center gap-10 md:gap-16">
+            
+            <div class="flex flex-col items-center flex-shrink-0">
+                <img src="./images/profile.jpg" alt="Justin Bae P.Eng" class="h-64 w-64 md:h-[22rem] md:w-[22rem] rounded-full border-4 border-white shadow-2xl object-cover mb-6" onerror="this.style.display='none'">
+                <img src="./images/BRX green-white.svg" alt="BRX Mortgage" class="h-24 md:h-32 w-auto bg-white/10 px-4 py-3 rounded-xl" onerror="this.style.display='none'">
+            </div>
+
+            <div class="text-center md:text-left flex flex-col justify-center">
+                <span class="bg-brand-dark text-white text-xs font-bold px-3 py-1 rounded-full mb-4 inline-block border border-brand-light/30 self-center md:self-start">P.Eng & BCFSA Registered Broker</span>
+                <h1 class="text-3xl md:text-4xl lg:text-[2.75rem] font-extrabold mb-5 leading-tight tracking-tight">엔지니어의 꼼꼼함으로<br>분석하는 최적의<br>모기지 솔루션</h1>
+                <p class="text-base text-blue-100 mb-8 max-w-md mx-auto md:mx-0">복잡한 숫자와 약관, 공학적인 정밀함으로 검토해 드립니다. 모기지아재와 함께 가장 안전한 내 집 마련 전략을 세우세요.</p>
+                <a href="https://mortgageajae.ca/check" target="_blank" class="bg-yellow-500 hover:bg-yellow-400 text-brand-dark font-bold py-3 px-8 rounded-lg shadow-lg transition duration-300 text-base md:text-lg self-center md:self-start">🚀 3분 만에 내 금리 진단받기</a>
+            </div>
+            
         </div>
     </section>
 
-    <section id="tools" class="py-16 px-4 max-w-7xl mx-auto">
+    <section id="tools" class="pt-16 pb-8 px-4 max-w-7xl mx-auto">
         <h2 class="text-3xl font-bold text-center mb-12 text-brand">엔지니어링 모기지 도구함</h2>
-        
-        <div class="grid md:grid-cols-2 gap-8 mb-12">
+        <div class="grid md:grid-cols-2 gap-8">
             <div class="bg-white p-8 rounded-xl shadow-md border-t-4 border-brand">
                 <h3 class="text-xl font-bold mb-4">📊 대출 한도 계산기 (GDS/TDS 최적화)</h3>
                 <div class="space-y-4 text-sm">
@@ -73,7 +87,7 @@
                         </div>
                         <div>
                             <label class="block font-medium text-gray-700">월 스트라타 피 ($)</label>
-                            <input type="number" id="calc1-strata" class="mt-1 block w-full border border-gray-300 focus:border-brand focus:ring-brand rounded-md p-2 outline-none" placeholder="예: 400 (50%만 적용됨)">
+                            <input type="number" id="calc1-strata" class="mt-1 block w-full border border-gray-300 focus:border-brand focus:ring-brand rounded-md p-2 outline-none" placeholder="예: 400 (50% 적용)">
                         </div>
                     </div>
                     <div class="grid grid-cols-2 gap-4">
@@ -86,16 +100,13 @@
                             <input type="number" id="calc1-debt" class="mt-1 block w-full border border-gray-300 focus:border-brand focus:ring-brand rounded-md p-2 outline-none" placeholder="자동차 등">
                         </div>
                     </div>
-                    <button onclick="calculateMaxLoan()" class="w-full bg-brand hover:bg-brand-dark text-white font-bold py-2 rounded-md transition mt-2">최대 한도 계산</button>
+                    <button onclick="calculateMaxLoan()" class="w-full bg-brand hover:bg-brand-dark text-white font-bold py-2 rounded-md transition mt-2 shadow-sm">최대 한도 계산</button>
                     
                     <div id="calc1-result" class="mt-4 p-4 bg-brand-light rounded-md text-center hidden border border-brand/20">
-                        <p class="text-sm text-gray-600">스트레스 테스트 및 GDS 39% / TDS 44% 적용 한도</p>
+                        <p class="text-sm text-gray-600">스트레스 테스트 및 GDS/TDS 적용 한도</p>
                         <p class="text-3xl font-bold text-brand mt-1" id="calc1-output">$0</p>
                         <p class="text-xs text-gray-500 mt-2" id="calc1-limiting-factor">제한 요인: -</p>
-                        
-                        <a href="https://calendar.app.google/zWG82EqskeBtwyeU7" target="_blank" class="mt-6 inline-block w-full bg-brand hover:bg-brand-dark text-white font-bold py-3 px-4 rounded-md transition shadow-md">
-                            📅 이 결과로 심층 상담 예약하기 (무료)
-                        </a>
+                        <a href="https://calendar.app.google/zWG82EqskeBtwyeU7" target="_blank" class="mt-6 inline-block w-full bg-brand hover:bg-brand-dark text-white font-bold py-3 px-4 rounded-md transition shadow-md">📅 이 결과로 심층 상담 예약하기</a>
                     </div>
                 </div>
             </div>
@@ -117,15 +128,13 @@
                         <div>
                             <label class="block font-medium text-gray-700">Amortization</label>
                             <select id="calc2-amortization" class="mt-1 block w-full border border-gray-300 focus:border-yellow-500 focus:ring-yellow-500 rounded-md p-2 outline-none">
-                                <option value="25">25년</option>
-                                <option value="30">30년</option>
+                                <option value="25">25년</option><option value="30">30년</option>
                             </select>
                         </div>
                         <div>
                             <label class="block font-medium text-gray-700">계약 텀 (Term)</label>
                             <select id="calc2-term" class="mt-1 block w-full border border-gray-300 focus:border-yellow-500 focus:ring-yellow-500 rounded-md p-2 outline-none">
-                                <option value="3">3년</option>
-                                <option value="5" selected>5년</option>
+                                <option value="3">3년</option><option value="5" selected>5년</option>
                             </select>
                         </div>
                     </div>
@@ -137,7 +146,7 @@
                             <option value="accel_biweekly">Accelerated Bi-weekly (빠른 격주납)</option>
                         </select>
                     </div>
-                    <button onclick="calculatePayment()" class="w-full bg-yellow-500 hover:bg-yellow-600 text-brand-dark font-bold py-2 rounded-md transition mt-2">상세 재무 분석하기</button>
+                    <button onclick="calculatePayment()" class="w-full bg-yellow-500 hover:bg-yellow-600 text-brand-dark font-bold py-2 rounded-md transition mt-2 shadow-sm">상세 재무 분석하기</button>
                     
                     <div id="calc2-result" class="mt-4 hidden space-y-2">
                         <div class="p-3 bg-brand-light border border-brand/20 rounded-md flex justify-between">
@@ -152,32 +161,208 @@
                             <span class="font-medium text-sm text-red-600" id="calc2-interest-label">텀 기간 낸 총 이자:</span>
                             <span class="font-bold text-red-800" id="calc2-interest">$0</span>
                         </div>
-                        
-                        <a href="https://calendar.app.google/zWG82EqskeBtwyeU7" target="_blank" class="mt-2 inline-block w-full bg-brand hover:bg-brand-dark text-white font-bold py-3 px-4 rounded-md transition shadow-md text-center">
-                            📅 엔지니어와 맞춤 상환 전략 상담하기
-                        </a>
+                        <a href="https://calendar.app.google/zWG82EqskeBtwyeU7" target="_blank" class="mt-2 inline-block w-full bg-brand hover:bg-brand-dark text-white font-bold py-3 px-4 rounded-md transition shadow-md text-center">📅 맞춤 상환 전략 상담하기</a>
                     </div>
                 </div>
             </div>
         </div>
+    </section>
+
+    <section id="benefits" class="py-12 px-4 max-w-7xl mx-auto">
+        <h2 class="text-3xl font-bold text-center mb-4 text-brand">✅ 정부 혜택 & 면제 조건 진단기</h2>
+        <p class="text-center text-gray-600 mb-10">조건을 체크하고 구입 가격을 입력하여 받을 수 있는 정확한 혜택을 확인하세요.</p>
         
-        <div class="bg-brand-light border-2 border-brand/20 rounded-xl p-8 text-center shadow-sm max-w-4xl mx-auto">
-            <h3 class="text-2xl font-bold text-brand mb-2">계산 결과가 복잡하게 느껴지시나요?</h3>
-            <p class="text-gray-600 mb-6">엔지니어의 시각으로 고객님의 상황에 맞는 정확한 언더라이팅과 금리를 찾아드립니다.</p>
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            
+            <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm benefit-card flex flex-col justify-between" id="benefit-ptt-fthb">
+                <div>
+                    <h3 class="font-bold text-brand text-lg mb-1">1. BC 취득세 면제 (생애최초)</h3>
+                    <div class="mb-3 mt-4">
+                        <label class="block text-xs font-bold text-gray-700 mb-1">주택 구입 예상 가격 ($)</label>
+                        <input type="number" id="price-ptt-fthb" class="w-full border border-gray-300 focus:border-brand focus:ring-brand rounded p-2 text-sm outline-none" placeholder="예: 800000" onkeyup="checkBenefit('ptt-fthb', 3)">
+                    </div>
+                    <div class="space-y-2 text-sm text-gray-700 mb-4">
+                        <label class="flex items-start space-x-2 cursor-pointer">
+                            <input type="checkbox" class="mt-1 w-4 h-4 text-brand rounded focus:ring-brand" onchange="checkBenefit('ptt-fthb', 3)">
+                            <span>캐나다 시민권자 또는 영주권자입니다.</span>
+                        </label>
+                        <label class="flex items-start space-x-2 cursor-pointer">
+                            <input type="checkbox" class="mt-1 w-4 h-4 text-brand rounded focus:ring-brand" onchange="checkBenefit('ptt-fthb', 3)">
+                            <span>집 등록일 기준 과거 12개월 연속 BC주 거주, 또는 지난 6년 중 2회 이상 BC주 세금 보고를 했습니다.</span>
+                        </label>
+                        <label class="flex items-start space-x-2 cursor-pointer">
+                            <input type="checkbox" class="mt-1 w-4 h-4 text-brand rounded focus:ring-brand" onchange="checkBenefit('ptt-fthb', 3)">
+                            <span>전 세계 어디에서도 주거용 부동산을 소유한 적이 없습니다.</span>
+                        </label>
+                    </div>
+                    <div id="result-ptt-fthb" class="mt-4 p-3 text-center font-bold rounded transition border hidden mb-4"></div>
+                </div>
+                <a href="https://www2.gov.bc.ca/gov/content/taxes/property-taxes/property-transfer-tax/exemptions/first-time-home-buyers" target="_blank" class="text-xs text-brand hover:underline mt-2 text-right">🔗 BC주 공식 가이드라인 확인</a>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm benefit-card flex flex-col justify-between" id="benefit-ptt-new">
+                <div>
+                    <h3 class="font-bold text-brand text-lg mb-1">2. BC 취득세 면제 (신축 주택)</h3>
+                    <div class="mb-3 mt-4">
+                        <label class="block text-xs font-bold text-gray-700 mb-1">신축 주택 구입 예상 가격 ($)</label>
+                        <input type="number" id="price-ptt-new" class="w-full border border-gray-300 focus:border-brand focus:ring-brand rounded p-2 text-sm outline-none" placeholder="예: 1000000" onkeyup="checkBenefit('ptt-new', 3)">
+                    </div>
+                    <div class="space-y-2 text-sm text-gray-700 mb-4">
+                        <label class="flex items-start space-x-2 cursor-pointer">
+                            <input type="checkbox" class="mt-1 w-4 h-4 text-brand rounded focus:ring-brand" onchange="checkBenefit('ptt-new', 3)">
+                            <span>캐나다 시민권자 또는 영주권자입니다.</span>
+                        </label>
+                        <label class="flex items-start space-x-2 cursor-pointer">
+                            <input type="checkbox" class="mt-1 w-4 h-4 text-brand rounded focus:ring-brand" onchange="checkBenefit('ptt-new', 3)">
+                            <span>해당 주택은 BC주에 위치하며 주거주지(Principal Residence)로 사용할 예정입니다.</span>
+                        </label>
+                        <label class="flex items-start space-x-2 cursor-pointer">
+                            <input type="checkbox" class="mt-1 w-4 h-4 text-brand rounded focus:ring-brand" onchange="checkBenefit('ptt-new', 3)">
+                            <span>누구도 거주한 적이 없는 신축 주택(Newly built)입니다.</span>
+                        </label>
+                    </div>
+                    <div id="result-ptt-new" class="mt-4 p-3 text-center font-bold rounded transition border hidden mb-4"></div>
+                </div>
+                <a href="https://www2.gov.bc.ca/gov/content/taxes/property-taxes/property-transfer-tax/exemptions/newly-built-home-exemption" target="_blank" class="text-xs text-brand hover:underline mt-2 text-right">🔗 BC주 신축 면제 가이드라인 확인</a>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm benefit-card flex flex-col justify-between" id="benefit-gst">
+                <div>
+                    <h3 class="font-bold text-brand text-lg mb-1">3. 신축 GST 리베이트</h3>
+                    <div class="mb-3 mt-4">
+                        <label class="block text-xs font-bold text-gray-700 mb-1">신축 주택 구입 예상 가격 ($)</label>
+                        <input type="number" id="price-gst" class="w-full border border-gray-300 focus:border-brand focus:ring-brand rounded p-2 text-sm outline-none" placeholder="예: 1000000" onkeyup="checkBenefit('gst', 4)">
+                    </div>
+                    <div class="space-y-2 text-sm text-gray-700 mb-4">
+                        <label class="flex items-start space-x-2 cursor-pointer">
+                            <input type="checkbox" class="mt-1 w-4 h-4 text-brand rounded focus:ring-brand" onchange="checkBenefit('gst', 4)">
+                            <span>캐나다 시민권자 또는 영주권자입니다.</span>
+                        </label>
+                        <label class="flex items-start space-x-2 cursor-pointer">
+                            <input type="checkbox" class="mt-1 w-4 h-4 text-brand rounded focus:ring-brand" onchange="checkBenefit('gst', 4)">
+                            <span>생애최초 주택 구매자입니다. (과거 4년간 본인/배우자 주거주지 소유이력 없음)</span>
+                        </label>
+                        <label class="flex items-start space-x-2 cursor-pointer">
+                            <input type="checkbox" class="mt-1 w-4 h-4 text-brand rounded focus:ring-brand" onchange="checkBenefit('gst', 4)">
+                            <span class="font-medium text-brand">2025년 5월 27일 이후 ~ 2031년 이전에 빌더와 주택 구매 계약을 체결했습니다.</span>
+                        </label>
+                        <label class="flex items-start space-x-2 cursor-pointer">
+                            <input type="checkbox" class="mt-1 w-4 h-4 text-brand rounded focus:ring-brand" onchange="checkBenefit('gst', 4)">
+                            <span>신축 주택을 구매하거나 전면 개보수하여 주거주지로 사용할 예정입니다.</span>
+                        </label>
+                    </div>
+                    <p class="text-xs text-red-500 mb-3 leading-tight">* 주의: 상세 자격 요건 및 예외 사항은 아래 정부 링크를 통해 반드시 확인해야 합니다.</p>
+                    <div id="result-gst" class="mt-2 p-3 text-center font-bold rounded transition border hidden mb-4"></div>
+                </div>
+                <a href="https://www.canada.ca/en/revenue-agency/services/tax/businesses/topics/gst-hst-businesses/gst-hst-rebates/first-time-home-buyers-gst-hst-rebate.html" target="_blank" class="text-xs text-brand hover:underline mt-2 text-right">🔗 CRA 연방 GST 리베이트 확인</a>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm benefit-card flex flex-col justify-between" id="benefit-eco">
+                <div>
+                    <h3 class="font-bold text-brand text-lg mb-1">4. 모기지 보험료 25% 환급</h3>
+                    <p class="text-xs text-gray-500 mb-4">Eco Plus (CMHC, Sagen 등)</p>
+                    <div class="space-y-2 text-sm text-gray-700 mb-4">
+                        <label class="flex items-start space-x-2 cursor-pointer">
+                            <input type="checkbox" class="mt-1 w-4 h-4 text-brand rounded focus:ring-brand" onchange="checkBenefit('eco', 2)">
+                            <span>다운페이가 20% 미만이라 모기지 기본 보험에 가입합니다.</span>
+                        </label>
+                        <label class="flex items-start space-x-2 cursor-pointer">
+                            <input type="checkbox" class="mt-1 w-4 h-4 text-brand rounded focus:ring-brand" onchange="checkBenefit('eco', 2)">
+                            <span class="font-medium text-brand">해당 주택이 특정 에너지 효율 등급(LEED 등)을 인증받은 신축이거나, <span class="text-yellow-600">또는</span> 기존 주택 구매 후 에너지 효율 개선 공사를 할 계획입니다.</span>
+                        </label>
+                    </div>
+                    <div id="result-eco" class="mt-4 p-3 bg-green-50 border border-green-200 text-green-800 text-center font-bold rounded hidden mb-4">🎉 보험료 25% 환급 신청이 가능합니다!</div>
+                </div>
+                <a href="https://www.cmhc-schl.gc.ca/professionals/project-funding-and-mortgage-financing/mortgage-loan-insurance/mortgage-loan-insurance-homeownership-programs/cmhc-eco-plus" target="_blank" class="text-xs text-brand hover:underline mt-2 text-right">🔗 CMHC Eco Plus 신청안내 확인</a>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm benefit-card flex flex-col justify-between" id="benefit-fhsa">
+                <div>
+                    <h3 class="font-bold text-brand text-lg mb-1">5. FHSA 계좌 자격 (비과세 저축)</h3>
+                    <p class="text-xs text-gray-500 mb-4">First Home Savings Account Eligibility</p>
+                    <div class="space-y-2 text-sm text-gray-700 mb-4">
+                        <label class="flex items-start space-x-2 cursor-pointer">
+                            <input type="checkbox" class="mt-1 w-4 h-4 text-brand rounded focus:ring-brand" onchange="checkBenefit('fhsa', 3)">
+                            <span class="font-bold text-brand">BC주 거주자이며 만 19세 이상입니다. (타 주의 경우 만 18세 및 성인 연령 기준)</span>
+                        </label>
+                        <label class="flex items-start space-x-2 cursor-pointer">
+                            <input type="checkbox" class="mt-1 w-4 h-4 text-brand rounded focus:ring-brand" onchange="checkBenefit('fhsa', 3)">
+                            <span>계좌 개설 연도 및 직전 4년 동안 본인 주거주지를 소유한 적이 없습니다.</span>
+                        </label>
+                        <label class="flex items-start space-x-2 cursor-pointer">
+                            <input type="checkbox" class="mt-1 w-4 h-4 text-brand rounded focus:ring-brand" onchange="checkBenefit('fhsa', 3)">
+                            <span>(배우자가 있는 경우) 같은 기간 동안 배우자가 소유한 주택에 함께 거주한 적도 없습니다.</span>
+                        </label>
+                    </div>
+                    <div id="result-fhsa" class="mt-4 p-3 bg-green-50 border border-green-200 text-green-800 text-center font-bold rounded hidden mb-4">🎉 FHSA 계좌 개설 및 사용이 가능합니다!</div>
+                </div>
+                <a href="https://www.canada.ca/en/revenue-agency/services/tax/individuals/topics/first-home-savings-account.html" target="_blank" class="text-xs text-brand hover:underline mt-2 text-right">🔗 CRA FHSA 자격요건 확인</a>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm benefit-card flex flex-col justify-between" id="benefit-hbp">
+                <div>
+                    <h3 class="font-bold text-brand text-lg mb-1">6. RRSP HBP (최대 $6만 인출)</h3>
+                    <p class="text-xs text-gray-500 mb-4">Home Buyers' Plan Conditions</p>
+                    <div class="space-y-2 text-sm text-gray-700 mb-4">
+                        <label class="flex items-start space-x-2 cursor-pointer">
+                            <input type="checkbox" class="mt-1 w-4 h-4 text-brand rounded focus:ring-brand" onchange="checkBenefit('hbp', 4)">
+                            <span>현재 연도 및 직전 4년 동안 주택을 소유하고 거주한 적이 없는 생애최초 구매자입니다.</span>
+                        </label>
+                        <label class="flex items-start space-x-2 cursor-pointer">
+                            <input type="checkbox" class="mt-1 w-4 h-4 text-brand rounded focus:ring-brand" onchange="checkBenefit('hbp', 4)">
+                            <span>주택을 구매하거나 짓기 위한 서면 계약서가 있습니다.</span>
+                        </label>
+                        <label class="flex items-start space-x-2 cursor-pointer">
+                            <input type="checkbox" class="mt-1 w-4 h-4 text-brand rounded focus:ring-brand" onchange="checkBenefit('hbp', 4)">
+                            <span>구매/완공 후 1년 이내에 해당 주택을 주거주지로 사용할 의도가 있습니다.</span>
+                        </label>
+                        <label class="flex items-start space-x-2 cursor-pointer">
+                            <input type="checkbox" class="mt-1 w-4 h-4 text-brand rounded focus:ring-brand" onchange="checkBenefit('hbp', 4)">
+                            <span>인출하려는 자금은 인출일 기준 최소 90일 이상 RRSP에 예치되어 있었습니다.</span>
+                        </label>
+                    </div>
+                    <div id="result-hbp" class="mt-4 p-3 bg-green-50 border border-green-200 text-green-800 text-center font-bold rounded hidden mb-4">🎉 RRSP HBP $60,000 인출이 가능합니다!</div>
+                </div>
+                <a href="https://www.canada.ca/en/revenue-agency/services/tax/individuals/topics/rrsps-related-plans/what-home-buyers-plan.html" target="_blank" class="text-xs text-brand hover:underline mt-2 text-right">🔗 CRA RRSP HBP 규정 확인</a>
+            </div>
+
+        </div>
+    </section>
+
+    <section class="pb-16 px-4 max-w-7xl mx-auto">
+        <div class="bg-brand-light border-2 border-brand/20 rounded-xl p-8 md:p-12 text-center shadow-sm max-w-4xl mx-auto">
+            <h3 class="text-2xl md:text-3xl font-bold text-brand mb-3">혜택 적용과 한도 계산이 복잡하게 느껴지시나요?</h3>
+            <p class="text-gray-700 mb-8 text-lg">엔지니어의 시각으로 고객님의 상황을 분석하여 단 1%의 혜택도 놓치지 않는 맞춤 전략을 세워드립니다.</p>
             <a href="https://calendar.app.google/zWG82EqskeBtwyeU7" target="_blank" class="inline-block bg-brand hover:bg-brand-dark text-white font-bold text-lg py-4 px-10 rounded-full transition shadow-lg">
-                🎥 Google Meet 화상 상담 예약하기
+                🎥 Google Meet 1:1 화상 상담 예약하기
             </a>
         </div>
     </section>
 
-    <footer class="bg-gray-900 text-gray-400 py-8 text-center text-sm mt-12">
+    <footer class="bg-gray-900 text-gray-400 py-8 text-center text-sm">
         <p>Justin Bae | P.Eng, Registered Mortgage Broker (BCFSA)</p>
         <p class="mt-2">Email: jb@mortgageajae.ca | Phone: 250-581-6862 | KakaoTalk: mortgageajae</p>
+        <p class="mt-4 text-xs text-gray-600">&copy; 2026 Mortgage Ajae. All rights reserved.</p>
     </footer>
 
     <script>
         function formatCurrency(num) {
-            return new Intl.NumberFormat('en-CA', { style: 'currency', currency: 'CAD' }).format(num);
+            return new Intl.NumberFormat('en-CA', { style: 'currency', currency: 'CAD', maximumFractionDigits: 0 }).format(num);
+        }
+
+        function calculateStandardPTT(price) {
+            if (price <= 0) return 0;
+            let ptt = 0;
+            if (price <= 200000) {
+                ptt = price * 0.01;
+            } else if (price <= 2000000) {
+                ptt = 200000 * 0.01 + (price - 200000) * 0.02;
+            } else if (price <= 3000000) {
+                ptt = 200000 * 0.01 + 1800000 * 0.02 + (price - 2000000) * 0.03;
+            } else {
+                ptt = 200000 * 0.01 + 1800000 * 0.02 + 1000000 * 0.03 + (price - 3000000) * 0.05;
+            }
+            return ptt;
         }
 
         function calculateMaxLoan() {
@@ -209,11 +394,9 @@
 
             const monthlyRate = Math.pow(1 + (stressRate / 2), 2 / 12) - 1;
             const months = 25 * 12; 
-            
             const maxLoan = actualMaxPi * ((Math.pow(1 + monthlyRate, months) - 1) / (monthlyRate * Math.pow(1 + monthlyRate, months)));
 
             document.getElementById('calc1-output').innerText = formatCurrency(Math.max(0, maxLoan));
-            
             let limitReason = maxPiGDS < maxPiTDS ? "GDS (39%) 기준에 의해 한도가 결정되었습니다." : "TDS (44%) 기준에 의해 한도가 결정되었습니다.";
             document.getElementById('calc1-limiting-factor').innerText = limitReason;
             document.getElementById('calc1-result').classList.remove('hidden');
@@ -234,34 +417,23 @@
 
             const pmtMonthly = principal * (monthlyRate * Math.pow(1 + monthlyRate, amzYears * 12)) / (Math.pow(1 + monthlyRate, amzYears * 12) - 1);
 
-            let payment = 0;
-            let periodRate = 0;
-            let periodsInTerm = 0;
+            let payment = 0; let periodRate = 0; let periodsInTerm = 0;
 
             if (frequency === 'monthly') {
-                payment = pmtMonthly;
-                periodRate = monthlyRate;
-                periodsInTerm = termYears * 12;
+                payment = pmtMonthly; periodRate = monthlyRate; periodsInTerm = termYears * 12;
             } else if (frequency === 'biweekly') {
                 payment = principal * (biweeklyRate * Math.pow(1 + biweeklyRate, amzYears * 26)) / (Math.pow(1 + biweeklyRate, amzYears * 26) - 1);
-                periodRate = biweeklyRate;
-                periodsInTerm = termYears * 26;
+                periodRate = biweeklyRate; periodsInTerm = termYears * 26;
             } else if (frequency === 'accel_biweekly') {
-                payment = pmtMonthly / 2;
-                periodRate = biweeklyRate;
-                periodsInTerm = termYears * 26;
+                payment = pmtMonthly / 2; periodRate = biweeklyRate; periodsInTerm = termYears * 26;
             }
 
-            let balance = principal;
-            let totalInterest = 0;
-
+            let balance = principal; let totalInterest = 0;
             for (let i = 0; i < periodsInTerm; i++) {
                 let interestForPeriod = balance * periodRate;
                 let principalForPeriod = payment - interestForPeriod;
-                
                 totalInterest += interestForPeriod;
                 balance -= principalForPeriod;
-                
                 if (balance < 0) { balance = 0; break; }
             }
 
@@ -271,6 +443,72 @@
             document.getElementById('calc2-interest-label').innerText = `${termYears}년 동안 낸 총 이자:`;
             document.getElementById('calc2-interest').innerText = formatCurrency(totalInterest);
             document.getElementById('calc2-result').classList.remove('hidden');
+        }
+
+        function checkBenefit(id, requiredCount) {
+            const container = document.getElementById(`benefit-${id}`);
+            const checkboxes = container.querySelectorAll('input[type="checkbox"]');
+            const resultDiv = document.getElementById(`result-${id}`);
+            
+            let checkedCount = 0;
+            checkboxes.forEach(cb => { if (cb.checked) checkedCount++; });
+
+            if (checkedCount === requiredCount) {
+                if (id === 'ptt-fthb' || id === 'ptt-new' || id === 'gst') {
+                    const priceInput = document.getElementById(`price-${id}`);
+                    resultDiv.className = "mt-4 p-3 text-center font-bold rounded transition border mb-4"; 
+
+                    if (priceInput && priceInput.value) {
+                        const price = parseFloat(priceInput.value);
+                        
+                        if (id === 'gst') {
+                            let rebate = 0;
+                            let gstPaid = price * 0.05;
+
+                            if (price <= 1000000) {
+                                rebate = price * 0.05; 
+                            } else if (price < 1500000) {
+                                rebate = 50000 * ((1500000 - price) / 500000); 
+                            }
+                            
+                            if (rebate > 0) {
+                                let rebateType = price <= 1000000 ? "전액 리베이트" : "부분 리베이트";
+                                resultDiv.innerHTML = `🎉 연방 GST ${rebateType} 신청 가능:<br><span class="text-xl font-extrabold text-brand">${formatCurrency(rebate)}</span><br><span class="text-xs font-normal mt-1 text-gray-600 block">(납부해야 할 연방 GST 5%: ${formatCurrency(gstPaid)})</span>`;
+                                resultDiv.classList.add('bg-green-50', 'text-green-800', 'border-green-200');
+                            } else {
+                                resultDiv.innerHTML = `❌ 입력하신 가격(${formatCurrency(price)})은 $1.5M 한도를 초과하여 리베이트 대상이 아닙니다.<br><span class="text-xs font-normal mt-1 block">(납부해야 할 연방 GST 5%: ${formatCurrency(gstPaid)})</span>`;
+                                resultDiv.classList.add('bg-red-50', 'text-red-800', 'border-red-200');
+                            }
+                        } else {
+                            const standardPTT = calculateStandardPTT(price);
+                            let exemption = 0;
+                            if (id === 'ptt-fthb') {
+                                if (price <= 835000) exemption = standardPTT;
+                                else if (price < 860000) exemption = standardPTT * ((860000 - price) / 25000);
+                            } else if (id === 'ptt-new') {
+                                if (price <= 1100000) exemption = standardPTT;
+                                else if (price < 1150000) exemption = standardPTT * ((1150000 - price) / 50000);
+                            }
+                            
+                            if (exemption > 0) {
+                                resultDiv.innerHTML = `🎉 예상 면제액: <span class="text-xl font-extrabold">${formatCurrency(exemption)}</span><br><span class="text-xs font-normal mt-1 text-gray-600 block">(적용 전 원래 취득세: ${formatCurrency(standardPTT)})</span>`;
+                                resultDiv.classList.add('bg-green-50', 'text-green-800', 'border-green-200');
+                            } else {
+                                resultDiv.innerHTML = `❌ 입력하신 가격(${formatCurrency(price)})은 면제 한도를 초과하여 혜택을 받을 수 없습니다.<br><span class="text-xs font-normal mt-1 block">(예상 취득세: ${formatCurrency(standardPTT)})</span>`;
+                                resultDiv.classList.add('bg-red-50', 'text-red-800', 'border-red-200');
+                            }
+                        }
+                    } else {
+                        resultDiv.innerHTML = `ℹ️ 주택 구입 예상 가격을 입력하시면 정확한 면제/리베이트 금액이 계산됩니다.`;
+                        resultDiv.classList.add('bg-blue-50', 'text-blue-800', 'border-blue-200');
+                    }
+                    resultDiv.classList.remove('hidden');
+                    return;
+                }
+                resultDiv.classList.remove('hidden');
+            } else {
+                resultDiv.classList.add('hidden');
+            }
         }
     </script>
 </body>
