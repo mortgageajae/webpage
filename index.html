@@ -278,10 +278,8 @@
                     </div>
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <label class="block font-medium text-gray-700">Amortization</label>
-                            <select id="calc2-amortization" class="mt-1 block w-full border border-gray-300 focus:border-yellow-500 focus:ring-yellow-500 rounded-md p-2 outline-none bg-white">
-                                <option value="25">25년</option><option value="30" selected>30년</option>
-                            </select>
+                            <label class="block font-medium text-gray-700">Amortization (년)</label>
+                            <input type="number" id="calc2-amortization" class="mt-1 block w-full border border-gray-300 focus:border-yellow-500 focus:ring-yellow-500 rounded-md p-2 outline-none" value="30" placeholder="예: 30">
                         </div>
                         <div>
                             <label class="block font-medium text-gray-700">계약기간 (Term)</label>
@@ -400,13 +398,14 @@
                             </label>
                             <label class="flex items-start space-x-2 cursor-pointer">
                                 <input type="checkbox" class="mt-1 w-4 h-4 text-brand rounded focus:ring-brand" onchange="checkBenefit('gst', 4)">
-                                <span>2025년 5월 27일 이후 ~ 2031년 이전에 빌더와 주택 구매 계약을 체결했습니다.</span>
+                                <span class="font-medium text-brand">2025년 5월 27일 이후 ~ 2031년 이전에 빌더와 주택 구매 계약을 체결했습니다.</span>
                             </label>
                             <label class="flex items-start space-x-2 cursor-pointer">
                                 <input type="checkbox" class="mt-1 w-4 h-4 text-brand rounded focus:ring-brand" onchange="checkBenefit('gst', 4)">
                                 <span>신축 주택을 구매하거나 전면 개보수하여 주거주지로 사용할 예정입니다.</span>
                             </label>
                         </div>
+                        <p class="text-xs text-red-500 mb-3 leading-tight">* 주의: 상세 자격 요건 및 예외 사항은 아래 정부 링크를 통해 반드시 확인해야 합니다.</p>
                         <div id="result-gst" class="mt-2 p-3 text-center font-bold rounded transition border hidden mb-4"></div>
                     </div>
                     <a href="https://www.canada.ca/en/revenue-agency/services/tax/businesses/topics/gst-hst-businesses/gst-hst-rebates/first-time-home-buyers-gst-hst-rebate.html" target="_blank" class="text-xs text-brand hover:underline mt-2 text-right">🔗 CRA 연방 GST 리베이트 확인</a>
@@ -423,7 +422,7 @@
                             </label>
                             <label class="flex items-start space-x-2 cursor-pointer">
                                 <input type="checkbox" class="mt-1 w-4 h-4 text-brand rounded focus:ring-brand" onchange="checkBenefit('eco', 2)">
-                                <span>해당 주택이 특정 에너지 효율 등급(LEED 등)을 인증받은 신축이거나, <span class="text-yellow-600 font-bold">또는</span> 기존 주택 구매 후 에너지 효율 개선 공사를 할 계획입니다.</span>
+                                <span class="font-medium text-brand">해당 주택이 특정 에너지 효율 등급(LEED 등)을 인증받은 신축이거나, <span class="text-yellow-600 font-bold">또는</span> 기존 주택 구매 후 에너지 효율 개선 공사를 할 계획입니다.</span>
                             </label>
                         </div>
                         <div id="result-eco" class="mt-4 p-3 bg-green-50 border border-green-200 text-green-800 text-center font-bold rounded hidden mb-4">🎉 보험료 25% 환급 신청이 가능합니다!</div>
@@ -438,7 +437,7 @@
                         <div class="space-y-2 text-sm text-gray-700 mb-4">
                             <label class="flex items-start space-x-2 cursor-pointer">
                                 <input type="checkbox" class="mt-1 w-4 h-4 text-brand rounded focus:ring-brand" onchange="checkBenefit('fhsa', 3)">
-                                <span>BC주 거주자이며 만 19세 이상입니다. (타 주의 경우 만 18세 및 성인 연령 기준)</span>
+                                <span class="font-bold text-brand">BC주 거주자이며 만 19세 이상입니다. (타 주의 경우 만 18세 및 성인 연령 기준)</span>
                             </label>
                             <label class="flex items-start space-x-2 cursor-pointer">
                                 <input type="checkbox" class="mt-1 w-4 h-4 text-brand rounded focus:ring-brand" onchange="checkBenefit('fhsa', 3)">
@@ -510,42 +509,6 @@
             return new Intl.NumberFormat('en-CA', { style: 'currency', currency: 'CAD', maximumFractionDigits: 0 }).format(num);
         }
 
-        function toggleFields() {
-            const p = document.getElementById('purpose').value;
-            document.getElementById('purchase-fields').classList.toggle('hidden', p !== '신규 구매');
-            document.getElementById('renewal-fields').classList.toggle('hidden', p !== 'Renewal');
-        }
-
-        function checkDate() {
-            const d = document.getElementById('originalDate').value;
-            document.getElementById('original-price-container').classList.toggle('hidden', d && d < "2016-10");
-        }
-
-        document.getElementById('mortgageForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const email = document.getElementById('emailInput').value;
-            if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-                alert("정확한 이메일 형식을 입력해주세요.");
-                return;
-            }
-            const btn = e.target.querySelector('button[type="submit"]');
-            btn.innerHTML = '분석 진행 중... ⏳';
-            btn.disabled = true;
-            btn.classList.add('opacity-75', 'cursor-not-allowed');
-
-            fetch(e.target.action, { method: 'POST', body: new FormData(e.target) })
-            .then(response => { 
-                e.target.classList.add('hidden'); 
-                document.getElementById('successMessage').classList.remove('hidden'); 
-            })
-            .catch(error => { 
-                alert('통신 오류가 발생했습니다.'); 
-                btn.innerHTML = '분석리포트 신청하기'; 
-                btn.disabled = false; 
-                btn.classList.remove('opacity-75', 'cursor-not-allowed');
-            });
-        });
-
         function calculateStandardPTT(price) {
             if (price <= 0) return 0;
             let ptt = 0;
@@ -601,11 +564,12 @@
         function calculatePayment() {
             const principal = parseFloat(document.getElementById('calc2-amount').value);
             const rate = parseFloat(document.getElementById('calc2-rate').value);
+            // 드롭다운 대신 입력된 숫자를 가져오도록 수정
             const amzYears = parseInt(document.getElementById('calc2-amortization').value);
             const termYears = parseInt(document.getElementById('calc2-term').value);
             const frequency = document.getElementById('calc2-frequency').value;
 
-            if (!principal || !rate) return alert("대출 금액과 금리를 입력해주세요.");
+            if (!principal || !rate || !amzYears) return alert("대출 금액, 금리, 상환기간을 입력해주세요.");
 
             const annualRate = rate / 100;
             const monthlyRate = Math.pow(1 + (annualRate / 2), 2 / 12) - 1;
@@ -706,6 +670,42 @@
                 resultDiv.classList.add('hidden');
             }
         }
+
+        function toggleFields() {
+            const p = document.getElementById('purpose').value;
+            document.getElementById('purchase-fields').classList.toggle('hidden', p !== '신규 구매');
+            document.getElementById('renewal-fields').classList.toggle('hidden', p !== 'Renewal');
+        }
+
+        function checkDate() {
+            const d = document.getElementById('originalDate').value;
+            document.getElementById('original-price-container').classList.toggle('hidden', d && d < "2016-10");
+        }
+
+        document.getElementById('mortgageForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('emailInput').value;
+            if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                alert("정확한 이메일 형식을 입력해주세요.");
+                return;
+            }
+            const btn = e.target.querySelector('button[type="submit"]');
+            btn.innerHTML = '분석 진행 중... ⏳';
+            btn.disabled = true;
+            btn.classList.add('opacity-75', 'cursor-not-allowed');
+
+            fetch(e.target.action, { method: 'POST', body: new FormData(e.target) })
+            .then(response => { 
+                e.target.classList.add('hidden'); 
+                document.getElementById('successMessage').classList.remove('hidden'); 
+            })
+            .catch(error => { 
+                alert('통신 오류가 발생했습니다.'); 
+                btn.innerHTML = '분석리포트 신청하기'; 
+                btn.disabled = false; 
+                btn.classList.remove('opacity-75', 'cursor-not-allowed');
+            });
+        });
     </script>
 </body>
 </html>
