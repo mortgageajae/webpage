@@ -64,8 +64,8 @@
             </div>
             <div class="text-center md:text-left flex flex-col justify-center mt-6 md:mt-0">
                 <span class="bg-brand-dark text-white text-xs font-bold px-3 py-1 rounded-full mb-4 inline-block border border-brand-light/30 self-center md:self-start">P.Eng & BCFSA Registered Broker</span>
-                <h1 class="text-2xl md:text-3xl lg:text-4xl font-extrabold mb-5 leading-tight tracking-tight">엔지니어의 꼼꼼함으로<br>분석하는 최적의<br>모기지 솔루션</h1>
-                <p class="text-base text-blue-100 max-w-md mx-auto md:mx-0">복잡한 숫자와 약관, 공학적인 정밀함으로 검토해 드립니다. 모기지아재와 함께 가장 안전한 내 집 마련 전략을 세우세요.</p>
+                <h1 class="text-2xl md:text-3xl lg:text-4xl font-extrabold mb-5 leading-tight tracking-tight">엔지니어의 꼼꼼함으로<br>분석해드리는 최적의<br>모기지 솔루션</h1>
+                <p class="text-base text-blue-100 max-w-md mx-auto md:mx-0">복잡한 숫자와 약관, 손쉽게 풀어서 정밀하게 검토해 드립니다. 모기지아재와 함께 내집마련 전략을 세우세요.</p>
             </div>
         </div>
     </section>
@@ -133,14 +133,14 @@
                     <label class="block text-sm font-bold text-gray-700 mb-1">신청 목적</label>
                     <select id="purpose" name="신청 목적 (Purpose)" required onchange="toggleFields()" class="w-full border border-gray-300 focus:border-brand rounded-lg p-3 outline-none bg-white">
                         <option value="" disabled selected>선택해주세요</option>
-                        <option value="신규 구매">신규 구매 (Purchase / 재융자 포함)</option>
-                        <option value="Renewal">갱신 및 기관 이동 (Renewal / Switch)</option>
+                        <option value="신규 구매">신규구매 혹은 재융자 (Purchase / Refinance)</option>
+                        <option value="Renewal">갱신 및 렌더변경 (Renewal / Switch)</option>
                     </select>
                 </div>
 
                 <div id="purchase-fields" class="hidden grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-1">주택 구매 가격 ($)</label>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">주택 구매가격 ($)</label>
                         <input type="number" name="주택 구매 가격" class="w-full border border-gray-300 focus:border-brand rounded-lg p-3 outline-none" placeholder="1000000">
                     </div>
                     <div>
@@ -151,16 +151,16 @@
 
                 <div id="renewal-fields" class="hidden space-y-4">
                     <div class="bg-blue-50 p-4 rounded-lg border border-blue-100">
-                        <label class="block text-sm font-bold text-brand mb-1">최초 주택 구매 연월</label>
+                        <label class="block text-sm font-bold text-brand mb-1">최초 주택구매 연월</label>
                         <input type="month" id="originalDate" name="최초구매연월" onchange="checkDate()" class="w-full border border-gray-300 focus:border-brand rounded-lg p-2 outline-none">
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-sm font-bold text-gray-700 mb-1">현재 시장 가치 ($)</label>
+                            <label class="block text-sm font-bold text-gray-700 mb-1">현재 시장가치 ($)</label>
                             <input type="number" name="현재 시장 가치" class="w-full border border-gray-300 focus:border-brand rounded-lg p-3 outline-none" placeholder="1000000">
                         </div>
                         <div>
-                            <label class="block text-sm font-bold text-gray-700 mb-1">필요한 모기지 금액 ($)</label>
+                            <label class="block text-sm font-bold text-gray-700 mb-1">필요한 모기지금액 ($)</label>
                             <input type="number" name="필요한 모기지 금액" class="w-full border border-gray-300 focus:border-brand rounded-lg p-3 outline-none" placeholder="남은 대출 잔액">
                         </div>
                     </div>
@@ -173,12 +173,12 @@
                 <hr class="border-gray-100">
 
                 <div>
-                    <label class="block text-sm font-bold text-gray-700 mb-1">제안받은 은행/렌더 이름 (선택)</label>
+                    <label class="block text-sm font-bold text-gray-700 mb-1">제안받은 은행/렌더 이름</label>
                     <input type="text" name="렌더이름 입력해주세요" class="w-full border border-gray-300 focus:border-brand focus:ring-brand rounded-lg p-3 outline-none" placeholder="예: TD Bank, RBC 등">
                 </div>
 
                 <div class="bg-gray-50 p-6 rounded-xl border border-gray-200">
-                    <p class="text-sm font-bold text-gray-700 mb-3 text-center">현재 제안받은 금리 입력 (최소 1개 이상)</p>
+                    <p class="text-sm font-bold text-gray-700 mb-3 text-center">현재 제안받은 금리입력 (최소 1개 이상)</p>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
                             <label class="block text-xs text-gray-500 font-bold mb-1">3Y Fixed (%)</label>
@@ -219,11 +219,11 @@
                 <div class="space-y-4 text-sm flex-grow">
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <label class="block font-medium text-gray-700">연 소득 ($)</label>
+                            <label class="block font-medium text-gray-700">연소득 ($)</label>
                             <input type="number" id="calc1-income" class="mt-1 block w-full border border-gray-300 focus:border-brand focus:ring-brand rounded-md p-2 outline-none">
                         </div>
                         <div>
-                            <label class="block font-medium text-gray-700">현재 예상 금리 (%)</label>
+                            <label class="block font-medium text-gray-700">현재 예상금리 (%)</label>
                             <input type="number" id="calc1-rate" class="mt-1 block w-full border border-gray-300 focus:border-brand focus:ring-brand rounded-md p-2 outline-none" step="0.1">
                         </div>
                     </div>
@@ -233,7 +233,7 @@
                             <input type="number" id="calc1-tax" class="mt-1 block w-full border border-gray-300 focus:border-brand focus:ring-brand rounded-md p-2 outline-none" placeholder="예: 3000">
                         </div>
                         <div>
-                            <label class="block font-medium text-gray-700">월 스트라타 피 ($)</label>
+                            <label class="block font-medium text-gray-700">월 스트라타피 ($)</label>
                             <input type="number" id="calc1-strata" class="mt-1 block w-full border border-gray-300 focus:border-brand focus:ring-brand rounded-md p-2 outline-none" placeholder="예: 400 (50% 적용)">
                         </div>
                     </div>
@@ -243,7 +243,7 @@
                             <input type="number" id="calc1-heat" class="mt-1 block w-full border border-gray-300 focus:border-brand focus:ring-brand rounded-md p-2 outline-none" placeholder="예: 100" value="100">
                         </div>
                         <div>
-                            <label class="block font-medium text-gray-700">월 기타 부채 ($)</label>
+                            <label class="block font-medium text-gray-700">월 기타부채 ($)</label>
                             <input type="number" id="calc1-debt" class="mt-1 block w-full border border-gray-300 focus:border-brand focus:ring-brand rounded-md p-2 outline-none" placeholder="자동차 등">
                         </div>
                     </div>
@@ -268,7 +268,7 @@
                 <div class="space-y-4 text-sm flex-grow">
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <label class="block font-medium text-gray-700">대출 금액 ($)</label>
+                            <label class="block font-medium text-gray-700">대출금액 ($)</label>
                             <input type="number" id="calc2-amount" class="mt-1 block w-full border border-gray-300 focus:border-yellow-500 focus:ring-yellow-500 rounded-md p-2 outline-none">
                         </div>
                         <div>
@@ -284,14 +284,14 @@
                             </select>
                         </div>
                         <div>
-                            <label class="block font-medium text-gray-700">계약 텀 (Term)</label>
+                            <label class="block font-medium text-gray-700">계약기간 (Term)</label>
                             <select id="calc2-term" class="mt-1 block w-full border border-gray-300 focus:border-yellow-500 focus:ring-yellow-500 rounded-md p-2 outline-none bg-white">
                                 <option value="3">3년</option><option value="5" selected>5년</option>
                             </select>
                         </div>
                     </div>
                     <div>
-                        <label class="block font-medium text-gray-700">상환 주기 (Payment Frequency)</label>
+                        <label class="block font-medium text-gray-700">상환주기 (Payment Frequency)</label>
                         <select id="calc2-frequency" class="mt-1 block w-full border border-gray-300 focus:border-yellow-500 focus:ring-yellow-500 rounded-md p-2 outline-none bg-white">
                             <option value="monthly" selected>Monthly (월납)</option>
                             <option value="biweekly">Bi-weekly (격주납)</option>
@@ -309,11 +309,11 @@
                             <span class="text-2xl font-bold text-brand" id="calc2-pmt">$0</span>
                         </div>
                         <div class="p-4 bg-gray-50 border border-gray-200 rounded-xl flex justify-between items-center">
-                            <span class="font-medium text-gray-800" id="calc2-balance-label">텀 종료 후 남은 원금:</span>
+                            <span class="font-medium text-gray-800" id="calc2-balance-label">텀 종료후 남은원금:</span>
                             <span class="text-xl font-bold text-gray-800" id="calc2-balance">$0</span>
                         </div>
                         <div class="p-4 bg-red-50 border border-red-200 rounded-xl flex justify-between items-center mb-4">
-                            <span class="font-medium text-red-600" id="calc2-interest-label">텀 기간 낸 총 이자:</span>
+                            <span class="font-medium text-red-600" id="calc2-interest-label">텀 기간 낸 총이자:</span>
                             <span class="text-xl font-bold text-red-800" id="calc2-interest">$0</span>
                         </div>
                     </div>
@@ -334,7 +334,7 @@
                     <div>
                         <h3 class="font-bold text-brand text-lg mb-1">1. BC 취득세 면제 (생애최초)</h3>
                         <div class="mb-3 mt-4">
-                            <label class="block text-xs font-bold text-gray-700 mb-1">주택 구입 예상 가격 ($)</label>
+                            <label class="block text-xs font-bold text-gray-700 mb-1">주택구입 예상가격 ($)</label>
                             <input type="number" id="price-ptt-fthb" class="w-full border border-gray-300 focus:border-brand focus:ring-brand rounded p-2 text-sm outline-none" placeholder="예: 800000" onkeyup="checkBenefit('ptt-fthb', 3)">
                         </div>
                         <div class="space-y-2 text-sm text-gray-700 mb-4">
@@ -358,9 +358,9 @@
 
                 <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm benefit-card flex flex-col justify-between" id="benefit-ptt-new">
                     <div>
-                        <h3 class="font-bold text-brand text-lg mb-1">2. BC 취득세 면제 (신축 주택)</h3>
+                        <h3 class="font-bold text-brand text-lg mb-1">2. BC 취득세 면제 (신축주택)</h3>
                         <div class="mb-3 mt-4">
-                            <label class="block text-xs font-bold text-gray-700 mb-1">신축 주택 구입 예상 가격 ($)</label>
+                            <label class="block text-xs font-bold text-gray-700 mb-1">신축주택구입 예상가격 ($)</label>
                             <input type="number" id="price-ptt-new" class="w-full border border-gray-300 focus:border-brand focus:ring-brand rounded p-2 text-sm outline-none" placeholder="예: 1000000" onkeyup="checkBenefit('ptt-new', 3)">
                         </div>
                         <div class="space-y-2 text-sm text-gray-700 mb-4">
@@ -386,7 +386,7 @@
                     <div>
                         <h3 class="font-bold text-brand text-lg mb-1">3. 신축 GST 리베이트</h3>
                         <div class="mb-3 mt-4">
-                            <label class="block text-xs font-bold text-gray-700 mb-1">신축 주택 구입 예상 가격 ($)</label>
+                            <label class="block text-xs font-bold text-gray-700 mb-1">신축주택구입 예상가격 ($)</label>
                             <input type="number" id="price-gst" class="w-full border border-gray-300 focus:border-brand focus:ring-brand rounded p-2 text-sm outline-none" placeholder="예: 1000000" onkeyup="checkBenefit('gst', 4)">
                         </div>
                         <div class="space-y-2 text-sm text-gray-700 mb-4">
@@ -400,7 +400,7 @@
                             </label>
                             <label class="flex items-start space-x-2 cursor-pointer">
                                 <input type="checkbox" class="mt-1 w-4 h-4 text-brand rounded focus:ring-brand" onchange="checkBenefit('gst', 4)">
-                                <span class="font-medium text-brand">2025년 5월 27일 이후 ~ 2031년 이전에 빌더와 주택 구매 계약을 체결했습니다.</span>
+                                <span>2025년 5월 27일 이후 ~ 2031년 이전에 빌더와 주택 구매 계약을 체결했습니다.</span>
                             </label>
                             <label class="flex items-start space-x-2 cursor-pointer">
                                 <input type="checkbox" class="mt-1 w-4 h-4 text-brand rounded focus:ring-brand" onchange="checkBenefit('gst', 4)">
@@ -423,7 +423,7 @@
                             </label>
                             <label class="flex items-start space-x-2 cursor-pointer">
                                 <input type="checkbox" class="mt-1 w-4 h-4 text-brand rounded focus:ring-brand" onchange="checkBenefit('eco', 2)">
-                                <span class="font-medium text-brand">해당 주택이 특정 에너지 효율 등급(LEED 등)을 인증받은 신축이거나, <span class="text-yellow-600 font-bold">또는</span> 기존 주택 구매 후 에너지 효율 개선 공사를 할 계획입니다.</span>
+                                <span>해당 주택이 특정 에너지 효율 등급(LEED 등)을 인증받은 신축이거나, <span class="text-yellow-600 font-bold">또는</span> 기존 주택 구매 후 에너지 효율 개선 공사를 할 계획입니다.</span>
                             </label>
                         </div>
                         <div id="result-eco" class="mt-4 p-3 bg-green-50 border border-green-200 text-green-800 text-center font-bold rounded hidden mb-4">🎉 보험료 25% 환급 신청이 가능합니다!</div>
@@ -438,7 +438,7 @@
                         <div class="space-y-2 text-sm text-gray-700 mb-4">
                             <label class="flex items-start space-x-2 cursor-pointer">
                                 <input type="checkbox" class="mt-1 w-4 h-4 text-brand rounded focus:ring-brand" onchange="checkBenefit('fhsa', 3)">
-                                <span class="font-bold text-brand">BC주 거주자이며 만 19세 이상입니다. (타 주의 경우 만 18세 및 성인 연령 기준)</span>
+                                <span>BC주 거주자이며 만 19세 이상입니다. (타 주의 경우 만 18세 및 성인 연령 기준)</span>
                             </label>
                             <label class="flex items-start space-x-2 cursor-pointer">
                                 <input type="checkbox" class="mt-1 w-4 h-4 text-brand rounded focus:ring-brand" onchange="checkBenefit('fhsa', 3)">
