@@ -48,10 +48,11 @@
             </a>
         </div>
         <div class="border-t border-gray-100 py-3 md:py-4 bg-white">
-            <div class="max-w-6xl mx-auto px-4 flex justify-center space-x-6 md:space-x-12 text-lg md:text-lg font-bold text-gray-700">
+            <div class="max-w-6xl mx-auto px-4 flex justify-center space-x-6 md:space-x-12 text-lg md:text-base font-bold text-gray-700">
                 <a href="#analysis" class="hover:text-brand transition text-brand">금리진단</a>
                 <a href="#tools" class="hover:text-brand transition">핵심도구</a>
                 <a href="#benefits" class="hover:text-brand transition">혜택진단</a>
+                <a href="board.html" class="hover:text-brand transition">정보보드</a>
                 <a href="https://calendar.app.google/zWG82EqskeBtwyeU7" class="hover:text-brand transition">미팅신청</a>
             </div>
         </div>
@@ -278,8 +279,8 @@
                     </div>
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <label class="block font-medium text-gray-700">Amortization (년)</label>
-                            <input type="number" id="calc2-amortization" class="mt-1 block w-full border border-gray-300 focus:border-yellow-500 focus:ring-yellow-500 rounded-md p-2 outline-none" value="30" placeholder="예: 30">
+                            <label class="block font-medium text-gray-700">Amortization</label>
+                            <input type="number" id="calc2-amortization" class="mt-1 block w-full border border-gray-300 focus:border-yellow-500 focus:ring-yellow-500 rounded-md p-2 outline-none bg-white" value="30" placeholder="예: 30">
                         </div>
                         <div>
                             <label class="block font-medium text-gray-700">계약기간 (Term)</label>
@@ -564,7 +565,6 @@
         function calculatePayment() {
             const principal = parseFloat(document.getElementById('calc2-amount').value);
             const rate = parseFloat(document.getElementById('calc2-rate').value);
-            // 드롭다운 대신 입력된 숫자를 가져오도록 수정
             const amzYears = parseInt(document.getElementById('calc2-amortization').value);
             const termYears = parseInt(document.getElementById('calc2-term').value);
             const frequency = document.getElementById('calc2-frequency').value;
@@ -644,12 +644,15 @@
                             let exemption = 0;
                             if (id === 'ptt-fthb') {
                                 if (price <= 500000) {
-                                    exemption = standardPTT; // 50만 불 이하는 전액 면제
+                                    exemption = standardPTT;
                                 } else if (price <= 835000) {
-                                    exemption = 8000; // 50만~83.5만 불 사이는 딱 8,000불만 면제
+                                    exemption = 8000;
                                 } else if (price < 860000) {
-                                    exemption = 8000 * ((860000 - price) / 25000); // 83.5만~86만 불 부분 면제 구간
+                                    exemption = 8000 * ((860000 - price) / 25000);
                                 }
+                            } else if (id === 'ptt-new') {
+                                if (price <= 1100000) exemption = standardPTT;
+                                else if (price < 1150000) exemption = standardPTT * ((1150000 - price) / 50000);
                             }
                             
                             if (exemption > 0) {

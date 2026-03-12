@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>인사이트 & 뉴스레터 | 모기지아재</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { light: '#f0f3fa', DEFAULT: '#334da9', dark: '#253880' }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .markdown-body h1 { font-size: 2.25rem; font-weight: 800; margin-bottom: 1.5rem; color: #111827; }
+        .markdown-body h2 { font-size: 1.5rem; font-weight: 700; margin-top: 2rem; margin-bottom: 1rem; color: #1f2937; border-bottom: 2px solid #f0f3fa; padding-bottom: 0.5rem;}
+        .markdown-body h3 { font-size: 1.25rem; font-weight: 700; margin-top: 1.5rem; margin-bottom: 0.75rem; color: #374151; }
+        .markdown-body p { margin-bottom: 1.25rem; line-height: 1.75; color: #4b5563; }
+        .markdown-body ul { list-style-type: disc; margin-left: 1.5rem; margin-bottom: 1.5rem; color: #4b5563; }
+        .markdown-body li { margin-bottom: 0.5rem; }
+        .markdown-body blockquote { border-left: 4px solid #334da9; background-color: #f0f3fa; padding: 1rem; margin-bottom: 1.5rem; font-style: italic; color: #374151; border-radius: 0 0.5rem 0.5rem 0; }
+        .markdown-body table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
+        .markdown-body th, .markdown-body td { border: 1px solid #e5e7eb; padding: 0.75rem; text-align: center; }
+        .markdown-body th { background-color: #f9fafb; font-weight: 700; color: #1f2937; }
+        .tab-btn { transition: all 0.3s ease; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans pt-48 md:pt-56">
+
+    <header class="bg-white shadow-md fixed w-full z-20 top-0">
+        <div class="w-full flex justify-center bg-white">
+            <a href="index.html" class="w-full max-w-[1400px] flex justify-center">
+                <img src="./images/mortgageajae-banner.jpg" alt="모기지아재 로고 배너" class="w-full h-auto max-h-24 md:max-h-32 object-contain md:hidden" onerror="this.style.display='none'">
+                <img src="./images/mortgageajae-banner-web.jpg" alt="모기지아재 데스크탑 배너" class="hidden md:block w-full h-auto max-h-24 md:max-h-32 object-contain mx-auto" onerror="this.style.display='none'">
+            </a>
+        </div>
+        <div class="border-t border-gray-100 py-3 md:py-4 bg-white">
+            <div class="max-w-6xl mx-auto px-4 flex justify-center space-x-6 md:space-x-12 text-lg md:text-lg font-bold text-gray-700">
+                <a href="index.html#analysis" class="hover:text-brand transition">금리진단</a>
+                <a href="index.html#tools" class="hover:text-brand transition">핵심도구</a>
+                <a href="index.html#benefits" class="hover:text-brand transition">혜택진단</a>
+                <a href="board.html" class="hover:text-brand transition text-brand">인사이트</a>
+                <a href="https://calendar.app.google/zWG82EqskeBtwyeU7" class="hover:text-brand transition">미팅신청</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="max-w-6xl mx-auto px-4 pb-20">
+        <div class="mb-8 text-center">
+            <h1 class="text-3xl font-extrabold text-brand mb-4">인사이트 & 뉴스레터</h1>
+            <p class="text-gray-600">모기지아재의 시각으로 분석한 마켓 동향과 최신 모기지 소식을 확인하세요.</p>
+        </div>
+
+        <div class="flex justify-center space-x-2 md:space-x-4 mb-10">
+            <button id="tab-all" class="tab-btn px-5 md:px-8 py-2 md:py-3 rounded-full font-bold text-sm md:text-base bg-brand text-white shadow-md" onclick="filterPosts('all')">전체보기</button>
+            <button id="tab-board" class="tab-btn px-5 md:px-8 py-2 md:py-3 rounded-full font-bold text-sm md:text-base bg-white text-gray-600 border border-gray-200 hover:bg-gray-100" onclick="filterPosts('정보보드')">정보보드</button>
+            <button id="tab-news" class="tab-btn px-5 md:px-8 py-2 md:py-3 rounded-full font-bold text-sm md:text-base bg-white text-gray-600 border border-gray-200 hover:bg-gray-100" onclick="filterPosts('뉴스레터')">뉴스레터</button>
+        </div>
+
+        <div id="board-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            </div>
+
+        <div id="post-modal" class="fixed inset-0 z-50 hidden bg-black/60 overflow-y-auto pb-10 pt-24 px-4">
+            <div class="max-w-4xl mx-auto bg-white rounded-2xl shadow-2xl relative overflow-hidden">
+                <button onclick="closePost()" class="absolute top-4 right-4 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-full w-10 h-10 flex items-center justify-center font-bold transition z-10">✕</button>
+                <div id="post-header-image" class="w-full h-64 md:h-80 bg-gray-200 bg-cover bg-center hidden"></div>
+                <div class="p-8 md:p-12">
+                    <div class="flex items-center space-x-3 mb-6">
+                        <span id="post-type" class="bg-gray-800 text-white px-2 py-1 rounded text-xs font-bold">분류</span>
+                        <span id="post-category" class="bg-blue-100 text-brand px-3 py-1 rounded-md text-sm font-bold">카테고리</span>
+                        <span id="post-date" class="text-gray-500 text-sm">날짜</span>
+                    </div>
+                    <div id="post-content" class="markdown-body"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 📝 등록할 마크다운 파일 목록
+        const postFiles = [
+            'sample.md',
+            'creditscore.md' // 새로 만들어드린 신용점수 가이드 파일도 추가했습니다!
+        ];
+
+        let allPostsData = []; 
+        let currentFilteredPosts = []; // 클릭 버그 해결을 위해 현재 보여지는 리스트 전역 변수 추가
+
+        async function loadAllPosts() {
+            const boardGrid = document.getElementById('board-grid');
+            boardGrid.innerHTML = '<p class="col-span-3 text-center py-10 text-gray-500">데이터를 불러오는 중입니다...</p>';
+            allPostsData = [];
+
+            for (const file of postFiles) {
+                try {
+                    const response = await fetch('./' + file + '?v=' + new Date().getTime());
+                    if (!response.ok) continue; 
+                    
+                    const text = await response.text();
+                    const match = text.match(/---[\r\n]+([\s\S]+?)[\r\n]+---[\r\n]+([\s\S]+)/);
+                    
+                    if (match) {
+                        const frontmatterRaw = match[1];
+                        const markdownContent = match[2];
+                        
+                        const titleMatch = frontmatterRaw.match(/title:\s*"?([^"\n]+)"?/);
+                        const categoryMatch = frontmatterRaw.match(/category:\s*"?([^"\n]+)"?/);
+                        const typeMatch = frontmatterRaw.match(/type:\s*"?([^"\n]+)"?/);
+                        const dateMatch = frontmatterRaw.match(/date:\s*"?([^"\n]+)"?/);
+                        const thumbnailMatch = frontmatterRaw.match(/thumbnail:\s*"?([^"\n]+)"?/);
+                        const summaryMatch = frontmatterRaw.match(/summary:\s*"?([^"\n]+)"?/);
+
+                        allPostsData.push({
+                            title: titleMatch ? titleMatch[1] : '제목 없음',
+                            category: categoryMatch ? categoryMatch[1] : '공지',
+                            type: typeMatch ? typeMatch[1] : '정보보드', 
+                            date: dateMatch ? dateMatch[1] : '2000-01-01',
+                            thumbnail: thumbnailMatch ? thumbnailMatch[1] : '',
+                            summary: summaryMatch ? summaryMatch[1] : '',
+                            content: markdownContent
+                        });
+                    }
+                } catch (error) {
+                    console.error('파일 로드 실패:', file, error);
+                }
+            }
+
+            // 날짜 최신순으로 정렬
+            allPostsData.sort((a, b) => new Date(b.date) - new Date(a.date));
+            filterPosts('all');
+        }
+
+        function filterPosts(filterType) {
+            // 탭 활성화 디자인
+            const tabs = {
+                'all': document.getElementById('tab-all'),
+                '정보보드': document.getElementById('tab-board'),
+                '뉴스레터': document.getElementById('tab-news')
+            };
+
+            for (const key in tabs) {
+                if (key === filterType) {
+                    tabs[key].className = "tab-btn px-5 md:px-8 py-2 md:py-3 rounded-full font-bold text-sm md:text-base bg-brand text-white shadow-md";
+                } else {
+                    tabs[key].className = "tab-btn px-5 md:px-8 py-2 md:py-3 rounded-full font-bold text-sm md:text-base bg-white text-gray-600 border border-gray-200 hover:bg-gray-100";
+                }
+            }
+
+            // 데이터 필터링 후 현재 배열에 저장 (에러 방지 핵심)
+            if (filterType === 'all') {
+                currentFilteredPosts = allPostsData;
+            } else {
+                currentFilteredPosts = allPostsData.filter(post => post.type === filterType);
+            }
+
+            const boardGrid = document.getElementById('board-grid');
+            if (currentFilteredPosts.length === 0) {
+                boardGrid.innerHTML = `<p class="col-span-3 text-center py-16 text-gray-500 font-bold text-lg">등록된 글이 없습니다.</p>`;
+                return;
+            }
+
+            let htmlString = '';
+            // 인덱스(index) 번호를 활용해 클릭 이벤트 할당! 따옴표 에러 원천 차단 🌟
+            currentFilteredPosts.forEach((post, index) => {
+                const typeBadgeColor = post.type === '뉴스레터' ? 'bg-yellow-400 text-gray-900' : 'bg-gray-800 text-white';
+
+                htmlString += `
+                    <div class="bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden hover:shadow-xl transition cursor-pointer flex flex-col h-full transform hover:-translate-y-1" onclick="openPost(${index})">
+                        <div class="h-48 bg-gray-200 bg-cover bg-center relative" style="background-image: url('${post.thumbnail}');">
+                            <span class="absolute top-3 left-3 ${typeBadgeColor} px-2 py-1 rounded text-xs font-bold shadow-sm">${post.type}</span>
+                        </div>
+                        <div class="p-6 flex flex-col flex-grow">
+                            <div class="flex justify-between items-center mb-3">
+                                <span class="bg-blue-50 text-brand px-2 py-1 rounded text-xs font-bold">${post.category}</span>
+                                <span class="text-xs text-gray-500 font-medium">${post.date}</span>
+                            </div>
+                            <h3 class="font-bold text-xl mb-3 text-gray-800 leading-snug">${post.title}</h3>
+                            <p class="text-gray-600 text-sm flex-grow line-clamp-3">${post.summary}</p>
+                        </div>
+                    </div>
+                `;
+            });
+            boardGrid.innerHTML = htmlString;
+        }
+
+        // 인덱스를 받아와서 안전하게 열기
+        function openPost(index) {
+            const postData = currentFilteredPosts[index];
+            
+            const headerImage = document.getElementById('post-header-image');
+            if(postData.thumbnail) {
+                headerImage.style.backgroundImage = `url('${postData.thumbnail}')`;
+                headerImage.classList.remove('hidden');
+            } else {
+                headerImage.classList.add('hidden');
+            }
+            
+            document.getElementById('post-type').innerText = postData.type;
+            document.getElementById('post-category').innerText = postData.category;
+            document.getElementById('post-date').innerText = postData.date;
+            document.getElementById('post-content').innerHTML = marked.parse(postData.content);
+            
+            document.getElementById('post-modal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden'; 
+        }
+
+        function closePost() {
+            document.getElementById('post-modal').classList.add('hidden');
+            document.body.style.overflow = 'auto'; 
+        }
+
+        window.onload = loadAllPosts;
+    </script>
+</body>
+</html>
