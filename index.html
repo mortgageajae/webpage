@@ -398,7 +398,7 @@
                             </label>
                             <label class="flex items-start space-x-2 cursor-pointer">
                                 <input type="checkbox" class="mt-1 w-4 h-4 text-brand rounded focus:ring-brand" onchange="checkBenefit('gst', 4)">
-                                <span class="font-medium text-brand">2025년 5월 27일 이후 ~ 2031년 이전에 빌더와 주택 구매 계약을 체결했습니다.</span>
+                                <span>2025년 5월 27일 이후 ~ 2031년 이전에 빌더와 주택 구매 계약을 체결했습니다.</span>
                             </label>
                             <label class="flex items-start space-x-2 cursor-pointer">
                                 <input type="checkbox" class="mt-1 w-4 h-4 text-brand rounded focus:ring-brand" onchange="checkBenefit('gst', 4)">
@@ -422,7 +422,7 @@
                             </label>
                             <label class="flex items-start space-x-2 cursor-pointer">
                                 <input type="checkbox" class="mt-1 w-4 h-4 text-brand rounded focus:ring-brand" onchange="checkBenefit('eco', 2)">
-                                <span class="font-medium text-brand">해당 주택이 특정 에너지 효율 등급(LEED 등)을 인증받은 신축이거나, <span class="text-yellow-600 font-bold">또는</span> 기존 주택 구매 후 에너지 효율 개선 공사를 할 계획입니다.</span>
+                                <span>해당 주택이 특정 에너지 효율 등급(LEED 등)을 인증받은 신축이거나, <span class="text-yellow-600 font-bold">또는</span> 기존 주택 구매 후 에너지 효율 개선 공사를 할 계획입니다.</span>
                             </label>
                         </div>
                         <div id="result-eco" class="mt-4 p-3 bg-green-50 border border-green-200 text-green-800 text-center font-bold rounded hidden mb-4">🎉 보험료 25% 환급 신청이 가능합니다!</div>
@@ -643,11 +643,13 @@
                             const standardPTT = calculateStandardPTT(price);
                             let exemption = 0;
                             if (id === 'ptt-fthb') {
-                                if (price <= 835000) exemption = standardPTT;
-                                else if (price < 860000) exemption = standardPTT * ((860000 - price) / 25000);
-                            } else if (id === 'ptt-new') {
-                                if (price <= 1100000) exemption = standardPTT;
-                                else if (price < 1150000) exemption = standardPTT * ((1150000 - price) / 50000);
+                                if (price <= 500000) {
+                                    exemption = standardPTT; // 50만 불 이하는 전액 면제
+                                } else if (price <= 835000) {
+                                    exemption = 8000; // 50만~83.5만 불 사이는 딱 8,000불만 면제
+                                } else if (price < 860000) {
+                                    exemption = 8000 * ((860000 - price) / 25000); // 83.5만~86만 불 부분 면제 구간
+                                }
                             }
                             
                             if (exemption > 0) {
