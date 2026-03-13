@@ -52,6 +52,7 @@
                 <a href="#analysis" class="hover:text-brand transition text-brand">금리진단</a>
                 <a href="#tools" class="hover:text-brand transition">핵심도구</a>
                 <a href="#benefits" class="hover:text-brand transition">혜택진단</a>
+                <a href="#consolidation" class="hover:text-brand transition">부채통합</a>
                 <a href="board.html" class="hover:text-brand transition">정보보드</a>
                 <a href="https://calendar.app.google/zWG82EqskeBtwyeU7" class="hover:text-brand transition">미팅신청</a>
             </div>
@@ -74,34 +75,34 @@
     <section id="analysis" class="pt-8 pb-8 px-4 max-w-6xl mx-auto relative z-10">
         <div class="bg-white p-8 rounded-xl shadow-md border border-gray-200">
             <div class="bg-brand rounded-xl py-6 mb-4">
-                <h2 class="text-3xl md:text-3xl font-extrabold text-white text-center">모기지아재의 금리진단</h2>
+                <h2 class="text-2xl md:text-3xl font-extrabold text-white text-center">모기지아재의 금리진단</h2>
             </div>
             
-            <p class="text-center text-gray-600 font-medium mb-8">현재 제안받으신 금리들을 입력하시면, 최신의 BC주 시장 데이터와 대조하여 최적의 오퍼인지 분석해 드립니다.</p>
+            <p class="text-center text-sm text-gray-600 font-medium mb-8">현재 제안받으신 금리들을 입력하시면, 최신의 BC주 시장 데이터와 대조하여 최적의 오퍼인지 분석해 드립니다.</p>
 
             <form id="mortgageForm" action="https://script.google.com/macros/s/AKfycbwMIsYYOPnqUtDs_pJx4vZ1JG_yHEvj1uoLE4AgCU6DY88v-kgyPQ-bGqJr8qWi70NBiQ/exec" method="POST" class="space-y-6">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-sm font-bold text-gray-700 mb-1">성함</label>
-                        <input type="text" name="성함" required class="w-full border border-gray-300 focus:border-brand focus:ring-brand rounded-lg p-3 outline-none" placeholder="홍길동">
+                        <input type="text" name="성함" required class="w-full border border-gray-300 focus:border-brand focus:ring-brand rounded-lg p-2 text-sm outline-none" placeholder="홍길동">
                     </div>
                     <div>
                         <label class="block text-sm font-bold text-gray-700 mb-1">이메일 주소</label>
-                        <input type="text" id="emailInput" name="이메일 주소" required class="w-full border border-gray-300 focus:border-brand focus:ring-brand rounded-lg p-3 outline-none" placeholder="example@email.com">
+                        <input type="text" id="emailInput" name="이메일 주소" required class="w-full border border-gray-300 focus:border-brand focus:ring-brand rounded-lg p-2 text-sm outline-none" placeholder="example@email.com">
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-sm font-bold text-gray-700 mb-1">신용 점수가 680점 이상입니까?</label>
-                        <select name="신용 점수가 680점 이상입니까?" class="w-full border border-gray-300 focus:border-brand rounded-lg p-3 outline-none bg-white">
+                        <select name="신용 점수가 680점 이상입니까?" class="w-full border border-gray-300 focus:border-brand rounded-lg p-2 text-sm outline-none bg-white">
                             <option value="예">예 (680점 이상)</option>
                             <option value="아니오">아니오</option>
                         </select>
                     </div>
                     <div>
                         <label class="block text-sm font-bold text-gray-700 mb-1">주요 소득원 유형</label>
-                        <select name="주요 소득원 유형" required class="w-full border border-gray-300 focus:border-brand rounded-lg p-3 outline-none bg-white">
+                        <select name="주요 소득원 유형" required class="w-full border border-gray-300 focus:border-brand rounded-lg p-2 text-sm outline-none bg-white">
                             <option value="" disabled selected>선택해주세요</option>
                             <option value="직장인 (T4)">직장인 (T4)</option>
                             <option value="자영업 (Self-Employed)">자영업 (Self-Employed)</option>
@@ -114,14 +115,14 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-sm font-bold text-gray-700 mb-1">생애 최초구매 이신가요?</label>
-                        <select name="생애 최초구매" class="w-full border border-gray-300 focus:border-brand rounded-lg p-3 outline-none bg-white">
+                        <select name="생애 최초구매" class="w-full border border-gray-300 focus:border-brand rounded-lg p-2 text-sm outline-none bg-white">
                             <option value="예">예</option>
                             <option value="아니오" selected>아니오</option>
                         </select>
                     </div>
                     <div>
                         <label class="block text-sm font-bold text-gray-700 mb-1">주택 용도</label>
-                        <select name="주택 용도" class="w-full border border-gray-300 focus:border-brand rounded-lg p-3 outline-none bg-white">
+                        <select name="주택 용도" class="w-full border border-gray-300 focus:border-brand rounded-lg p-2 text-sm outline-none bg-white">
                             <option value="본인 거주용" selected>본인 거주용 (Owner Occupied)</option>
                             <option value="투자용">투자용 렌탈 (Rental Property)</option>
                         </select>
@@ -132,7 +133,7 @@
 
                 <div>
                     <label class="block text-sm font-bold text-gray-700 mb-1">신청 목적</label>
-                    <select id="purpose" name="신청 목적 (Purpose)" required onchange="toggleFields()" class="w-full border border-gray-300 focus:border-brand rounded-lg p-3 outline-none bg-white">
+                    <select id="purpose" name="신청 목적 (Purpose)" required onchange="toggleFields()" class="w-full border border-gray-300 focus:border-brand rounded-lg p-2 text-sm outline-none bg-white">
                         <option value="" disabled selected>선택해주세요</option>
                         <option value="신규 구매">신규구매 혹은 재융자 (Purchase / Refinance)</option>
                         <option value="Renewal">갱신 및 렌더변경 (Renewal / Switch)</option>
@@ -142,32 +143,32 @@
                 <div id="purchase-fields" class="hidden grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-sm font-bold text-gray-700 mb-1">주택 구매가격 ($)</label>
-                        <input type="number" name="주택 구매 가격" class="w-full border border-gray-300 focus:border-brand rounded-lg p-3 outline-none" placeholder="1000000">
+                        <input type="number" name="주택 구매 가격" class="w-full border border-gray-300 focus:border-brand rounded-lg p-2 text-sm outline-none" placeholder="1000000">
                     </div>
                     <div>
                         <label class="block text-sm font-bold text-gray-700 mb-1">다운페이먼트 금액 ($)</label>
-                        <input type="number" name="다운페이먼트 금액" class="w-full border border-gray-300 focus:border-brand rounded-lg p-3 outline-none" placeholder="200000">
+                        <input type="number" name="다운페이먼트 금액" class="w-full border border-gray-300 focus:border-brand rounded-lg p-2 text-sm outline-none" placeholder="200000">
                     </div>
                 </div>
 
                 <div id="renewal-fields" class="hidden space-y-4">
-                    <div class="bg-blue-50 p-4 rounded-lg border border-blue-100">
-                        <label class="block text-sm font-bold text-brand mb-1">최초 주택구매 연월</label>
-                        <input type="month" id="originalDate" name="최초구매연월" onchange="checkDate()" class="w-full border border-gray-300 focus:border-brand rounded-lg p-2 outline-none">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">최초 주택구매 연월</label>
+                        <input type="month" id="originalDate" name="최초구매연월" onchange="checkDate()" class="w-full border border-gray-300 focus:border-brand rounded-lg p-2 text-sm outline-none">
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-sm font-bold text-gray-700 mb-1">현재 시장가치 ($)</label>
-                            <input type="number" name="현재 시장 가치" class="w-full border border-gray-300 focus:border-brand rounded-lg p-3 outline-none" placeholder="1000000">
+                            <input type="number" name="현재 시장 가치" class="w-full border border-gray-300 focus:border-brand rounded-lg p-2 text-sm outline-none" placeholder="1000000">
                         </div>
                         <div>
                             <label class="block text-sm font-bold text-gray-700 mb-1">필요한 모기지금액 ($)</label>
-                            <input type="number" name="필요한 모기지 금액" class="w-full border border-gray-300 focus:border-brand rounded-lg p-3 outline-none" placeholder="남은 대출 잔액">
+                            <input type="number" name="필요한 모기지 금액" class="w-full border border-gray-300 focus:border-brand rounded-lg p-2 text-sm outline-none" placeholder="남은 대출 잔액">
                         </div>
                     </div>
                     <div id="original-price-container" class="hidden">
                         <label class="block text-sm font-bold text-gray-700 mb-1">최초 구매금액 ($)</label>
-                        <input type="number" name="최초 구매금액" class="w-full border border-gray-300 focus:border-brand rounded-lg p-3 outline-none" placeholder="과거 구매 가격">
+                        <input type="number" name="최초 구매금액" class="w-full border border-gray-300 focus:border-brand rounded-lg p-2 text-sm outline-none" placeholder="과거 구매 가격">
                     </div>
                 </div>
 
@@ -175,7 +176,7 @@
 
                 <div>
                     <label class="block text-sm font-bold text-gray-700 mb-1">제안받은 은행/렌더 이름</label>
-                    <input type="text" name="렌더이름 입력해주세요" class="w-full border border-gray-300 focus:border-brand focus:ring-brand rounded-lg p-3 outline-none" placeholder="예: TD Bank, RBC 등">
+                    <input type="text" name="렌더이름 입력해주세요" class="w-full border border-gray-300 focus:border-brand focus:ring-brand rounded-lg p-2 text-sm outline-none" placeholder="예: TD Bank, RBC 등">
                 </div>
 
                 <div class="bg-gray-50 p-6 rounded-xl border border-gray-200">
@@ -183,15 +184,15 @@
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
                             <label class="block text-xs text-gray-500 font-bold mb-1">3Y Fixed (%)</label>
-                            <input type="number" step="0.01" id="rate3F" name="3-Year Fixed Rate" class="w-full border border-gray-300 focus:border-brand rounded-lg p-2 text-center outline-none" placeholder="예: 4.89">
+                            <input type="number" step="0.01" id="rate3F" name="3-Year Fixed Rate" class="w-full border border-gray-300 focus:border-brand rounded-lg p-2 text-sm text-center outline-none" placeholder="예: 4.89">
                         </div>
                         <div>
                             <label class="block text-xs text-gray-500 font-bold mb-1">5Y Fixed (%)</label>
-                            <input type="number" step="0.01" id="rate5F" name="5-Year Fixed Rate" class="w-full border border-gray-300 focus:border-brand rounded-lg p-2 text-center outline-none" placeholder="예: 4.59">
+                            <input type="number" step="0.01" id="rate5F" name="5-Year Fixed Rate" class="w-full border border-gray-300 focus:border-brand rounded-lg p-2 text-sm text-center outline-none" placeholder="예: 4.59">
                         </div>
                         <div>
                             <label class="block text-xs text-gray-500 font-bold mb-1">5Y Variable (%)</label>
-                            <input type="number" step="0.01" id="rate5V" name="5-Year Variable Rate" class="w-full border border-gray-300 focus:border-brand rounded-lg p-2 text-center outline-none" placeholder="예: 5.70">
+                            <input type="number" step="0.01" id="rate5V" name="5-Year Variable Rate" class="w-full border border-gray-300 focus:border-brand rounded-lg p-2 text-sm text-center outline-none" placeholder="예: 5.70">
                         </div>
                     </div>
                 </div>
@@ -214,7 +215,7 @@
             
             <div class="bg-white p-8 rounded-xl shadow-md border border-gray-200 flex flex-col">
                 <div class="bg-brand rounded-xl py-6 mb-8">
-                    <h2 class="text-3xl md:text-3xl font-extrabold text-white text-center">대출한도 계산</h2>
+                    <h2 class="text-2xl md:text-3xl font-extrabold text-white text-center">대출한도 계산</h2>
                 </div>
                 
                 <div class="space-y-4 text-sm flex-grow">
@@ -263,7 +264,7 @@
 
             <div class="bg-white p-8 rounded-xl shadow-md border border-gray-200 flex flex-col">
                 <div class="bg-brand rounded-xl py-6 mb-8">
-                    <h2 class="text-3xl md:text-3xl font-extrabold text-white text-center">페이먼트 및 잔액계산</h2>
+                    <h2 class="text-2xl md:text-3xl font-extrabold text-white text-center">페이먼트 및 잔액계산</h2>
                 </div>
                 
                 <div class="space-y-4 text-sm flex-grow">
@@ -324,7 +325,7 @@
     <section id="benefits" class="py-12 px-4 max-w-6xl mx-auto">
         <div class="bg-white p-8 rounded-xl shadow-md border border-gray-200">
             <div class="bg-brand rounded-xl py-6 mb-8">
-                <h2 class="text-3xl md:text-3xl font-extrabold text-white text-center">정부혜택진단</h2>
+                <h2 class="text-2xl md:text-3xl font-extrabold text-white text-center">정부혜택진단</h2>
             </div>
             
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -489,13 +490,13 @@
         <div class="bg-white p-8 rounded-xl shadow-md border border-gray-200 flex flex-col">
             
             <div class="bg-brand rounded-xl py-6 mb-8">
-                <h2 class="text-3xl md:text-3xl font-extrabold text-white text-center">부채통합 계산</h2>
+                <h2 class="text-2xl md:text-3xl font-extrabold text-white text-center">부채통합 계산</h2>
             </div>
             
             <div class="space-y-10">
                 
                 <div>
-                    <h3 class="text-xl font-bold text-gray-800 mb-4 border-b-2 border-brand/20 pb-2">1. 주택 및 기존모기지 정보</h3>
+                    <h3 class="text-lg font-bold text-gray-800 mb-4 border-b-2 border-brand/20 pb-2">1. 주택 및 기존모기지 정보</h3>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                         <div class="bg-blue-50 p-3 rounded-lg border border-blue-100">
@@ -545,8 +546,8 @@
 
                     <div class="p-5 bg-brand-light rounded-xl border border-brand/20 fade-in">
                         <div class="flex justify-between items-center mb-3">
-                            <h4 class="font-extrabold text-brand text-sm">💡 현재 모기지 실시간 요약</h4>
-                            <span class="text-sm text-brand-dark bg-white px-2 py-1 rounded shadow-sm border border-brand/10 font-bold" id="rt-remaining-term">남은기간: -개월</span>
+                            <h4 class="font-extrabold text-brand text-sm">💡 현재 모기지 요약</h4>
+                            <span class="text-xs text-brand-dark bg-white px-2 py-1 rounded shadow-sm border border-brand/10 font-bold" id="rt-remaining-term">남은기간: -개월</span>
                         </div>
                         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center md:text-left">
                             <div>
@@ -557,7 +558,7 @@
                                 <span class="text-gray-500 text-sm font-bold block mb-1">현재 월 페이먼트</span>
                                 <span class="font-bold text-gray-800 text-lg" id="rt-monthly-pmt">$0</span>
                             </div>
-                            <div class="border-t md:border-t-0 md:border-l border-brand/20 pt-2 md:pt-0 md:pl-4">
+                            <div>
                                 <span class="text-gray-500 text-sm font-bold block mb-1">이번 달 원금 상환액</span>
                                 <span class="font-bold text-brand text-lg" id="rt-principal-part">$0</span>
                             </div>
@@ -571,14 +572,14 @@
 
                 <div>
                     <div class="flex justify-between items-center mb-4 border-b-2 border-brand/20 pb-2">
-                        <h3 class="text-xl font-bold text-gray-800">2. 통합할 기타부채</h3>
-                        <button type="button" onclick="addDebtRow()" class="bg-gray-100 hover:bg-gray-200 text-gray-800 text-sm font-bold py-1 px-3 rounded-lg shadow-sm border border-gray-300 transition">➕ 부채 추가</button>
+                        <h3 class="text-lg font-bold text-gray-800">2. 통합할 기타부채</h3>
+                        <button type="button" onclick="addDebtRow()" class="bg-gray-100 hover:bg-gray-200 text-gray-800 text-xs font-bold py-1 px-3 rounded-lg shadow-sm border border-gray-300 transition">➕ 부채 추가</button>
                     </div>
                     <div id="debt-rows-container" class="space-y-3"></div>
                 </div>
 
                 <div>
-                    <h3 class="text-xl font-bold text-gray-800 mb-4 border-b-2 border-brand/20 pb-2">3. 새로운 리파이낸싱 조건 및 비용</h3>
+                    <h3 class="text-lg font-bold text-gray-800 mb-4 border-b-2 border-brand/20 pb-2">3. 새로운 리파이낸싱 조건 및 비용</h3>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
                         
@@ -678,12 +679,12 @@
 
     <section class="pb-16 px-4 max-w-7xl mx-auto mt-12">
         <div class="bg-brand-light border-2 border-brand/20 rounded-xl p-8 md:p-12 text-center shadow-sm max-w-4xl mx-auto">
-            <h3 class="text-2xl md:text-3xl font-bold text-brand mb-3">혜택적용과 한도계산이 복잡하게 느껴지시나요?</h3>
-            <p class="text-gray-700 mb-8 text-lg">매의 눈으로 고객님의 상황을 분석하여 단 1%의 혜택도 놓치지 않는 맞춤 전략을 세워드립니다.</p>
+            <h3 class="text-2xl md:text-3xl font-bold text-brand mb-3">혜택적용과 한도계산이 <br> 복잡하게 느껴지시나요?</h3>
+            <p class="text-gray-700 mb-8 text-lg">매의 눈으로 고객님의 상황을 분석하여 <br> 단 1%의 혜택도 놓치지 않는 맞춤 전략을 세워드립니다.</p>
             
             <div class="flex flex-col items-center justify-center gap-4 mt-6">
                 <a href="https://calendar.app.google/zWG82EqskeBtwyeU7" target="_blank" class="inline-block w-full md:w-auto bg-brand hover:bg-brand-dark text-white font-bold text-lg md:text-xl py-4 px-12 rounded-full transition shadow-xl border-none outline-none">
-                    🎥 Google Meet 1:1   화상상담 예약하기
+                    🎥 Google Meet 1:1 <br>화상상담 예약하기
                 </a>
             </div>
         </div>
@@ -944,23 +945,23 @@
             row.id = `debt-row-${debtCount}`;
             row.innerHTML = `
                 <div class="col-span-12 md:col-span-3">
-                    <label class="block text-xs font-bold text-gray-600 mb-1">부채 종류</label>
+                    <label class="block text-sm font-bold text-gray-600 mb-1">부채 종류</label>
                     <input type="text" class="w-full border border-gray-300 rounded-md p-2 text-sm outline-none" placeholder="신용카드, 자동차 등">
                 </div>
                 <div class="col-span-12 md:col-span-3">
-                    <label class="block text-xs font-bold text-gray-600 mb-1">남은 원금 ($)</label>
+                    <label class="block text-sm font-bold text-gray-600 mb-1">남은 원금 ($)</label>
                     <input type="number" class="debt-bal w-full border border-gray-300 rounded-md p-2 text-sm outline-none" placeholder="예: 25000">
                 </div>
                 <div class="col-span-12 md:col-span-2">
-                    <label class="block text-xs font-bold text-gray-600 mb-1">이자율 (%)</label>
+                    <label class="block text-sm font-bold text-gray-600 mb-1">이자율 (%)</label>
                     <input type="number" step="0.1" class="debt-rate w-full border border-gray-300 rounded-md p-2 text-sm outline-none" placeholder="예: 19.9">
                 </div>
                 <div class="col-span-12 md:col-span-3">
-                    <label class="block text-xs font-bold text-gray-600 mb-1">현재 월 페이먼트 ($)</label>
+                    <label class="block text-sm font-bold text-gray-600 mb-1">현재 월 페이먼트 ($)</label>
                     <input type="number" class="debt-pmt w-full border border-gray-300 rounded-md p-2 text-sm outline-none" placeholder="예: 800">
                 </div>
                 <div class="col-span-12 md:col-span-1 flex justify-center pb-1">
-                    <button type="button" onclick="removeDebtRow('${row.id}')" class="text-red-500 hover:text-red-700 font-bold bg-white border border-red-200 rounded p-2" title="삭제">✕</button>
+                    <button type="button" onclick="removeDebtRow('${row.id}')" class="text-red-500 hover:text-red-700 font-bold bg-white border border-red-200 rounded p-2 text-xs" title="삭제">삭제 ✕</button>
                 </div>
             `;
             container.appendChild(row);
