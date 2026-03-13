@@ -48,7 +48,7 @@
             </a>
         </div>
         <div class="border-t border-gray-100 py-3 md:py-4 bg-white">
-            <div class="max-w-6xl mx-auto px-4 flex justify-center space-x-6 md:space-x-12 text-sm md:text-lg font-bold text-gray-700">
+            <div class="max-w-6xl mx-auto px-2 flex justify-center space-x-3 sm:space-x-6 md:space-x-12 text-xs sm:text-sm md:text-lg font-bold text-gray-700 whitespace-nowrap overflow-x-auto no-scrollbar">
                 <a href="#analysis" class="hover:text-brand transition text-brand">금리진단</a>
                 <a href="#tools" class="hover:text-brand transition">핵심도구</a>
                 <a href="#benefits" class="hover:text-brand transition">혜택진단</a>
@@ -279,7 +279,7 @@
                     </div>
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <label class="block font-medium text-gray-700">Amortization</label>
+                            <label class="block font-medium text-gray-700">Amortization (년)</label>
                             <input type="number" id="calc2-amortization" class="mt-1 block w-full border border-gray-300 focus:border-yellow-500 focus:ring-yellow-500 rounded-md p-2 outline-none bg-white" value="30" placeholder="예: 30">
                         </div>
                         <div>
@@ -485,24 +485,214 @@
         </div>
     </section>
 
-    <section class="pb-16 px-4 max-w-7xl mx-auto">
+    <section id="consolidation" class="pb-12 px-4 max-w-6xl mx-auto">
+        <div class="bg-white p-8 rounded-xl shadow-md border border-gray-200 flex flex-col">
+            
+            <div class="bg-brand rounded-xl py-6 mb-8">
+                <h2 class="text-3xl md:text-3xl font-extrabold text-white text-center">부채통합 계산</h2>
+            </div>
+            
+            <div class="space-y-10">
+                
+                <div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-4 border-b-2 border-brand/20 pb-2">1. 주택 및 기존모기지 정보</h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <div class="bg-blue-50 p-3 rounded-lg border border-blue-100">
+                            <label class="block font-bold text-brand-dark text-sm mb-1">현재 예상주택가치 ($)</label>
+                            <input type="number" id="dc-home-value" class="w-full border border-gray-300 focus:border-brand rounded-md p-2 text-sm outline-none bg-white" placeholder="예: 1000000">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                        <div>
+                            <label class="block font-bold text-gray-700 text-sm mb-1">대출원금 ($)</label>
+                            <input type="number" id="dc-orig-principal" oninput="updateCurrentMortgageInfo()" class="w-full border border-gray-300 focus:border-brand rounded-md p-2 text-sm outline-none" placeholder="예: 500000">
+                        </div>
+                        <div>
+                            <label class="block font-bold text-gray-700 text-sm mb-1">상환기간 (Amortization, 년)</label>
+                            <input type="number" id="dc-orig-amz" oninput="updateCurrentMortgageInfo()" class="w-full border border-gray-300 focus:border-brand rounded-md p-2 text-sm outline-none" placeholder="예: 25">
+                        </div>
+                        <div>
+                            <label class="block font-bold text-gray-700 text-sm mb-1">계약기간 (Term, 년)</label>
+                            <select id="dc-orig-term" onchange="updateCurrentMortgageInfo()" class="w-full border border-gray-300 focus:border-brand rounded-md p-2 text-sm outline-none bg-white">
+                                <option value="3">3년</option>
+                                <option value="5" selected>5년</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                        <div class="col-span-1 md:col-span-1">
+                            <label class="block font-bold text-gray-700 text-sm mb-1">경과기간 (납부한기간)</label>
+                            <div class="flex space-x-2">
+                                <input type="number" id="dc-elapsed-years" oninput="updateCurrentMortgageInfo()" class="w-1/2 border border-gray-300 focus:border-brand rounded-md p-2 text-sm outline-none" placeholder="년(예: 3)">
+                                <input type="number" id="dc-elapsed-months" oninput="updateCurrentMortgageInfo()" class="w-1/2 border border-gray-300 focus:border-brand rounded-md p-2 text-sm outline-none" placeholder="개월(예: 6)">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block font-bold text-gray-700 text-sm mb-1">현재금리 (%)</label>
+                            <input type="number" step="0.01" id="dc-orig-rate" oninput="updateCurrentMortgageInfo()" class="w-full border border-gray-300 focus:border-brand rounded-md p-2 text-sm outline-none" placeholder="예: 4.5">
+                        </div>
+                        <div>
+                            <label class="block font-bold text-gray-700 text-sm mb-1">금리종류</label>
+                            <select id="dc-rate-type" onchange="toggleIrdInput(); updateCurrentMortgageInfo();" class="w-full border border-gray-300 focus:border-brand rounded-md p-2 text-sm outline-none bg-white">
+                                <option value="variable" selected>변동 (Variable)</option>
+                                <option value="fixed">고정 (Fixed)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="p-5 bg-brand-light rounded-xl border border-brand/20 fade-in">
+                        <div class="flex justify-between items-center mb-3">
+                            <h4 class="font-extrabold text-brand text-sm">💡 현재 모기지 실시간 요약</h4>
+                            <span class="text-sm text-brand-dark bg-white px-2 py-1 rounded shadow-sm border border-brand/10 font-bold" id="rt-remaining-term">남은기간: -개월</span>
+                        </div>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center md:text-left">
+                            <div>
+                                <span class="text-gray-500 text-sm font-bold block mb-1">남은 원금 총액</span>
+                                <span class="font-bold text-gray-800 text-xl" id="rt-rem-principal">$0</span>
+                            </div>
+                            <div>
+                                <span class="text-gray-500 text-sm font-bold block mb-1">현재 월 페이먼트</span>
+                                <span class="font-bold text-gray-800 text-xl" id="rt-monthly-pmt">$0</span>
+                            </div>
+                            <div class="border-t md:border-t-0 md:border-l border-brand/20 pt-2 md:pt-0 md:pl-4">
+                                <span class="text-gray-500 text-sm font-bold block mb-1">이번 달 원금 상환액</span>
+                                <span class="font-bold text-brand text-lg" id="rt-principal-part">$0</span>
+                            </div>
+                            <div>
+                                <span class="text-gray-500 text-xs font-bold block mb-1">이번 달 이자 납부액</span>
+                                <span class="font-bold text-red-500 text-lg" id="rt-interest-part">$0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="flex justify-between items-center mb-4 border-b-2 border-brand/20 pb-2">
+                        <h3 class="text-xl font-bold text-gray-800">2. 통합할 기타 부채 (신용카드, 차량 등)</h3>
+                        <button type="button" onclick="addDebtRow()" class="bg-gray-100 hover:bg-gray-200 text-gray-800 text-sm font-bold py-1 px-3 rounded-lg shadow-sm border border-gray-300 transition">➕ 부채 추가</button>
+                    </div>
+                    <div id="debt-rows-container" class="space-y-3"></div>
+                </div>
+
+                <div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-4 border-b-2 border-brand/20 pb-2">3. 새로운 리파이낸싱 조건 및 비용</h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+                        
+                        <div class="bg-gray-50 p-5 rounded-xl border border-gray-200 shadow-sm relative">
+                            <label class="block font-bold text-gray-700 text-sm mb-1">추산 페널티 금액 ($)</label>
+                            <input type="number" id="dc-penalty" class="w-full border border-gray-300 focus:border-brand rounded-md p-2 text-sm outline-none font-bold text-red-600 mb-2 bg-white" placeholder="직접 입력 또는 아래 자동계산">
+                            
+                            <a href="penalty-links.html" target="_blank" class="inline-block text-xs bg-white border border-gray-300 text-gray-700 px-3 py-1.5 rounded-lg hover:bg-gray-100 transition font-bold mb-3 shadow-sm">🔗 은행별 고시금리(Posted Rates) 확인하기 ↗</a>
+                            
+                            <div id="ird-panel" class="hidden pt-3 border-t border-gray-200">
+                                <label class="block text-sm font-bold text-brand mb-3">📌 고정금리 IRD 계산</label>
+                                <div class="grid grid-cols-2 gap-3 mb-3">
+                                    <div>
+                                        <label class="block text-xs font-bold text-gray-600 mb-1">계약시 할인폭(Discount, %)</label>
+                                        <input type="number" step="0.01" id="dc-ird-discount" class="w-full border border-gray-300 rounded-md p-2 text-sm outline-none bg-white" placeholder="예: 2.00">
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-bold text-gray-600 mb-1">잔여기간 Posted 금리 (%)</label>
+                                        <input type="number" step="0.01" id="dc-ird-posted" class="w-full border border-gray-300 rounded-md p-2 text-sm outline-none bg-white" placeholder="예: 4.50">
+                                    </div>
+                                </div>
+                                <button type="button" onclick="estimatePenalty()" class="w-full text-sm bg-brand hover:bg-brand-dark text-white py-2.5 rounded-lg font-bold transition shadow-sm mb-3">Max (3개월 이자, IRD) 계산</button>
+                                
+                                <div class="bg-red-50 border border-red-200 p-3 rounded-lg">
+                                    <p class="text-xs text-red-700 font-bold mb-1">⚠️ 확인이 어려운 경우:</p>
+                                    <p class="text-[11px] text-red-600 leading-snug">각 은행별로 IRD 계산공식 및 Posted 금리 기준일이 다를 수 있습니다. 정확한 수치를 모를 경우 반드시 **현재 대출 은행에 직접 연락하여 정확한 페널티를 확인**하시기 바랍니다.</p>
+                                </div>
+                            </div>
+
+                            <div id="variable-penalty-btn">
+                                <button type="button" onclick="estimatePenalty()" class="w-full text-sm bg-brand hover:bg-brand-dark text-white py-2.5 rounded-lg font-bold transition shadow-sm">3개월 이자 페널티 자동계산</button>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block font-bold text-gray-700 text-sm mb-1">기타 부대비용 ($) (Legal, Appraisal 등)</label>
+                            <input type="number" id="dc-legal-fee" class="w-full border border-gray-300 focus:border-brand rounded-md p-2 text-sm outline-none bg-white" placeholder="예: 2000" value="2000">
+                            
+                            <label class="block font-bold text-gray-700 text-sm mb-1 mt-5">새로운 상환기간 (년)</label>
+                            <input type="number" id="dc-new-amz" class="w-full border border-gray-300 focus:border-brand rounded-md p-2 text-sm outline-none bg-white" placeholder="예: 30" value="30">
+                            
+                            <label class="block font-bold text-gray-700 text-sm mb-1 mt-5">새로운 예상금리 (%)</label>
+                            <input type="number" step="0.01" id="dc-new-rate" class="w-full border border-gray-300 focus:border-brand rounded-md p-2 text-sm outline-none bg-white" placeholder="예: 3.89">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center mt-10">
+                    <button type="button" onclick="calculateConsolidation()" class="inline-block bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-extrabold text-lg md:text-xl py-4 px-12 md:px-20 rounded-full shadow-xl transition cursor-pointer border-none outline-none">부채통합 분석 및 결과보기</button>
+                </div>
+
+                <div id="consolidation-result" class="hidden mt-10 space-y-6 fade-in">
+                    
+                    <div id="ltv-alert" class="p-4 rounded-xl font-bold text-center border"></div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-gray-100 p-6 rounded-xl border border-gray-200 shadow-sm">
+                            <h4 class="text-lg font-bold text-gray-600 border-b border-gray-300 pb-2 mb-4">현재 납부상황 (Before)</h4>
+                            <div class="flex justify-between mb-2"><span class="text-sm">기존 모기지 월 페이먼트:</span> <span class="font-bold" id="res-old-mortgage-pmt">$0</span></div>
+                            <div class="flex justify-between mb-2"><span class="text-sm">기타 부채 월 페이먼트 합계:</span> <span class="font-bold" id="res-old-other-pmt">$0</span></div>
+                            <div class="flex justify-between mb-2 text-red-500"><span class="text-sm">현재 발생중인 월 총이자:</span> <span class="font-bold" id="res-old-interest">$0</span></div>
+                            <div class="flex justify-between mt-4 pt-4 border-t border-gray-300 text-lg">
+                                <span class="font-bold">현재 총 월 상환액:</span> 
+                                <span class="font-extrabold text-gray-800" id="res-old-total-pmt">$0</span>
+                            </div>
+                        </div>
+
+                        <div class="bg-blue-50 p-6 rounded-xl border border-blue-200 shadow-sm">
+                            <h4 class="text-lg font-bold text-brand border-b border-blue-200 pb-2 mb-4">리파이낸싱 통합후 (After)</h4>
+                            <div class="flex justify-between mb-2"><span class="text-sm">새로운 총 대출원금:</span> <span class="font-bold text-gray-700" id="res-new-principal">$0</span></div>
+                            <div class="flex justify-between mb-2 text-brand"><span class="text-sm">새로운 월 발생이자:</span> <span class="font-bold" id="res-new-interest">$0</span></div>
+                            <div class="flex justify-between mt-4 pt-4 border-t border-blue-200 text-lg">
+                                <span class="font-bold text-brand">새로운 총 월 상환액:</span> 
+                                <span class="font-extrabold text-brand" id="res-new-total-pmt">$0</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-green-50 border-2 border-green-400 p-6 rounded-2xl text-center shadow-lg">
+                            <p class="text-green-800 font-bold text-lg mb-1">🎉 매월 늘어나는 여유자금</p>
+                            <p class="text-sm text-green-700 mb-3">(Cashflow 확보)</p>
+                            <p class="text-4xl md:text-5xl font-extrabold text-green-600" id="res-monthly-savings">+$0</p>
+                        </div>
+                        
+                        <div class="bg-indigo-50 border-2 border-indigo-400 p-6 rounded-2xl text-center shadow-lg">
+                            <p class="text-indigo-800 font-bold text-lg mb-1">📉 매월 아끼는 순수 이자비용</p>
+                            <p class="text-sm text-indigo-700 mb-3">(증발하는 비용 절감액)</p>
+                            <p class="text-4xl md:text-5xl font-extrabold text-indigo-600" id="res-interest-savings">+$0</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="pb-16 px-4 max-w-7xl mx-auto mt-12">
         <div class="bg-brand-light border-2 border-brand/20 rounded-xl p-8 md:p-12 text-center shadow-sm max-w-4xl mx-auto">
-            <h3 class="text-2xl md:text-3xl font-bold text-brand mb-3">혜택 적용과 한도 계산이 복잡하게 느껴지시나요?</h3>
-            <p class="text-gray-700 mb-8 text-lg">엔지니어의 시각으로 고객님의 상황을 분석하여 단 1%의 혜택도 놓치지 않는 맞춤 전략을 세워드립니다.</p>
+            <h3 class="text-2xl md:text-3xl font-bold text-brand mb-3">혜택적용과 한도계산이 복잡하게 느껴지시나요?</h3>
+            <p class="text-gray-700 mb-8 text-lg">매의 눈으로 고객님의 상황을 분석하여 단 1%의 혜택도 놓치지 않는 맞춤 전략을 세워드립니다.</p>
             
             <div class="flex flex-col items-center justify-center gap-4 mt-6">
                 <a href="https://calendar.app.google/zWG82EqskeBtwyeU7" target="_blank" class="inline-block w-full md:w-auto bg-brand hover:bg-brand-dark text-white font-bold text-lg md:text-xl py-4 px-12 rounded-full transition shadow-xl border-none outline-none">
-                    🎥 Google Meet 1:1 화상 상담 예약하기
+                    🎥 Google Meet 1:1 화상상담 예약하기
                 </a>
-                
             </div>
         </div>
     </section>
 
     <footer class="bg-gray-900 text-gray-400 py-8 text-center text-sm">
-        <p>Justin Bae | P.Eng, Registered Mortgage Broker (BCFSA)</p>
+        <p>Justin Bae | M.Sc. P.Eng Registered Mortgage Broker (BCFSA)</p>
         <p class="mt-2">Email: jb@mortgageajae.ca | Phone: 250-581-6862 | KakaoTalk: mortgageajae</p>
-        <p class="mt-4 text-xs text-gray-600">&copy; 2026 Mortgage Ajae. All rights reserved.</p>
+        <p class="mt-4 text-xs text-gray-600">&copy; 2026 Mortgageajae. All rights reserved.</p>
     </footer>
 
     <script>
@@ -510,18 +700,19 @@
             return new Intl.NumberFormat('en-CA', { style: 'currency', currency: 'CAD', maximumFractionDigits: 0 }).format(num);
         }
 
+        // === 핵심 버그 수정: 캐나다 모기지 월 복리 변환 함수 복구 ===
+        function getCanadianMonthlyRate(annualRatePercentage) {
+            let r = annualRatePercentage / 100;
+            return Math.pow(1 + (r / 2), 2 / 12) - 1;
+        }
+
         function calculateStandardPTT(price) {
             if (price <= 0) return 0;
             let ptt = 0;
-            if (price <= 200000) {
-                ptt = price * 0.01;
-            } else if (price <= 2000000) {
-                ptt = 200000 * 0.01 + (price - 200000) * 0.02;
-            } else if (price <= 3000000) {
-                ptt = 200000 * 0.01 + 1800000 * 0.02 + (price - 2000000) * 0.03;
-            } else {
-                ptt = 200000 * 0.01 + 1800000 * 0.02 + 1000000 * 0.03 + (price - 3000000) * 0.05;
-            }
+            if (price <= 200000) { ptt = price * 0.01; } 
+            else if (price <= 2000000) { ptt = 200000 * 0.01 + (price - 200000) * 0.02; } 
+            else if (price <= 3000000) { ptt = 200000 * 0.01 + 1800000 * 0.02 + (price - 2000000) * 0.03; } 
+            else { ptt = 200000 * 0.01 + 1800000 * 0.02 + 1000000 * 0.03 + (price - 3000000) * 0.05; }
             return ptt;
         }
 
@@ -542,7 +733,6 @@
 
             const maxPiGDS = (monthlyIncome * 0.39) - housingCosts;
             const maxPiTDS = (monthlyIncome * 0.44) - housingCosts - otherDebtMonthly;
-
             const actualMaxPi = Math.min(maxPiGDS, maxPiTDS);
             
             if (actualMaxPi <= 0) {
@@ -579,14 +769,9 @@
 
             let payment = 0; let periodRate = 0; let periodsInTerm = 0;
 
-            if (frequency === 'monthly') {
-                payment = pmtMonthly; periodRate = monthlyRate; periodsInTerm = termYears * 12;
-            } else if (frequency === 'biweekly') {
-                payment = principal * (biweeklyRate * Math.pow(1 + biweeklyRate, amzYears * 26)) / (Math.pow(1 + biweeklyRate, amzYears * 26) - 1);
-                periodRate = biweeklyRate; periodsInTerm = termYears * 26;
-            } else if (frequency === 'accel_biweekly') {
-                payment = pmtMonthly / 2; periodRate = biweeklyRate; periodsInTerm = termYears * 26;
-            }
+            if (frequency === 'monthly') { payment = pmtMonthly; periodRate = monthlyRate; periodsInTerm = termYears * 12; } 
+            else if (frequency === 'biweekly') { payment = principal * (biweeklyRate * Math.pow(1 + biweeklyRate, amzYears * 26)) / (Math.pow(1 + biweeklyRate, amzYears * 26) - 1); periodRate = biweeklyRate; periodsInTerm = termYears * 26; } 
+            else if (frequency === 'accel_biweekly') { payment = pmtMonthly / 2; periodRate = biweeklyRate; periodsInTerm = termYears * 26; }
 
             let balance = principal; let totalInterest = 0;
             for (let i = 0; i < periodsInTerm; i++) {
@@ -609,7 +794,6 @@
             const container = document.getElementById(`benefit-${id}`);
             const checkboxes = container.querySelectorAll('input[type="checkbox"]');
             const resultDiv = document.getElementById(`result-${id}`);
-            
             let checkedCount = 0;
             checkboxes.forEach(cb => { if (cb.checked) checkedCount++; });
 
@@ -617,20 +801,12 @@
                 if (id === 'ptt-fthb' || id === 'ptt-new' || id === 'gst') {
                     const priceInput = document.getElementById(`price-${id}`);
                     resultDiv.className = "mt-4 p-3 text-center font-bold rounded transition border mb-4"; 
-
                     if (priceInput && priceInput.value) {
                         const price = parseFloat(priceInput.value);
-                        
                         if (id === 'gst') {
-                            let rebate = 0;
-                            let gstPaid = price * 0.05;
-
-                            if (price <= 1000000) {
-                                rebate = price * 0.05; 
-                            } else if (price < 1500000) {
-                                rebate = 50000 * ((1500000 - price) / 500000); 
-                            }
-                            
+                            let rebate = 0; let gstPaid = price * 0.05;
+                            if (price <= 1000000) { rebate = price * 0.05; } 
+                            else if (price < 1500000) { rebate = 50000 * ((1500000 - price) / 500000); }
                             if (rebate > 0) {
                                 let rebateType = price <= 1000000 ? "전액 리베이트" : "부분 리베이트";
                                 resultDiv.innerHTML = `🎉 연방 GST ${rebateType} 신청 가능:<br><span class="text-xl font-extrabold text-brand">${formatCurrency(rebate)}</span><br><span class="text-xs font-normal mt-1 text-gray-600 block">(납부해야 할 연방 GST 5%: ${formatCurrency(gstPaid)})</span>`;
@@ -643,18 +819,13 @@
                             const standardPTT = calculateStandardPTT(price);
                             let exemption = 0;
                             if (id === 'ptt-fthb') {
-                                if (price <= 500000) {
-                                    exemption = standardPTT;
-                                } else if (price <= 835000) {
-                                    exemption = 8000;
-                                } else if (price < 860000) {
-                                    exemption = 8000 * ((860000 - price) / 25000);
-                                }
+                                if (price <= 500000) { exemption = standardPTT; } 
+                                else if (price <= 835000) { exemption = 8000; } 
+                                else if (price < 860000) { exemption = 8000 * ((860000 - price) / 25000); }
                             } else if (id === 'ptt-new') {
                                 if (price <= 1100000) exemption = standardPTT;
                                 else if (price < 1150000) exemption = standardPTT * ((1150000 - price) / 50000);
                             }
-                            
                             if (exemption > 0) {
                                 resultDiv.innerHTML = `🎉 예상 면제액: <span class="text-xl font-extrabold">${formatCurrency(exemption)}</span><br><span class="text-xs font-normal mt-1 text-gray-600 block">(적용 전 원래 취득세: ${formatCurrency(standardPTT)})</span>`;
                                 resultDiv.classList.add('bg-green-50', 'text-green-800', 'border-green-200');
@@ -667,13 +838,10 @@
                         resultDiv.innerHTML = `ℹ️ 주택 구입 예상 가격을 입력하시면 정확한 면제/리베이트 금액이 계산됩니다.`;
                         resultDiv.classList.add('bg-blue-50', 'text-blue-800', 'border-blue-200');
                     }
-                    resultDiv.classList.remove('hidden');
-                    return;
+                    resultDiv.classList.remove('hidden'); return;
                 }
                 resultDiv.classList.remove('hidden');
-            } else {
-                resultDiv.classList.add('hidden');
-            }
+            } else { resultDiv.classList.add('hidden'); }
         }
 
         function toggleFields() {
@@ -690,27 +858,226 @@
         document.getElementById('mortgageForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const email = document.getElementById('emailInput').value;
-            if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-                alert("정확한 이메일 형식을 입력해주세요.");
-                return;
-            }
+            if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { alert("정확한 이메일 형식을 입력해주세요."); return; }
             const btn = e.target.querySelector('button[type="submit"]');
-            btn.innerHTML = '분석 진행 중... ⏳';
-            btn.disabled = true;
-            btn.classList.add('opacity-75', 'cursor-not-allowed');
+            btn.innerHTML = '분석 진행 중... ⏳'; btn.disabled = true; btn.classList.add('opacity-75', 'cursor-not-allowed');
 
             fetch(e.target.action, { method: 'POST', body: new FormData(e.target) })
-            .then(response => { 
-                e.target.classList.add('hidden'); 
-                document.getElementById('successMessage').classList.remove('hidden'); 
-            })
-            .catch(error => { 
-                alert('통신 오류가 발생했습니다.'); 
-                btn.innerHTML = '분석리포트 신청하기'; 
-                btn.disabled = false; 
-                btn.classList.remove('opacity-75', 'cursor-not-allowed');
-            });
+            .then(response => { e.target.classList.add('hidden'); document.getElementById('successMessage').classList.remove('hidden'); })
+            .catch(error => { alert('통신 오류가 발생했습니다.'); btn.innerHTML = '분석리포트 신청하기'; btn.disabled = false; btn.classList.remove('opacity-75', 'cursor-not-allowed'); });
         });
+
+        // === 부채 통합 계산기 스크립트 ===
+        let internalCalculatedCurrentBalance = 0;
+        let internalCurrentMortgageInterest = 0;
+        let internalRemainingMonths = 0;
+
+        function toggleIrdInput() {
+            const type = document.getElementById('dc-rate-type').value;
+            if (type === 'fixed') {
+                document.getElementById('ird-panel').classList.remove('hidden');
+                document.getElementById('variable-penalty-btn').classList.add('hidden');
+            } else {
+                document.getElementById('ird-panel').classList.add('hidden');
+                document.getElementById('variable-penalty-btn').classList.remove('hidden');
+            }
+        }
+
+        function updateCurrentMortgageInfo() {
+            const P = parseFloat(document.getElementById('dc-orig-principal').value) || 0;
+            const amzYears = parseFloat(document.getElementById('dc-orig-amz').value) || 0;
+            const rate = parseFloat(document.getElementById('dc-orig-rate').value) || 0;
+            const termYears = parseFloat(document.getElementById('dc-orig-term').value) || 0;
+            const eYears = parseFloat(document.getElementById('dc-elapsed-years').value) || 0;
+            const eMonths = parseFloat(document.getElementById('dc-elapsed-months').value) || 0;
+
+            const remPrinEl = document.getElementById('rt-rem-principal');
+            const pmtEl = document.getElementById('rt-monthly-pmt');
+            const prinPartEl = document.getElementById('rt-principal-part');
+            const intPartEl = document.getElementById('rt-interest-part');
+            const termEl = document.getElementById('rt-remaining-term');
+
+            if(P > 0 && amzYears > 0 && rate > 0) {
+                const r_m = getCanadianMonthlyRate(rate);
+                const totalMonths = amzYears * 12;
+                const elapsedTotalMonths = (eYears * 12) + eMonths;
+                const totalTermMonths = termYears * 12;
+                
+                internalRemainingMonths = totalTermMonths - elapsedTotalMonths;
+                termEl.innerText = internalRemainingMonths > 0 ? `남은 텀: ${internalRemainingMonths}개월` : "계약 만료";
+                termEl.className = internalRemainingMonths > 0 ? "text-xs text-brand-dark bg-white px-2 py-1 rounded shadow-sm border border-brand/10 font-bold" : "text-xs text-red-600 bg-red-50 px-2 py-1 rounded shadow-sm border border-red-200 font-bold";
+
+                const M = P * (r_m * Math.pow(1 + r_m, totalMonths)) / (Math.pow(1 + r_m, totalMonths) - 1);
+                
+                let currentBal = P;
+                if(elapsedTotalMonths > 0 && elapsedTotalMonths <= totalMonths) {
+                    currentBal = P * (Math.pow(1 + r_m, totalMonths) - Math.pow(1 + r_m, elapsedTotalMonths)) / (Math.pow(1 + r_m, totalMonths) - 1);
+                } else if (elapsedTotalMonths > totalMonths) {
+                    currentBal = 0;
+                }
+
+                const interestPart = currentBal * r_m;
+                const principalPart = M - interestPart;
+
+                internalCalculatedCurrentBalance = Math.max(0, currentBal);
+                internalCurrentMortgageInterest = Math.max(0, interestPart);
+
+                remPrinEl.innerText = formatCurrency(internalCalculatedCurrentBalance);
+                pmtEl.innerText = formatCurrency(M);
+                prinPartEl.innerText = formatCurrency(Math.max(0, principalPart));
+                intPartEl.innerText = formatCurrency(internalCurrentMortgageInterest);
+            } else {
+                internalCalculatedCurrentBalance = 0;
+                internalCurrentMortgageInterest = 0;
+                internalRemainingMonths = 0;
+                termEl.innerText = "남은 텀: -개월";
+                remPrinEl.innerText = "$0"; pmtEl.innerText = "$0"; prinPartEl.innerText = "$0"; intPartEl.innerText = "$0";
+            }
+        }
+
+        let debtCount = 0;
+        function addDebtRow() {
+            debtCount++;
+            const container = document.getElementById('debt-rows-container');
+            const row = document.createElement('div');
+            row.className = 'grid grid-cols-12 gap-2 items-end border border-gray-200 p-4 rounded-xl bg-gray-50 mb-2 fade-in';
+            row.id = `debt-row-${debtCount}`;
+            row.innerHTML = `
+                <div class="col-span-12 md:col-span-3">
+                    <label class="block text-xs font-bold text-gray-600 mb-1">부채 종류</label>
+                    <input type="text" class="w-full border border-gray-300 rounded-md p-2 text-sm outline-none" placeholder="신용카드, 자동차 등">
+                </div>
+                <div class="col-span-12 md:col-span-3">
+                    <label class="block text-xs font-bold text-gray-600 mb-1">남은 원금 ($)</label>
+                    <input type="number" class="debt-bal w-full border border-gray-300 rounded-md p-2 text-sm outline-none" placeholder="예: 25000">
+                </div>
+                <div class="col-span-12 md:col-span-2">
+                    <label class="block text-xs font-bold text-gray-600 mb-1">이자율 (%)</label>
+                    <input type="number" step="0.1" class="debt-rate w-full border border-gray-300 rounded-md p-2 text-sm outline-none" placeholder="예: 19.9">
+                </div>
+                <div class="col-span-12 md:col-span-3">
+                    <label class="block text-xs font-bold text-gray-600 mb-1">현재 월 페이먼트 ($)</label>
+                    <input type="number" class="debt-pmt w-full border border-gray-300 rounded-md p-2 text-sm outline-none" placeholder="예: 800">
+                </div>
+                <div class="col-span-12 md:col-span-1 flex justify-center pb-1">
+                    <button type="button" onclick="removeDebtRow('${row.id}')" class="text-red-500 hover:text-red-700 font-bold bg-white border border-red-200 rounded p-2" title="삭제">✕</button>
+                </div>
+            `;
+            container.appendChild(row);
+        }
+
+        function removeDebtRow(rowId) { document.getElementById(rowId).remove(); }
+        window.onload = function() { addDebtRow(); }
+
+        function estimatePenalty() {
+            if(internalCalculatedCurrentBalance === 0) { alert("기존 모기지 정보를 먼저 정확히 입력해주세요."); return; }
+            if(internalRemainingMonths <= 0) { alert("계약 기간이 만료되어 페널티가 없습니다."); document.getElementById('dc-penalty').value = 0; return; }
+
+            const currentRate = parseFloat(document.getElementById('dc-orig-rate').value) || 0;
+            const rateType = document.getElementById('dc-rate-type').value;
+            const r_m = getCanadianMonthlyRate(currentRate);
+            
+            const threeMonthsInterest = internalCalculatedCurrentBalance * r_m * 3;
+            let finalPenalty = threeMonthsInterest;
+
+            if (rateType === 'fixed') {
+                const discount = parseFloat(document.getElementById('dc-ird-discount').value);
+                const currentPosted = parseFloat(document.getElementById('dc-ird-posted').value);
+                
+                if (isNaN(discount) || isNaN(currentPosted)) {
+                    alert("정밀 IRD 계산을 위해 '계약시 할인폭(Discount)'과 '잔여기간 Posted 금리'를 모두 입력해주세요.");
+                    document.getElementById('dc-ird-discount').focus();
+                    return;
+                }
+                
+                const rateDiff = (currentRate - (currentPosted - discount)) / 100;
+                let irdPenalty = 0;
+                if (rateDiff > 0) { irdPenalty = internalCalculatedCurrentBalance * rateDiff * (internalRemainingMonths / 12); }
+                
+                finalPenalty = Math.max(threeMonthsInterest, irdPenalty);
+                
+                if (irdPenalty > threeMonthsInterest) { alert(`고정금리 IRD가 적용되었습니다.\n(정밀 IRD: $${Math.round(irdPenalty)} > 3개월 이자: $${Math.round(threeMonthsInterest)})`); } 
+                else { alert(`3개월 이자가 IRD보다 커서 3개월 이자로 적용되었습니다.\n(3개월 이자: $${Math.round(threeMonthsInterest)} > 정밀 IRD: $${Math.round(irdPenalty)})`); }
+            } else {
+                alert(`변동금리로 3개월 이자 페널티가 적용되었습니다.\n(예상금액: $${Math.round(threeMonthsInterest)})`);
+            }
+            document.getElementById('dc-penalty').value = Math.round(finalPenalty);
+        }
+
+        function calculateConsolidation() {
+            const homeValue = parseFloat(document.getElementById('dc-home-value').value) || 0;
+            const origP = parseFloat(document.getElementById('dc-orig-principal').value) || 0;
+            const origAmzYears = parseFloat(document.getElementById('dc-orig-amz').value) || 0;
+            const origRate = parseFloat(document.getElementById('dc-orig-rate').value) || 0;
+
+            if(origP === 0 || origRate === 0 || origAmzYears === 0) { alert("기존 모기지 정보를 정확히 입력해주세요."); return; }
+
+            const r_m_old = getCanadianMonthlyRate(origRate);
+            const totalMonthsOld = origAmzYears * 12;
+            const oldMortgagePmt = origP * (r_m_old * Math.pow(1 + r_m_old, totalMonthsOld)) / (Math.pow(1 + r_m_old, totalMonthsOld) - 1);
+
+            let totalOtherDebtBal = 0, totalOtherDebtPmt = 0, totalOtherDebtInterest = 0;
+            const debtBalInputs = document.querySelectorAll('.debt-bal');
+            const debtPmtInputs = document.querySelectorAll('.debt-pmt');
+            const debtRateInputs = document.querySelectorAll('.debt-rate');
+            
+            for(let i=0; i<debtBalInputs.length; i++) {
+                const bal = parseFloat(debtBalInputs[i].value) || 0;
+                const pmt = parseFloat(debtPmtInputs[i].value) || 0;
+                const rt = parseFloat(debtRateInputs[i].value) || 0;
+                totalOtherDebtBal += bal; totalOtherDebtPmt += pmt; totalOtherDebtInterest += bal * (rt / 100 / 12);
+            }
+
+            const penalty = parseFloat(document.getElementById('dc-penalty').value) || 0;
+            const legalFees = parseFloat(document.getElementById('dc-legal-fee').value) || 0;
+            const newRate = parseFloat(document.getElementById('dc-new-rate').value) || 0;
+            const newAmzYears = parseFloat(document.getElementById('dc-new-amz').value) || 0;
+
+            if(newRate === 0 || newAmzYears === 0) { alert("새로운 리파이낸싱 조건(금리, 기간)을 입력해주세요."); return; }
+
+            const newTotalPrincipal = internalCalculatedCurrentBalance + totalOtherDebtBal + penalty + legalFees;
+            
+            const ltvAlert = document.getElementById('ltv-alert');
+            if(homeValue > 0) {
+                const ltv = (newTotalPrincipal / homeValue) * 100;
+                if(ltv > 80) {
+                    ltvAlert.className = "p-4 rounded-xl font-bold text-center border bg-red-50 text-red-700 border-red-200";
+                    ltvAlert.innerHTML = `❌ 경고: 통합 후 LTV가 ${ltv.toFixed(1)}% 로 규정(80%)을 초과합니다. (필요한 주택가치: 최소 ${formatCurrency(newTotalPrincipal / 0.8)})`;
+                } else {
+                    ltvAlert.className = "p-4 rounded-xl font-bold text-center border bg-green-50 text-green-800 border-green-200";
+                    ltvAlert.innerHTML = `✅ LTV 안정권: 통합 후 LTV는 ${ltv.toFixed(1)}% 로 규정 내에서 안전하게 진행 가능합니다.`;
+                }
+            } else { ltvAlert.className = "hidden"; }
+
+            const r_m_new = getCanadianMonthlyRate(newRate);
+            const newTotalMonths = newAmzYears * 12;
+            const newMortgagePmt = newTotalPrincipal * (r_m_new * Math.pow(1 + r_m_new, newTotalMonths)) / (Math.pow(1 + r_m_new, newTotalMonths) - 1);
+            const newFirstMonthInterest = newTotalPrincipal * r_m_new;
+
+            const oldTotalPmt = oldMortgagePmt + totalOtherDebtPmt;
+            const monthlySavings = oldTotalPmt - newMortgagePmt;
+            const oldTotalInterest = internalCurrentMortgageInterest + totalOtherDebtInterest;
+            const interestSavings = oldTotalInterest - newFirstMonthInterest;
+
+            document.getElementById('res-old-mortgage-pmt').innerText = formatCurrency(oldMortgagePmt);
+            document.getElementById('res-old-other-pmt').innerText = formatCurrency(totalOtherDebtPmt);
+            document.getElementById('res-old-interest').innerText = formatCurrency(oldTotalInterest);
+            document.getElementById('res-old-total-pmt').innerText = formatCurrency(oldTotalPmt);
+            
+            document.getElementById('res-new-principal').innerText = formatCurrency(newTotalPrincipal);
+            document.getElementById('res-new-interest').innerText = formatCurrency(newFirstMonthInterest);
+            document.getElementById('res-new-total-pmt').innerText = formatCurrency(newMortgagePmt);
+
+            const savingsEl = document.getElementById('res-monthly-savings');
+            if(monthlySavings > 0) { savingsEl.innerText = `+${formatCurrency(monthlySavings)}`; savingsEl.className = "text-4xl md:text-5xl font-extrabold text-green-600"; } 
+            else { savingsEl.innerText = formatCurrency(monthlySavings); savingsEl.className = "text-4xl md:text-5xl font-extrabold text-red-600"; }
+
+            const intSavingsEl = document.getElementById('res-interest-savings');
+            if(interestSavings > 0) { intSavingsEl.innerText = `+${formatCurrency(interestSavings)}`; intSavingsEl.className = "text-4xl md:text-5xl font-extrabold text-indigo-600"; } 
+            else { intSavingsEl.innerText = formatCurrency(interestSavings); intSavingsEl.className = "text-4xl md:text-5xl font-extrabold text-red-600"; }
+
+            document.getElementById('consolidation-result').classList.remove('hidden');
+        }
     </script>
 </body>
 </html>

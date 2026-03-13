@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>은행별 고시금리 (Posted Rates) | 모기지아재</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            light: '#f0f3fa',   
+                            DEFAULT: '#334da9', 
+                            dark: '#253880',    
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        html { scroll-behavior: smooth; }
+        .gradient-bg { background: linear-gradient(135deg, #0f172a 0%, #334da9 100%); }
+        .hover-card { transition: all 0.3s ease; }
+        .hover-card:hover { transform: translateY(-3px); box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1); }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans pt-40 md:pt-48 pb-20">
+
+    <header class="bg-white shadow-md fixed w-full z-20 top-0">
+        <div class="w-full flex justify-center bg-white">
+            <a href="index.html" class="w-full max-w-[1400px] flex justify-center">
+                <img src="./images/mortgageajae-banner.jpg" alt="모기지아재 로고 배너" class="w-full h-auto max-h-24 md:max-h-32 object-contain md:hidden" onerror="this.style.display='none'">
+                <img src="./images/mortgageajae-banner-web.jpg" alt="모기지아재 데스크탑 배너" class="hidden md:block w-full h-auto max-h-24 md:max-h-32 object-contain mx-auto" onerror="this.style.display='none'">
+            </a>
+        </div>
+        <div class="border-t border-gray-100 py-3 md:py-4 bg-white">
+            <div class="max-w-6xl mx-auto px-4 flex justify-center space-x-6 md:space-x-12 text-sm md:text-lg font-bold text-gray-700">
+                <a href="index.html#analysis" class="hover:text-brand transition">금리진단</a>
+                <a href="index.html#tools" class="hover:text-brand transition text-brand">핵심도구</a>
+                <a href="index.html#benefits" class="hover:text-brand transition">혜택진단</a>
+                <a href="board.html" class="hover:text-brand transition">정보보드</a>
+                <a href="https://calendar.app.google/zWG82EqskeBtwyeU7" class="hover:text-brand transition">미팅신청</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="max-w-4xl mx-auto px-4">
+        <div class="text-center mb-10">
+            <h1 class="text-3xl md:text-3xl font-extrabold text-brand mb-4">🏦 캐나다 주요 은행 고시금리 (Posted Rates)</h1>
+            <p class="text-gray-600 text-base md:text-lg">고정금리 페널티(IRD)의 정밀한 계산을 위해<br class="hidden md:block">현재 대출 은행의 <strong>'잔여기간에 해당하는 고시금리'</strong>를 확인해 보세요.</p>
+            <div class="mt-4 inline-block bg-indigo-50 border border-indigo-200 text-indigo-800 text-sm px-5 py-3 rounded-lg text-left shadow-sm">
+                <strong>💡 IRD 계산 팁:</strong> 남은 텀(Term)이 2년 3개월이라면, 보통 반올림하여 <strong>2년물(2-Year) 고시금리</strong>를 찾아 계산기에 입력하시면 됩니다. (단, 은행별 기준 상이)
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            
+            <a href="https://www.rbcroyalbank.com/mortgages/mortgage-rates.html" target="_blank" class="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm hover-card flex items-center group">
+                <div class="w-14 h-14 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-bold text-xl mr-4 group-hover:bg-blue-600 group-hover:text-white transition">RBC</div>
+                <div class="flex-grow">
+                    <h3 class="font-bold text-xl text-gray-800">Royal Bank of Canada</h3>
+                    <p class="text-sm text-gray-500 mt-1">RBC Posted Rates 확인 ↗</p>
+                </div>
+            </a>
+
+            <a href="https://www.td.com/ca/en/personal-banking/products/mortgages/mortgage-rates" target="_blank" class="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm hover-card flex items-center group">
+                <div class="w-14 h-14 rounded-full bg-green-100 flex items-center justify-center text-green-700 font-bold text-xl mr-4 group-hover:bg-green-600 group-hover:text-white transition">TD</div>
+                <div class="flex-grow">
+                    <h3 class="font-bold text-xl text-gray-800">TD Canada Trust</h3>
+                    <p class="text-sm text-gray-500 mt-1">TD Posted Rates 확인 ↗</p>
+                </div>
+            </a>
+
+            <a href="https://www.scotiabank.com/ca/en/personal/rates-prices/mortgages-rates.html" target="_blank" class="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm hover-card flex items-center group">
+                <div class="w-14 h-14 rounded-full bg-red-100 flex items-center justify-center text-red-600 font-bold text-xl mr-4 group-hover:bg-red-600 group-hover:text-white transition">BNS</div>
+                <div class="flex-grow">
+                    <h3 class="font-bold text-xl text-gray-800">Scotiabank</h3>
+                    <p class="text-sm text-gray-500 mt-1">Scotiabank Posted Rates 확인 ↗</p>
+                </div>
+            </a>
+
+            <a href="https://www.bmo.com/main/personal/mortgages/mortgage-rates/" target="_blank" class="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm hover-card flex items-center group">
+                <div class="w-14 h-14 rounded-full bg-blue-50 flex items-center justify-center text-blue-500 font-bold text-xl mr-4 group-hover:bg-blue-500 group-hover:text-white border border-blue-200 transition">BMO</div>
+                <div class="flex-grow">
+                    <h3 class="font-bold text-xl text-gray-800">Bank of Montreal</h3>
+                    <p class="text-sm text-gray-500 mt-1">BMO Posted Rates 확인 ↗</p>
+                </div>
+            </a>
+
+            <a href="https://www.cibc.com/en/interest-rates/mortgage-rates.html" target="_blank" class="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm hover-card flex items-center group">
+                <div class="w-14 h-14 rounded-full bg-red-50 flex items-center justify-center text-red-800 font-bold text-xl mr-4 group-hover:bg-red-800 group-hover:text-white border border-red-200 transition">CIBC</div>
+                <div class="flex-grow">
+                    <h3 class="font-bold text-xl text-gray-800">CIBC</h3>
+                    <p class="text-sm text-gray-500 mt-1">CIBC Posted Rates 확인 ↗</p>
+                </div>
+            </a>
+
+            <a href="https://www.nbc.ca/personal/mortgages/rates.html" target="_blank" class="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm hover-card flex items-center group">
+                <div class="w-14 h-14 rounded-full bg-red-100 flex items-center justify-center text-red-600 font-bold text-xl mr-4 group-hover:bg-red-600 group-hover:text-white transition">NBC</div>
+                <div class="flex-grow">
+                    <h3 class="font-bold text-xl text-gray-800">National Bank</h3>
+                    <p class="text-sm text-gray-500 mt-1">NBC Posted Rates 확인 ↗</p>
+                </div>
+            </a>
+
+        </div>
+
+        <div class="text-center mt-12">
+            <a href="debt-consolidation.html" class="inline-block bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-3 px-8 rounded-full transition shadow-sm">
+                ← 부채 통합 계산기로 돌아가기
+            </a>
+        </div>
+    </div>
+
+</body>
+</html>
