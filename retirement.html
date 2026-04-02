@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>전문가용 은퇴 재정 & 역모기지 시뮬레이터</title>
+    <title>은퇴재정 시뮬레이터</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root { --primary: #2c3e50; --secondary: #2980b9; --accent: #e74c3c; --bg: #f4f7f6; --box: #ffffff; }
@@ -49,19 +49,19 @@
 
 <div class="container">
     <div class="panel input-panel">
-        <h2>📊 고객 데이터 & 목표 설정</h2>
+        <h2>📊 입력데이터 & 목표설정</h2>
         
         <fieldset>
-            <legend>1. 가구 형태 및 목표 상속가액</legend>
+            <legend>1. 가구형태 및 목표상속가액</legend>
             <div class="input-group">
-                <label>가구 형태</label>
+                <label>가구형태</label>
                 <select id="is_couple" onchange="toggleSpouse(); calculatePV();">
                     <option value="false">개인 (Single)</option>
                     <option value="true" selected>부부 (Couple)</option>
                 </select>
             </div>
             <div class="input-group">
-                <label style="font-weight:bold; color:#27ae60;">목표 상속가액 (현재가치 PV)</label>
+                <label style="font-weight:bold; color:#27ae60;">목표 상속가액(현재가치기준)</label>
                 <div class="input-wrapper"><input type="number" id="target_estate" value="1000000" step="10000"></div>
             </div>
             <div class="input-group">
@@ -103,7 +103,7 @@
                     <div class="input-wrapper"><input type="number" id="p2_db" value="0"></div>
                 </div>
             </div>
-            <div id="pension_preview" class="pv-preview">실시간 예상 연금 (월 PV) 계산중...</div>
+            <div id="pension_preview" class="pv-preview">예상연금 계산중...</div>
         </fieldset>
 
         <fieldset>
@@ -147,17 +147,17 @@
                 <div class="input-group"><label>RRSP 현재 잔액/이율 <span class="tax-tag tag-100">100%과세</span></label>
                     <div class="input-wrapper"><input type="number" id="p1_rrsp_curr" value="300000" oninput="calcAssetFV()"><input type="number" id="p1_rrsp_rate" value="4.0" step="0.1" oninput="calcAssetFV()"></div>
                 </div>
-                <div class="input-group"><label style="color:#c0392b;">👉 은퇴 시 목표 FV (수동수정 가능)</label><input type="number" id="p1_rrsp_retire" value="0" style="background:#fadbd8;"></div>
+                <div class="input-group"><label style="color:#c0392b;">👉 은퇴 시 목표 미래가치 (수동수정 가능)</label><input type="number" id="p1_rrsp_retire" value="0" style="background:#fadbd8;"></div>
                 
                 <div class="input-group"><label>TFSA 현재 잔액/이율 <span class="tax-tag tag-0">비과세</span></label>
                     <div class="input-wrapper"><input type="number" id="p1_tfsa_curr" value="80000" oninput="calcAssetFV()"><input type="number" id="p1_tfsa_rate" value="5.0" step="0.1" oninput="calcAssetFV()"></div>
                 </div>
-                <div class="input-group"><label style="color:#27ae60;">👉 은퇴 시 목표 FV (수동수정 가능)</label><input type="number" id="p1_tfsa_retire" value="0" style="background:#d5f5e3;"></div>
+                <div class="input-group"><label style="color:#27ae60;">👉 은퇴 시 목표 미래가치 (수동수정 가능)</label><input type="number" id="p1_tfsa_retire" value="0" style="background:#d5f5e3;"></div>
 
                 <div class="input-group"><label>Non-Reg 현재 잔액/이율 <span class="tax-tag tag-50">50%과세</span></label>
                     <div class="input-wrapper"><input type="number" id="p1_non_curr" value="50000" oninput="calcAssetFV()"><input type="number" id="p1_non_rate" value="4.0" step="0.1" oninput="calcAssetFV()"></div>
                 </div>
-                <div class="input-group"><label style="color:#e67e22;">👉 은퇴 시 목표 FV (수동수정 가능)</label><input type="number" id="p1_non_retire" value="0" style="background:#fdebd0;"></div>
+                <div class="input-group"><label style="color:#e67e22;">👉 은퇴 시 목표 미래가치 (수동수정 가능)</label><input type="number" id="p1_non_retire" value="0" style="background:#fdebd0;"></div>
             </div>
 
             <div class="asset-box spouse" id="spouse_asset_section" style="border-left: 3px solid #9b59b6;">
@@ -165,17 +165,17 @@
                 <div class="input-group"><label>RRSP 현재 잔액/이율 <span class="tax-tag tag-100">100%과세</span></label>
                     <div class="input-wrapper"><input type="number" id="p2_rrsp_curr" value="100000" oninput="calcAssetFV()"><input type="number" id="p2_rrsp_rate" value="4.0" step="0.1" oninput="calcAssetFV()"></div>
                 </div>
-                <div class="input-group"><label style="color:#c0392b;">👉 은퇴 시 목표 FV (수동수정 가능)</label><input type="number" id="p2_rrsp_retire" value="0" style="background:#fadbd8;"></div>
+                <div class="input-group"><label style="color:#c0392b;">👉 은퇴 시 목표 미래가치 (수동수정 가능)</label><input type="number" id="p2_rrsp_retire" value="0" style="background:#fadbd8;"></div>
                 
                 <div class="input-group"><label>TFSA 현재 잔액/이율 <span class="tax-tag tag-0">비과세</span></label>
                     <div class="input-wrapper"><input type="number" id="p2_tfsa_curr" value="20000" oninput="calcAssetFV()"><input type="number" id="p2_tfsa_rate" value="5.0" step="0.1" oninput="calcAssetFV()"></div>
                 </div>
-                <div class="input-group"><label style="color:#27ae60;">👉 은퇴 시 목표 FV (수동수정 가능)</label><input type="number" id="p2_tfsa_retire" value="0" style="background:#d5f5e3;"></div>
+                <div class="input-group"><label style="color:#27ae60;">👉 은퇴 시 목표 미래가치 (수동수정 가능)</label><input type="number" id="p2_tfsa_retire" value="0" style="background:#d5f5e3;"></div>
 
                 <div class="input-group"><label>Non-Reg 현재 잔액/이율 <span class="tax-tag tag-50">50%과세</span></label>
                     <div class="input-wrapper"><input type="number" id="p2_non_curr" value="10000" oninput="calcAssetFV()"><input type="number" id="p2_non_rate" value="4.0" step="0.1" oninput="calcAssetFV()"></div>
                 </div>
-                <div class="input-group"><label style="color:#e67e22;">👉 은퇴 시 목표 FV (수동수정 가능)</label><input type="number" id="p2_non_retire" value="0" style="background:#fdebd0;"></div>
+                <div class="input-group"><label style="color:#e67e22;">👉 은퇴 시 목표 미래가치 (수동수정 가능)</label><input type="number" id="p2_non_retire" value="0" style="background:#fdebd0;"></div>
             </div>
         </fieldset>
 
@@ -192,7 +192,7 @@
             <thead>
                 <tr>
                     <th>현금 흐름 구성 (클러스터)</th>
-                    <th>월별 발생액 (PV)</th>
+                    <th>월별 발생액 (현재가치기준)</th>
                 </tr>
             </thead>
             <tbody>
@@ -200,7 +200,7 @@
                 <tr><td>📈 투자금 인출 (RRSP+TFSA+Non-Reg)</td><td id="tbl_invest">$0</td></tr>
                 <tr><td>🏘️ 부동산 순 임대 수익</td><td id="tbl_rent">$0</td></tr>
                 <tr class="highlight-rm"><td>💰 역모기지 수령 (100% Tax-free)</td><td id="tbl_rm">$0</td></tr>
-                <tr class="row-tax"><td>🔻 발생 세금 및 환수 (Tax/Clawback)</td><td id="tbl_tax">-$0</td></tr>
+                <tr class="row-tax"><td>🔻 발생 세금 및 환수 (Tax/OAS Clawback)</td><td id="tbl_tax">-$0</td></tr>
                 <tr class="row-total"><td>✨ 최종 세후 월 생활비</td><td id="tbl_net">$0</td></tr>
             </tbody>
         </table>
@@ -211,7 +211,7 @@
         </div>
 
         <div>
-            <h3 style="margin-top: 20px;">📈 상속 가능 순자산 (Net Estate) 완벽 추적 (PV)</h3>
+            <h3 style="margin-top: 20px;">📈 상속 가능 순자산 (Net Estate) 추적 (현재가치)</h3>
             <div style="font-size:0.8rem; color:#777; text-align:right;">* 그래프의 끝점이 목표 상속가액에 정확히 도달합니다.</div>
             <canvas id="estateChart"></canvas>
         </div>
