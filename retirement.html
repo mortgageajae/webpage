@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>은퇴 재정설계 시뮬레이터 (다중 부동산/RRIF/전이로직)</title>
+    <title>모기지아재 은퇴 재정설계 시뮬레이터</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root { --primary: #2c3e50; --secondary: #2980b9; --accent: #e74c3c; --bg: #f4f7f6; --box: #ffffff; }
         * { box-sizing: border-box; }
         body { font-family: 'Malgun Gothic', sans-serif; background-color: var(--bg); margin: 0; padding: 10px; color: #333; }
-        .container { display: flex; flex-wrap: wrap; gap: 15px; max-width: 1800px; margin: 0 auto; }
+        .container { display: flex; flex-wrap: wrap; gap: 15px; max-width: 1700px; margin: 0 auto; }
         .panel { background: var(--box); padding: 15px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); width: 100%; }
         
         h2 { margin-top: 0; color: var(--primary); font-size: 1.2rem; border-bottom: 2px solid var(--secondary); padding-bottom: 10px; }
@@ -27,31 +27,27 @@
         .pv-preview { background: #e8f4f8; border-left: 4px solid #3498db; padding: 10px; font-size: 0.85rem; margin-top: 10px; border-radius: 4px; line-height: 1.4; }
         .warning-box { background: #fadbd8; border-left: 4px solid #c0392b; padding: 10px; font-size: 0.85rem; margin-top: 10px; border-radius: 4px; line-height: 1.4; color: #c0392b; display: none; }
         
-        .multi-col-group { display: flex; gap: 10px; margin-bottom: 10px; }
+        /* 다중 컬럼 인풋 스타일 (라벨 위, 박스 아래) - 모든 글씨크기 통일 (0.75rem) */
+        .multi-col-group { display: flex; gap: 10px; margin-bottom: 10px; width: 100%; }
         .multi-col-group .col-item { flex: 1; display: flex; flex-direction: column; }
-        .multi-col-group .col-item label { font-size: 0.75rem; margin-bottom: 4px; color: #555; font-weight: bold; white-space: nowrap;}
-        .multi-col-group .col-item input { padding: 8px 6px; border: 1px solid #ccc; border-radius: 6px; text-align: center; font-size: 0.85rem; width: 100%;}
+        .multi-col-group .col-item label { font-size: 0.75rem; margin-bottom: 4px; color: #555; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; letter-spacing: -0.3px;}
+        .multi-col-group .col-item input, .multi-col-group .col-item select { padding: 8px 6px; border: 1px solid #ccc; border-radius: 6px; text-align: right; font-size: 0.85rem; width: 100%;}
         
-        .input-group { display: flex; flex-direction: row; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-        .input-group label { font-size: 0.85rem; font-weight: 600; color: #444; }
-        .input-wrapper { display: flex; align-items: center; gap: 8px; justify-content: flex-end; }
-        .input-wrapper input, .input-wrapper select { width: 100px; padding: 8px 6px; border: 1px solid #ccc; border-radius: 6px; text-align: right; font-size: 0.85rem; }
-        
-        .withdraw-box { background: #fdfefe; border: 1px dashed #ccc; padding: 8px; border-radius: 6px; margin-top: 5px; font-size: 0.8rem; }
-        .withdraw-box .input-group { margin-bottom: 6px; }
-        .lump-tag { display: inline-block; background: #e8f4f8; border: 1px solid #b3e0ff; padding: 3px 6px; border-radius: 4px; margin: 2px; font-size: 0.75rem; }
+        .withdraw-box { background: #fdfefe; border: 1px dashed #ccc; padding: 10px; border-radius: 6px; margin-top: 5px; font-size: 0.8rem; }
+        .lump-tag { display: inline-block; background: #e8f4f8; border: 1px solid #b3e0ff; padding: 4px 8px; border-radius: 4px; margin: 2px; font-size: 0.75rem; }
         .lump-del { color: #e74c3c; cursor: pointer; font-weight: bold; margin-left: 4px; }
-        .btn-sm { background: var(--secondary); color: white; border: none; padding: 5px 8px; border-radius: 4px; cursor: pointer; font-size:0.75rem;}
+        .btn-sm { background: var(--secondary); color: white; border: none; padding: 8px 10px; border-radius: 4px; cursor: pointer; font-size:0.75rem; font-weight:bold; margin-bottom:0;}
 
+        /* 스프레드시트 테이블 */
         .table-container { overflow-x: auto; overflow-y: auto; max-height: 700px; margin-top: 10px; border-radius: 6px; border: 1px solid #ddd; }
-        table.breakdown-table { width: 100%; border-collapse: collapse; font-size: 0.75rem; text-align: right; min-width: 1800px; white-space: nowrap; }
+        table.breakdown-table { width: 100%; border-collapse: collapse; font-size: 0.75rem; text-align: right; min-width: 1700px; white-space: nowrap; }
         table.breakdown-table th, table.breakdown-table td { border: 1px solid #eee; padding: 8px 6px; }
-        table.breakdown-table th { background-color: var(--primary); color: white; text-align: center; position: sticky; top: 0; z-index: 10; font-size: 0.75rem; }
+        table.breakdown-table th { background-color: var(--primary) !important; color: white !important; text-align: center; position: sticky; top: 0; z-index: 10; font-size: 0.75rem; font-weight: bold; }
         table.breakdown-table td:first-child, table.breakdown-table td:nth-child(2) { text-align: center; font-weight: bold; background: #f9f9f9; }
         
-        .col-gross { background: #fffde7; font-weight: bold; color: #d35400; }
-        .col-net { font-weight: bold; color: var(--secondary); background: #eaf2f8 !important; font-size: 0.85rem;}
+        .col-net { font-weight: bold; color: var(--secondary); background: #eaf2f8 !important; font-size: 0.85rem; }
         .col-tax { color: #e74c3c; background: #fadbd8 !important; }
+        .col-gross { background: #fffde7; font-weight: bold; color: #d35400; }
         .col-asset { color: #34495e; background: #f4f6f7; }
         .deceased-tag { color: #e74c3c; font-size: 0.7rem; }
 
@@ -72,63 +68,66 @@
 
 <div class="container">
     <div class="panel input-panel">
-        <h2>📊 데이터 입력 & 목표설정</h2>
+        <h2 style="text-align:center;">데이터입력 & 목표설정</h2>
         
         <fieldset>
             <legend>1. 가구형태 및 목표 상속가액</legend>
-            <div class="input-group">
-                <label>가구 형태</label>
-                <select id="is_couple" onchange="toggleSpouse(); calculatePV();">
-                    <option value="false">개인 (Single)</option>
-                    <option value="true" selected>부부 (Couple)</option>
-                </select>
-            </div>
-            <div class="input-group"><label style="color:#27ae60;">목표 상속가액 (현재가치)</label>
-                <div class="input-wrapper"><input type="number" id="target_estate" value="1000000" step="10000"></div>
-            </div>
-            <div class="input-group"><label>연 물가상승률(%)</label>
-                <div class="input-wrapper"><input type="number" id="rate_inflation" value="2.5" step="0.1" oninput="calculatePV()"></div>
+            <div class="multi-col-group">
+                <div class="col-item">
+                    <label style="text-align:center;">가구 형태</label>
+                    <select id="is_couple" onchange="toggleSpouse(); calculatePV();" style="text-align:center;">
+                        <option value="false">개인 (Single)</option>
+                        <option value="true" selected>부부 (Couple)</option>
+                    </select>
+                </div>
+                <div class="col-item">
+                    <label style="color:#27ae60; text-align:center;">목표 상속가액($)</label>
+                    <input type="number" id="target_estate" value="1000000" step="10000">
+                </div>
+                <div class="col-item">
+                    <label style="text-align:center;">연간 물가상승률(%)</label>
+                    <input type="number" id="rate_inflation" value="2.5" step="0.1" oninput="calculatePV()">
+                </div>
             </div>
         </fieldset>
 
         <fieldset>
             <legend>2. 연령 및 정부/기업 연금</legend>
-            
             <div class="person-section">
                 <h3 style="color: var(--secondary); margin-top:0;">👤 본인 (Primary)</h3>
                 <div class="multi-col-group">
-                    <div class="col-item"><label>현재 나이</label><input type="number" id="p1_age" value="55" oninput="syncAges(); calculatePV();"></div>
-                    <div class="col-item"><label>은퇴 나이</label><input type="number" id="p1_retire" value="65" oninput="syncAges(); calculatePV();"></div>
-                    <div class="col-item"><label>기대 수명</label><input type="number" id="p1_life" value="90" oninput="syncAges(); calculatePV();"></div>
+                    <div class="col-item"><label style="text-align:center;">현재 나이</label><input type="number" id="p1_age" value="55" oninput="syncAges(); calculatePV();"></div>
+                    <div class="col-item"><label style="text-align:center;">은퇴 나이</label><input type="number" id="p1_retire" value="65" oninput="syncAges(); calculatePV();"></div>
+                    <div class="col-item"><label style="text-align:center;">기대 수명</label><input type="number" id="p1_life" value="90" oninput="syncAges(); calculatePV();"></div>
                 </div>
                 <div class="multi-col-group">
-                    <div class="col-item"><label>CPP 연수</label><input type="number" id="p1_cpp_yr" value="35" oninput="calculatePV()"></div>
-                    <div class="col-item"><label>평균페이(%)</label><input type="number" id="p1_cpp_pct" value="70" oninput="calculatePV()"></div>
-                    <div class="col-item"><label>시작 나이</label><input type="number" id="p1_cpp_start" value="65" oninput="calculatePV()"></div>
+                    <div class="col-item"><label style="text-align:center;">CPP 연수</label><input type="number" id="p1_cpp_yr" value="35" oninput="calculatePV()"></div>
+                    <div class="col-item"><label style="text-align:center;">평균페이(%)</label><input type="number" id="p1_cpp_pct" value="70" oninput="calculatePV()"></div>
+                    <div class="col-item"><label style="text-align:center;">시작 나이</label><input type="number" id="p1_cpp_start" value="65" oninput="calculatePV()"></div>
                 </div>
                 <div class="multi-col-group">
-                    <div class="col-item"><label>OAS 연수</label><input type="number" id="p1_oas_yr" value="30" oninput="calculatePV()"></div>
-                    <div class="col-item"><label>OAS 시작</label><input type="number" id="p1_oas_start" value="65" oninput="calculatePV()"></div>
-                    <div class="col-item"><label style="color:#27ae60;">월 기업연금(DB)</label><input type="number" id="p1_db" value="0"></div>
+                    <div class="col-item"><label style="text-align:center;">OAS 연수</label><input type="number" id="p1_oas_yr" value="30" oninput="calculatePV()"></div>
+                    <div class="col-item"><label style="text-align:center;">OAS 시작</label><input type="number" id="p1_oas_start" value="65" oninput="calculatePV()"></div>
+                    <div class="col-item"><label style="color:#27ae60; text-align:center;">월 기업연금(DB)</label><input type="number" id="p1_db" value="0"></div>
                 </div>
             </div>
             
             <div class="person-section spouse" id="spouse_section">
                 <h3 style="color: #9b59b6; margin-top:0;">👤 배우자 (Spouse)</h3>
                 <div class="multi-col-group">
-                    <div class="col-item"><label>현재 나이</label><input type="number" id="p2_age" value="52" oninput="syncAges(); calculatePV();"></div>
-                    <div class="col-item"><label>은퇴 나이</label><input type="number" id="p2_retire" value="62" oninput="syncAges(); calculatePV();"></div>
-                    <div class="col-item"><label>기대 수명</label><input type="number" id="p2_life" value="92" oninput="syncAges(); calculatePV();"></div>
+                    <div class="col-item"><label style="text-align:center;">현재 나이</label><input type="number" id="p2_age" value="52" oninput="syncAges(); calculatePV();"></div>
+                    <div class="col-item"><label style="text-align:center;">은퇴 나이</label><input type="number" id="p2_retire" value="62" oninput="syncAges(); calculatePV();"></div>
+                    <div class="col-item"><label style="text-align:center;">기대 수명</label><input type="number" id="p2_life" value="92" oninput="syncAges(); calculatePV();"></div>
                 </div>
                 <div class="multi-col-group">
-                    <div class="col-item"><label>CPP 연수</label><input type="number" id="p2_cpp_yr" value="20" oninput="calculatePV()"></div>
-                    <div class="col-item"><label>평균페이(%)</label><input type="number" id="p2_cpp_pct" value="50" oninput="calculatePV()"></div>
-                    <div class="col-item"><label>시작 나이</label><input type="number" id="p2_cpp_start" value="65" oninput="calculatePV()"></div>
+                    <div class="col-item"><label style="text-align:center;">CPP 연수</label><input type="number" id="p2_cpp_yr" value="20" oninput="calculatePV()"></div>
+                    <div class="col-item"><label style="text-align:center;">평균페이(%)</label><input type="number" id="p2_cpp_pct" value="50" oninput="calculatePV()"></div>
+                    <div class="col-item"><label style="text-align:center;">시작 나이</label><input type="number" id="p2_cpp_start" value="65" oninput="calculatePV()"></div>
                 </div>
                 <div class="multi-col-group">
-                    <div class="col-item"><label>OAS 연수</label><input type="number" id="p2_oas_yr" value="25" oninput="calculatePV()"></div>
-                    <div class="col-item"><label>OAS 시작</label><input type="number" id="p2_oas_start" value="65" oninput="calculatePV()"></div>
-                    <div class="col-item"><label style="color:#27ae60;">월 기업연금(DB)</label><input type="number" id="p2_db" value="0"></div>
+                    <div class="col-item"><label style="text-align:center;">OAS 연수</label><input type="number" id="p2_oas_yr" value="25" oninput="calculatePV()"></div>
+                    <div class="col-item"><label style="text-align:center;">OAS 시작</label><input type="number" id="p2_oas_start" value="65" oninput="calculatePV()"></div>
+                    <div class="col-item"><label style="color:#27ae60; text-align:center;">월 기업연금(DB)</label><input type="number" id="p2_db" value="0"></div>
                 </div>
             </div>
             <div id="pension_preview" class="pv-preview">실시간 예상 연금 계산중...</div>
@@ -136,23 +135,25 @@
 
         <fieldset>
             <legend>3. 부동산 및 부채 (가구 통합)</legend>
-            <div class="input-group"><label>주택 상승률 / 역모기지 이율</label>
-                <div class="input-wrapper"><input type="number" id="rate_home" value="3.5" step="0.1" oninput="calculatePV()"><input type="number" id="rate_rm" value="6.5" step="0.1"></div>
+            <div class="multi-col-group">
+                <div class="col-item"><label style="text-align:center;">주택 상승률(%)</label><input type="number" id="rate_home" value="3.5" step="0.1" oninput="calculatePV()"></div>
+                <div class="col-item"><label style="text-align:center;">역모기지 이율(%)</label><input type="number" id="rate_rm" value="6.5" step="0.1"></div>
             </div>
             
             <div class="asset-box">
                 <div class="asset-title">🏠 거주용 주택 (Primary)</div>
-                <div class="input-group"><label>현재시세 / 현재 모기지 잔액</label>
-                    <div class="input-wrapper"><input type="number" id="home_val" value="1500000" oninput="calculatePV()"><input type="number" id="home_mtg_curr" value="300000"></div>
+                <div class="multi-col-group">
+                    <div class="col-item"><label style="text-align:center;">현재시세($)</label><input type="number" id="home_val" value="1500000" oninput="calculatePV()"></div>
+                    <div class="col-item"><label style="text-align:center;">현재 모기지 잔액($)</label><input type="number" id="home_mtg_curr" value="300000"></div>
                 </div>
-                <div class="input-group"><label>월 렌트수익</label><div class="input-wrapper"><input type="number" id="home_rent_inc" value="1500"></div></div>
-                <div class="input-group"><label style="color:#2980b9;">은퇴시 모기지 잔액(Payout용)</label>
-                    <div class="input-wrapper"><input type="number" id="home_mtg_retire" value="100000"></div>
+                <div class="multi-col-group">
+                    <div class="col-item"><label style="text-align:center;">월 렌트수익($)</label><input type="number" id="home_rent_inc" value="1500"></div>
+                    <div class="col-item"><label style="color:#2980b9; text-align:center;">은퇴시 모기지 잔액($)</label><input type="number" id="home_mtg_retire" value="100000"></div>
                 </div>
             </div>
 
             <div id="inv_props_container"></div>
-            <button class="btn-sm" style="width:100%; margin-bottom:10px; padding:10px;" onclick="addInvProp()">+ 투자용 주택 추가</button>
+            <button class="btn-sm" style="width:100%; margin-bottom:10px; padding:10px; background-color:#e67e22;" onclick="addInvProp()">+ 투자용 주택 추가</button>
         </fieldset>
 
         <fieldset id="assets_fieldset">
@@ -165,7 +166,7 @@
     </div>
 
     <div class="panel output-panel">
-        <h2>💡 은퇴 연도별 마스터 스프레드시트</h2>
+        <h2 style="text-align:center;">은퇴후 소득 및 자산변화표(현재가치기준)</h2>
         <div id="rm_warning" class="warning-box"></div> 
         <div class="table-container">
             <table class="breakdown-table">
@@ -173,25 +174,28 @@
                     <tr>
                         <th rowspan="2">본인<br>나이</th>
                         <th rowspan="2">배우자<br>나이</th>
-                        <th colspan="9" style="background:#34495e;">가구 합산 현금 흐름 및 세금 (현재가치)</th>
-                        <th colspan="3" style="background:#8e44ad;">본인 보유 자산 잔액 (현재가치)</th>
-                        <th colspan="3" style="background:#9b59b6;">배우자 보유 자산 잔액 (현재가치)</th>
-                        <th colspan="2" style="background:#16a085;">부동산 순자산(가치-부채) (현재가치)</th>
+                        
+                        <th colspan="9" style="background:#34495e;">가구합산 현금흐름 및 세금</th>
+                        
+                        <th colspan="3" style="background:#8e44ad;">본인보유 자산잔액</th>
+                        <th colspan="3" style="background:#9b59b6;">배우자보유 자산잔액</th>
+                        <th colspan="2" style="background:#16a085;">부동산 순자산(가치-부채))</th>
                     </tr>
                     <tr>
                         <th class="col-gross">연간 세전<br>총수익</th>
-                        <th>부동산<br>순 렌트수익</th>
-                        <th>합산<br>CPP+OAS+DB</th>
-                        <th>합산<br>TFSA인출</th>
-                        <th>역모기지<br>수령액</th>
-                        <th>합산<br>RRSP인출</th>
-                        <th>합산<br>NonReg인출</th>
-                        <th class="col-tax">[-] 합산<br>세금/환수</th>
-                        <th class="col-net">✨세후월<br>현금흐름</th>
+                        <th class="col-tax">[-]합산<br>세금/환수</th>
+                        <th class="col-net">세후 월<br>현금흐름</th>
                         
-                        <th class="col-asset">RRSP</th><th class="col-asset">TFSA</th><th class="col-asset">Non-Reg</th>
-                        <th class="col-asset">RRSP</th><th class="col-asset">TFSA</th><th class="col-asset">Non-Reg</th>
-                        <th class="col-asset">거주용<br>주택가치</th><th class="col-asset">투자용<br>합산가치</th>
+                        <th>부동산<br>렌트수익</th>
+                        <th>합산연금<br>CPP+OAS+DB</th>
+                        <th>TFSA<br>합산인출</th>
+                        <th>역모기지<br>수령액</th>
+                        <th>RRSP<br>합산인출</th>
+                        <th>일반계좌<br>합산인출</th>
+                        
+                        <th>RRSP</th><th>TFSA</th><th>일반계좌</th>
+                        <th>RRSP</th><th>TFSA</th><th>일반계좌</th>
+                        <th>거주용<br>주택가치</th><th>투자용<br>합산가치</th>
                     </tr>
                 </thead>
                 <tbody id="spreadsheet_body">
@@ -205,12 +209,12 @@
 <script>
     const lumps = { p1_rrsp: [], p1_tfsa: [], p1_non: [], p2_rrsp: [], p2_tfsa: [], p2_non: [] };
     const assetDefs = [
-        { id: 'p1_rrsp', owner: '본인', name: 'RRSP', tag: 'tag-100', tagText: '100%과세', bal: 300000, rate: 4.0 },
-        { id: 'p1_tfsa', owner: '본인', name: 'TFSA', tag: 'tag-0', tagText: '비과세', bal: 80000, rate: 5.0 },
-        { id: 'p1_non', owner: '본인', name: 'Non-Reg', tag: 'tag-50', tagText: '50%과세', bal: 50000, rate: 4.0 },
-        { id: 'p2_rrsp', owner: '배우자', name: 'RRSP', tag: 'tag-100', tagText: '100%과세', bal: 100000, rate: 4.0 },
-        { id: 'p2_tfsa', owner: '배우자', name: 'TFSA', tag: 'tag-0', tagText: '비과세', bal: 20000, rate: 5.0 },
-        { id: 'p2_non', owner: '배우자', name: 'Non-Reg', tag: 'tag-50', tagText: '50%과세', bal: 10000, rate: 4.0 }
+        { id: 'p1_rrsp', owner: '본인', name: 'RRSP', tag: 'tag-100', tagText: '100%과세', bal: 50000, rate: 4.0 },
+        { id: 'p1_tfsa', owner: '본인', name: 'TFSA', tag: 'tag-0', tagText: '비과세', bal: 100000, rate: 5.0 },
+        { id: 'p1_non', owner: '본인', name: '일반계좌', tag: 'tag-50', tagText: '50%과세', bal: 10000, rate: 3.0 },
+        { id: 'p2_rrsp', owner: '배우자', name: 'RRSP', tag: 'tag-100', tagText: '100%과세', bal: 50000, rate: 4.0 },
+        { id: 'p2_tfsa', owner: '배우자', name: 'TFSA', tag: 'tag-0', tagText: '비과세', bal: 100000, rate: 5.0 },
+        { id: 'p2_non', owner: '배우자', name: '일반계좌', tag: 'tag-50', tagText: '50%과세', bal: 10000, rate: 3.0 }
     ];
 
     let invProps = []; let invPropIdCounter = 0;
@@ -222,15 +226,17 @@
             html += `
             <div class="asset-box" style="border-left: 3px solid #e67e22;" id="inv_box_${p.id}">
                 <div class="asset-title">🏢 투자용 주택 ${index + 1} <span style="color:#e74c3c; cursor:pointer; font-size:0.8rem;" onclick="removeInvProp(${p.id})">[삭제]</span></div>
-                <div class="input-group"><label>현재시세 / 현재모기지</label>
-                    <div class="input-wrapper"><input type="number" id="inv_val_${p.id}" value="500000" oninput="calculatePV()"><input type="number" id="inv_mtg_curr_${p.id}" value="200000"></div>
+                <div class="multi-col-group">
+                    <div class="col-item"><label style="text-align:center;">현재시세($)</label><input type="number" id="inv_val_${p.id}" value="500000" oninput="calculatePV()"></div>
+                    <div class="col-item"><label style="text-align:center;">현재 모기지($)</label><input type="number" id="inv_mtg_curr_${p.id}" value="200000"></div>
                 </div>
-                <div class="input-group"><label style="color:#e67e22;">구매가(ACB) / 매각 나이</label>
-                    <div class="input-wrapper"><input type="number" id="inv_acb_${p.id}" value="300000"><input type="number" id="inv_sale_age_${p.id}" value="70" placeholder="본인나이"></div>
+                <div class="multi-col-group">
+                    <div class="col-item"><label style="color:#e67e22; text-align:center;">구매가(ACB)</label><input type="number" id="inv_acb_${p.id}" value="300000"></div>
+                    <div class="col-item"><label style="color:#e67e22; text-align:center;">매각 나이</label><input type="number" id="inv_sale_age_${p.id}" value="70" placeholder="본인나이"></div>
                 </div>
-                <div class="input-group"><label>월 렌트수익</label><div class="input-wrapper"><input type="number" id="inv_rent_inc_${p.id}" value="800"></div></div>
-                <div class="input-group"><label style="color:#2980b9;">은퇴시 모기지 잔액(Payout용)</label>
-                    <div class="input-wrapper"><input type="number" id="inv_mtg_retire_${p.id}" value="150000"></div>
+                <div class="multi-col-group">
+                    <div class="col-item"><label style="text-align:center;">월 렌트수익($)</label><input type="number" id="inv_rent_inc_${p.id}" value="800"></div>
+                    <div class="col-item"><label style="color:#2980b9; text-align:center;">은퇴시 모기지($)</label><input type="number" id="inv_mtg_retire_${p.id}" value="150000"></div>
                 </div>
             </div>`;
         });
@@ -256,25 +262,38 @@
             html += `
             <div class="asset-box ${spouseClass}" style="border-left: 3px solid ${borderCol};">
                 <div class="asset-title">👤 ${a.owner} ${a.name} <span class="tax-tag ${a.tag}">${a.tagText}</span></div>
-                <div class="input-group"><label>현재 잔액 / 연수익률</label>
-                    <div class="input-wrapper"><input type="number" id="${a.id}_curr" value="${a.bal}" oninput="calcAssetFV()"><input type="number" id="${a.id}_rate" value="${a.rate}" step="0.1" oninput="calcAssetFV()"></div>
+                
+                <div class="multi-col-group">
+                    <div class="col-item"><label style="text-align:center;">현재잔액($)</label><input type="number" id="${a.id}_curr" value="${a.bal}" oninput="calcAssetFV()"></div>
+                    <div class="col-item"><label style="text-align:center;">연수익률(%)</label><input type="number" id="${a.id}_rate" value="${a.rate}" step="0.1" oninput="calcAssetFV()"></div>
                 </div>
-                <div class="input-group"><label style="color:#c0392b;">👉 은퇴시 목표 미래가치 (수정가능)</label>
-                    <div class="input-wrapper"><input type="number" id="${a.id}_retire" value="0" style="background:${retireBg}; font-weight:bold;"></div>
-                </div>
-                <div class="withdraw-box">
-                    <div class="input-group"><label>1. 상속금액 (이 자산에서 남길 금액, 현재가치 입력)</label>
-                        <div class="input-wrapper"><input type="number" id="${a.id}_inherit" value="0"></div>
+                <div class="multi-col-group" style="margin-bottom:10px;">
+                    <div class="col-item">
+                        <label style="color:#c0392b;">👉 은퇴시 목표적립액 (미래가치기준, 수정가능)</label>
+                        <input type="number" id="${a.id}_retire" value="0" style="background:${retireBg}; font-weight:bold;">
                     </div>
-                    <div class="input-group"><label>2. 일시금(Lumpsum) 출금액 [나이 / 금액]</label>
-                        <div class="input-wrapper">
-                            <input type="number" id="${a.id}_l_age" placeholder="나이"><input type="number" id="${a.id}_l_amt" placeholder="금액">
-                            <button type="button" class="btn-sm" onclick="addLump('${a.id}')">추가</button>
+                </div>
+                
+                <div class="withdraw-box">
+                    <div class="multi-col-group" style="margin-bottom: 8px;">
+                        <div class="col-item">
+                            <label>1. 상속금액 (현재가치기준)</label>
+                            <input type="number" id="${a.id}_inherit" value="0">
                         </div>
                     </div>
-                    <div id="${a.id}_lump_list" style="margin-bottom:5px;"></div>
-                    <div class="input-group"><label>3. 분산인출 시작/종료 나이</label>
-                        <div class="input-wrapper"><input type="number" id="${a.id}_d_start" value="${dStart}"><input type="number" id="${a.id}_d_end" value="${dEnd}"></div>
+                    
+                    <label style="font-size: 0.75rem; color: #555; font-weight: bold; margin-bottom: 4px; display: block; letter-spacing:-0.3px;">2. 일시금 (Lumpsum) 출금액</label>
+                    <div class="multi-col-group" style="align-items: flex-end; margin-bottom: 4px;">
+                        <div class="col-item"><label style="font-weight:normal; text-align:center;">출금나이</label><input type="number" id="${a.id}_l_age" placeholder="나이"></div>
+                        <div class="col-item"><label style="font-weight:normal; text-align:center;">금액($)</label><input type="number" id="${a.id}_l_amt" placeholder="금액"></div>
+                        <div class="col-item" style="flex: 0 0 auto;"><button type="button" class="btn-sm" style="padding: 9px 12px; margin-bottom:0;" onclick="addLump('${a.id}')">추가</button></div>
+                    </div>
+                    <div id="${a.id}_lump_list" style="margin-bottom:10px;"></div>
+                    
+                    <label style="font-size: 0.75rem; color: #555; font-weight: bold; margin-bottom: 4px; display: block; letter-spacing:-0.3px;">3. 분산인출</label>
+                    <div class="multi-col-group" style="margin-bottom: 0;">
+                        <div class="col-item"><label style="font-weight:normal; text-align:center;">시작나이</label><input type="number" id="${a.id}_d_start" value="${dStart}"></div>
+                        <div class="col-item"><label style="font-weight:normal; text-align:center;">종료나이</label><input type="number" id="${a.id}_d_end" value="${dEnd}"></div>
                     </div>
                 </div>
             </div>`;
@@ -536,7 +555,7 @@
                 yOas2 = p2OwnOas; yDb2 = p2DbAmt + (p1DbAmt * 0.6);
             }
 
-            let yRent = hRent;
+            let yRent = parseFloat(document.getElementById('home_rent_inc').value) * 12;
             let invValTotalFV = 0;
             let invNetTotalFV = 0;
 
@@ -558,7 +577,7 @@
                     else if(p1Alive) assets.p1_non.bal += netProceedsFV;
                     else assets.p2_non.bal += netProceedsFV;
                     
-                    p.valFV = 0; p.mtg = 0;
+                    p.valFV = 0; p.mtg = 0; p.rent = 0;
                 }
                 
                 if(!p.isSold) {
@@ -619,15 +638,18 @@
                 <tr>
                     <td>${age1Str}</td>
                     <td>${age2Str}</td>
+                    
                     <td class="col-gross">${str(grossIncomePV)}</td>
+                    <td class="col-tax">-${str(totTaxPV)}</td>
+                    <td class="col-net">${str(netCashflowPV/12)}</td>
+                    
                     <td>${str(yRent)}</td>
                     <td>${str(yCpp1+yCpp2+yOas1+yOas2+yDb1+yDb2)}</td>
                     <td>${str(pv(drawn.p1_tfsa+drawn.p2_tfsa))}</td>
                     <td style="color:#27ae60; font-weight:bold;">${str(pv(annualRMFV))}</td>
                     <td>${str(pv(drawn.p1_rrsp+drawn.p2_rrsp))}</td>
                     <td>${str(pv(drawn.p1_non+drawn.p2_non))}</td>
-                    <td class="col-tax">-${str(totTaxPV)}</td>
-                    <td class="col-net">${str(netCashflowPV/12)}</td>
+                    
                     <td class="col-asset">${p1Alive ? str(pv(assets.p1_rrsp.bal)) : '-'}</td>
                     <td class="col-asset">${p1Alive ? str(pv(assets.p1_tfsa.bal)) : '-'}</td>
                     <td class="col-asset">${p1Alive ? str(pv(assets.p1_non.bal)) : '-'}</td>
