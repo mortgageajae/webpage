@@ -25,7 +25,7 @@
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800 font-sans p-0 m-0">
-    <section id="switch-calculator" class="px-2 md:px-0 max-w-6xl mx-auto relative z-10 fade-in pb-20">
+    <section id="switch-calculator" class="px-2 md:px-0 max-w-6xl mx-auto relative z-10 fade-in pb-10">
         <div class="bg-white p-8 rounded-xl shadow-md border border-gray-200 flex flex-col w-full box-border mt-4">
             
             <div class="bg-brand rounded-xl py-6 mb-8">
@@ -242,8 +242,14 @@
     <script>
         function notifyHeightChange() {
             setTimeout(() => {
-                const height = document.documentElement.scrollHeight || document.body.scrollHeight;
-                window.parent.postMessage({ type: 'resize', height: height + 50 }, '*');
+                // 문서 전체(body)가 아닌, 실제 콘텐츠가 담긴 section의 높이만 족집게로 측정
+                const contentWrapper = document.getElementById('switch-calculator');
+                
+                if (contentWrapper) {
+                    const height = contentWrapper.offsetHeight;
+                    // 실제 콘텐츠 높이에 약간의 여유분(20px)만 더해서 부모 창으로 전송
+                    window.parent.postMessage({ type: 'resize', height: height + 20 }, '*');
+                }
             }, 100);
         }
 
