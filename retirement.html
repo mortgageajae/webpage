@@ -8,13 +8,53 @@
     <style>
         :root { --primary: #2c3e50; --secondary: #2980b9; --accent: #e74c3c; --bg: #f4f7f6; --box: #ffffff; }
         * { box-sizing: border-box; }
-        body { font-family: 'Malgun Gothic', sans-serif; background-color: var(--bg); margin: 0; padding: 10px; color: #333; }
-        .container { display: flex; flex-wrap: wrap; gap: 15px; max-width: 1500px; margin: 0 auto; }
-        .panel { background: var(--box); padding: 15px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); width: 100%; }
+        
+        html, body { margin: 0; padding: 0; background-color: var(--bg); }
+        body { font-family: 'Malgun Gothic', sans-serif; color: #333; }
+        
+        /* 공통 타이틀 헤더 스타일 (다른 페이지의 Tailwind bg-brand 디자인과 동일하게 맞춤) */
+        .brand-header {
+            background-color: #334da9;
+            border-radius: 12px;
+            padding: 24px;
+            margin: 10px 10px 0 10px;
+            text-align: center;
+        }
+        .brand-header h1 {
+            color: #ffffff;
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin: 0;
+            letter-spacing: -0.5px;
+        }
+        @media (min-width: 768px) {
+            .brand-header h1 { font-size: 1.875rem; }
+        }
+        @media (min-width: 992px) {
+            .brand-header { margin: 20px 20px 0 20px; }
+        }
+
+        /* 전체 화면: 상하 배치 */
+        .container { 
+            display: flex; 
+            flex-direction: column; 
+            max-width: 100%; 
+            margin: 0 auto; 
+            padding: 10px; 
+            gap: 20px; 
+        }
+        
+        .panel { 
+            background: var(--box); 
+            padding: 15px; 
+            border-radius: 10px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05); 
+            width: 100%; 
+        }
         
         h2 { margin-top: 0; color: var(--primary); font-size: 1.2rem; border-bottom: 2px solid var(--secondary); padding-bottom: 10px; }
         h3 { font-size: 1.05rem; color: var(--primary); margin: 15px 0 10px 0; }
-        fieldset { border: 1px solid #ddd; border-radius: 8px; padding: 12px; background: #fafafa; margin-bottom: 10px; }
+        fieldset { border: 1px solid #ddd; border-radius: 8px; padding: 12px; background: #fafafa; margin-bottom: 15px; }
         legend { font-weight: bold; color: var(--secondary); background: white; padding: 0 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 0.95rem; }
         
         .person-section { border-left: 4px solid var(--secondary); padding-left: 10px; margin-bottom: 15px; background: white; padding: 12px; border-radius: 6px; }
@@ -27,9 +67,8 @@
         .pv-preview { background: #e8f4f8; border-left: 4px solid #3498db; padding: 10px; font-size: 0.85rem; margin-top: 10px; border-radius: 4px; line-height: 1.4; }
         .warning-box { background: #fadbd8; border-left: 4px solid #c0392b; padding: 10px; font-size: 0.85rem; margin-top: 10px; border-radius: 4px; line-height: 1.4; color: #c0392b; display: none; }
         
-        /* 다중 컬럼 인풋 스타일 (라벨 위, 박스 아래) - 모든 글씨크기 통일 (0.75rem) */
         .multi-col-group { display: flex; gap: 10px; margin-bottom: 10px; width: 100%; }
-        .multi-col-group .col-item { flex: 1; display: flex; flex-direction: column; }
+        .multi-col-group .col-item { flex: 1; display: flex; flex-direction: column; min-width: 0; }
         .multi-col-group .col-item label { font-size: 0.75rem; margin-bottom: 4px; color: #555; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; letter-spacing: -0.3px;}
         .multi-col-group .col-item input, .multi-col-group .col-item select { padding: 8px 6px; border: 1px solid #ccc; border-radius: 6px; text-align: right; font-size: 0.85rem; width: 100%;}
         
@@ -38,12 +77,14 @@
         .lump-del { color: #e74c3c; cursor: pointer; font-weight: bold; margin-left: 4px; }
         .btn-sm { background: var(--secondary); color: white; border: none; padding: 8px 10px; border-radius: 4px; cursor: pointer; font-size:0.75rem; font-weight:bold; margin-bottom:0;}
 
-        /* 스프레드시트 테이블 */
-        .table-container { overflow-x: auto; overflow-y: auto; max-height: 700px; margin-top: 10px; border-radius: 6px; border: 1px solid #ddd; }
+        /* 드래그 테이블 */
+        .table-container { overflow-x: auto; margin-top: 10px; border-radius: 6px; border: 1px solid #ddd; cursor: grab; user-select: none; }
+        .table-container:active { cursor: grabbing; }
+        
         table.breakdown-table { width: 100%; border-collapse: collapse; font-size: 0.75rem; text-align: right; min-width: 1400px; white-space: nowrap; }
         table.breakdown-table th, table.breakdown-table td { border: 1px solid #eee; padding: 8px 6px; }
         table.breakdown-table th { background-color: var(--primary) !important; color: white !important; text-align: center; position: sticky; top: 0; z-index: 10; font-size: 0.75rem; font-weight: bold; }
-        table.breakdown-table td:first-child, table.breakdown-table td:nth-child(2) { text-align: center; font-weight: bold; background: #f9f9f9; }
+        table.breakdown-table td:first-child, table.breakdown-table td:nth-child(2) { text-align: center; font-weight: bold; background: #f9f9f9; pointer-events: none; }
         
         .col-net { font-weight: bold; color: var(--secondary); background: #eaf2f8 !important; font-size: 0.7rem; }
         .col-tax { color: #e74c3c; background: #fadbd8 !important; }
@@ -55,16 +96,30 @@
         .calc-btn:hover { background: #1f6391; }
         .hidden { display: none !important; }
 
+        /* 모바일 기본 (1단 그리드) */
+        .couple-grid { display: flex; flex-direction: column; gap: 15px; }
+        .dynamic-grid { display: flex; flex-direction: column; gap: 15px; }
+
+        /* 데스크탑 레이아웃 (992px 이상) */
         @media (min-width: 992px) {
-            body { padding: 20px; }
-            .container { gap: 20px; flex-wrap: nowrap; }
-            .panel { padding: 25px; }
-            .input-panel { flex: 0 0 520px; max-height: 90vh; overflow-y: auto; padding-right: 15px; }
-            .output-panel { flex: 1; max-height: 90vh; overflow-y: hidden; display: flex; flex-direction: column;}
+            .container { padding: 20px; align-items: center; } 
+            .input-panel { max-width: 1050px; width: 100%; } 
+            .output-panel { width: 100%; max-width: 100%; }
+            
+            /* 2번 연금: 본인/배우자 좌우 2단 배치 */
+            .couple-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+            
+            /* 4번 금융자산: 부부일 때만 좌우 2단 배치 */
+            .dynamic-grid.is-couple { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+            .dynamic-grid.is-couple .asset-box { margin-bottom: 0; height: 100%; }
         }
     </style>
 </head>
 <body>
+
+<div class="brand-header">
+    <h1 class="text-2xl md:text-3xl font-extrabold text-white text-center">은퇴 재정설계 시뮬레이터</h1>
+</div>
 
 <div class="container">
     <div class="panel input-panel">
@@ -93,44 +148,47 @@
 
         <fieldset>
             <legend>2. 연령 및 정부/기업 연금</legend>
-            <div class="person-section">
-                <h3 style="color: var(--secondary); margin-top:0;">👤 본인 (Primary)</h3>
-                <div class="multi-col-group">
-                    <div class="col-item"><label style="text-align:center;">현재 나이</label><input type="number" id="p1_age" value="55" oninput="syncAges(); calculatePV();"></div>
-                    <div class="col-item"><label style="text-align:center;">은퇴 나이</label><input type="number" id="p1_retire" value="65" oninput="syncAges(); calculatePV();"></div>
-                    <div class="col-item"><label style="text-align:center;">기대 수명</label><input type="number" id="p1_life" value="90" oninput="syncAges(); calculatePV();"></div>
+            <div class="couple-grid">
+                <div class="person-section" style="margin-bottom:0;">
+                    <h3 style="color: var(--secondary); margin-top:0;">👤 본인 (Primary)</h3>
+                    <div class="multi-col-group">
+                        <div class="col-item"><label style="text-align:center;">현재 나이</label><input type="number" id="p1_age" value="55" oninput="syncAges(); calculatePV();"></div>
+                        <div class="col-item"><label style="text-align:center;">은퇴 나이</label><input type="number" id="p1_retire" value="65" oninput="syncAges(); calculatePV();"></div>
+                        <div class="col-item"><label style="text-align:center;">기대 수명</label><input type="number" id="p1_life" value="90" oninput="syncAges(); calculatePV();"></div>
+                    </div>
+                    <div class="multi-col-group">
+                        <div class="col-item"><label style="text-align:center;">CPP 연수</label><input type="number" id="p1_cpp_yr" value="35" oninput="calculatePV()"></div>
+                        <div class="col-item"><label style="text-align:center;">평균페이(%)</label><input type="number" id="p1_cpp_pct" value="70" oninput="calculatePV()"></div>
+                        <div class="col-item"><label style="text-align:center;">시작 나이</label><input type="number" id="p1_cpp_start" value="65" oninput="calculatePV()"></div>
+                    </div>
+                    <div class="multi-col-group">
+                        <div class="col-item"><label style="text-align:center;">OAS 연수</label><input type="number" id="p1_oas_yr" value="30" oninput="calculatePV()"></div>
+                        <div class="col-item"><label style="text-align:center;">OAS 시작</label><input type="number" id="p1_oas_start" value="65" oninput="calculatePV()"></div>
+                        <div class="col-item"><label style="color:#27ae60; text-align:center;">월 기업연금</label><input type="number" id="p1_db" value="0"></div>
+                    </div>
                 </div>
-                <div class="multi-col-group">
-                    <div class="col-item"><label style="text-align:center;">CPP 연수</label><input type="number" id="p1_cpp_yr" value="35" oninput="calculatePV()"></div>
-                    <div class="col-item"><label style="text-align:center;">평균페이(%)</label><input type="number" id="p1_cpp_pct" value="70" oninput="calculatePV()"></div>
-                    <div class="col-item"><label style="text-align:center;">시작 나이</label><input type="number" id="p1_cpp_start" value="65" oninput="calculatePV()"></div>
+                
+                <div class="person-section spouse" id="spouse_section" style="margin-bottom:0;">
+                    <h3 style="color: #9b59b6; margin-top:0;">👤 배우자 (Spouse)</h3>
+                    <div class="multi-col-group">
+                        <div class="col-item"><label style="text-align:center;">현재 나이</label><input type="number" id="p2_age" value="52" oninput="syncAges(); calculatePV();"></div>
+                        <div class="col-item"><label style="text-align:center;">은퇴 나이</label><input type="number" id="p2_retire" value="62" oninput="syncAges(); calculatePV();"></div>
+                        <div class="col-item"><label style="text-align:center;">기대 수명</label><input type="number" id="p2_life" value="92" oninput="syncAges(); calculatePV();"></div>
+                    </div>
+                    <div class="multi-col-group">
+                        <div class="col-item"><label style="text-align:center;">CPP 연수</label><input type="number" id="p2_cpp_yr" value="20" oninput="calculatePV()"></div>
+                        <div class="col-item"><label style="text-align:center;">평균페이(%)</label><input type="number" id="p2_cpp_pct" value="50" oninput="calculatePV()"></div>
+                        <div class="col-item"><label style="text-align:center;">시작 나이</label><input type="number" id="p2_cpp_start" value="65" oninput="calculatePV()"></div>
+                    </div>
+                    <div class="multi-col-group">
+                        <div class="col-item"><label style="text-align:center;">OAS 연수</label><input type="number" id="p2_oas_yr" value="25" oninput="calculatePV()"></div>
+                        <div class="col-item"><label style="text-align:center;">OAS 시작</label><input type="number" id="p2_oas_start" value="65" oninput="calculatePV()"></div>
+                        <div class="col-item"><label style="color:#27ae60; text-align:center;">월 기업연금</label><input type="number" id="p2_db" value="0"></div>
+                    </div>
                 </div>
-                <div class="multi-col-group">
-                    <div class="col-item"><label style="text-align:center;">OAS 연수</label><input type="number" id="p1_oas_yr" value="30" oninput="calculatePV()"></div>
-                    <div class="col-item"><label style="text-align:center;">OAS 시작</label><input type="number" id="p1_oas_start" value="65" oninput="calculatePV()"></div>
-                    <div class="col-item"><label style="color:#27ae60; text-align:center;">월 기업연금(DB)</label><input type="number" id="p1_db" value="0"></div>
-                </div>
-            </div>
+            </div> 
             
-            <div class="person-section spouse" id="spouse_section">
-                <h3 style="color: #9b59b6; margin-top:0;">👤 배우자 (Spouse)</h3>
-                <div class="multi-col-group">
-                    <div class="col-item"><label style="text-align:center;">현재 나이</label><input type="number" id="p2_age" value="52" oninput="syncAges(); calculatePV();"></div>
-                    <div class="col-item"><label style="text-align:center;">은퇴 나이</label><input type="number" id="p2_retire" value="62" oninput="syncAges(); calculatePV();"></div>
-                    <div class="col-item"><label style="text-align:center;">기대 수명</label><input type="number" id="p2_life" value="92" oninput="syncAges(); calculatePV();"></div>
-                </div>
-                <div class="multi-col-group">
-                    <div class="col-item"><label style="text-align:center;">CPP 연수</label><input type="number" id="p2_cpp_yr" value="20" oninput="calculatePV()"></div>
-                    <div class="col-item"><label style="text-align:center;">평균페이(%)</label><input type="number" id="p2_cpp_pct" value="50" oninput="calculatePV()"></div>
-                    <div class="col-item"><label style="text-align:center;">시작 나이</label><input type="number" id="p2_cpp_start" value="65" oninput="calculatePV()"></div>
-                </div>
-                <div class="multi-col-group">
-                    <div class="col-item"><label style="text-align:center;">OAS 연수</label><input type="number" id="p2_oas_yr" value="25" oninput="calculatePV()"></div>
-                    <div class="col-item"><label style="text-align:center;">OAS 시작</label><input type="number" id="p2_oas_start" value="65" oninput="calculatePV()"></div>
-                    <div class="col-item"><label style="color:#27ae60; text-align:center;">월 기업연금(DB)</label><input type="number" id="p2_db" value="0"></div>
-                </div>
-            </div>
-            <div id="pension_preview" class="pv-preview">실시간 예상 연금 계산중...</div>
+            <div id="pension_preview" class="pv-preview" style="margin-top: 15px;">실시간 예상 연금 계산중...</div>
         </fieldset>
 
         <fieldset>
@@ -152,23 +210,25 @@
                 </div>
             </div>
 
-            <div id="inv_props_container"></div>
-            <button class="btn-sm" style="width:100%; margin-bottom:10px; padding:10px; background-color:#e67e22;" onclick="addInvProp()">+ 투자용 주택 추가</button>
+            <div id="inv_props_container" class="assets-grid"></div>
+            <button class="btn-sm" style="width:100%; margin-top:10px; margin-bottom:5px; padding:10px; background-color:#e67e22;" onclick="addInvProp()">+ 투자용 주택 추가</button>
         </fieldset>
 
         <fieldset id="assets_fieldset">
             <legend>4. 금융 투자자산 및 인출 옵션</legend>
-            <div style="font-size: 0.75rem; margin-bottom: 5px; color:#c0392b;">* 72세부터 CRA 법정 최소 인출액(RRIF Minimum)이 강제 적용됩니다.</div>
-            <div id="dynamic_assets_container"></div>
+            <div style="font-size: 0.75rem; margin-bottom: 10px; color:#c0392b;">* 72세부터 CRA 법정 최소 인출액(RRIF Minimum)이 강제 적용됩니다.</div>
+            <div id="dynamic_assets_container" class="dynamic-grid"></div>
         </fieldset>
 
         <button class="calc-btn" onclick="runSimulation()">결과보기</button>
     </div>
 
-    <div class="panel output-panel">
+    <div class="panel output-panel" id="result-section">
         <h2 style="text-align:center;">은퇴후 소득 및 자산변화표(현재가치기준)</h2>
+        <div style="text-align:center; font-size:0.8rem; color:#7f8c8d; margin-bottom:10px;">💡 표를 좌우로 드래그(스크롤)하여 더 많은 정보를 확인하세요.</div>
         <div id="rm_warning" class="warning-box"></div> 
-        <div class="table-container">
+        
+        <div class="table-container" id="scrollable-table">
             <table class="breakdown-table">
                 <thead>
                     <tr>
@@ -207,13 +267,45 @@
 </div>
 
 <script>
+    window.addEventListener('DOMContentLoaded', () => {
+        const resizeObserver = new ResizeObserver(() => {
+            const height = document.documentElement.scrollHeight || document.body.scrollHeight;
+            window.parent.postMessage({ type: 'resize', height: height + 20 }, '*');
+        });
+        resizeObserver.observe(document.body);
+
+        const slider = document.getElementById('scrollable-table');
+        let isDown = false;
+        let startX;
+        let scrollLeft;
+
+        slider.addEventListener('mousedown', (e) => {
+            isDown = true;
+            startX = e.pageX - slider.offsetLeft;
+            scrollLeft = slider.scrollLeft;
+        });
+
+        slider.addEventListener('mouseleave', () => { isDown = false; });
+        slider.addEventListener('mouseup', () => { isDown = false; });
+
+        slider.addEventListener('mousemove', (e) => {
+            if (!isDown) return;
+            e.preventDefault();
+            const x = e.pageX - slider.offsetLeft;
+            const walk = (x - startX) * 1.5; 
+            slider.scrollLeft = scrollLeft - walk;
+        });
+    });
+
     const lumps = { p1_rrsp: [], p1_tfsa: [], p1_non: [], p2_rrsp: [], p2_tfsa: [], p2_non: [] };
+    
+    // 금융자산 정의 (본인-배우자 순서로 배치하여 좌우 짝을 맞춤)
     const assetDefs = [
         { id: 'p1_rrsp', owner: '본인', name: 'RRSP', tag: 'tag-100', tagText: '100%과세', bal: 50000, rate: 4.0 },
-        { id: 'p1_tfsa', owner: '본인', name: 'TFSA', tag: 'tag-0', tagText: '비과세', bal: 100000, rate: 5.0 },
-        { id: 'p1_non', owner: '본인', name: '일반계좌', tag: 'tag-50', tagText: '50%과세', bal: 10000, rate: 3.0 },
         { id: 'p2_rrsp', owner: '배우자', name: 'RRSP', tag: 'tag-100', tagText: '100%과세', bal: 50000, rate: 4.0 },
+        { id: 'p1_tfsa', owner: '본인', name: 'TFSA', tag: 'tag-0', tagText: '비과세', bal: 100000, rate: 5.0 },
         { id: 'p2_tfsa', owner: '배우자', name: 'TFSA', tag: 'tag-0', tagText: '비과세', bal: 100000, rate: 5.0 },
+        { id: 'p1_non', owner: '본인', name: '일반계좌', tag: 'tag-50', tagText: '50%과세', bal: 10000, rate: 3.0 },
         { id: 'p2_non', owner: '배우자', name: '일반계좌', tag: 'tag-50', tagText: '50%과세', bal: 10000, rate: 3.0 }
     ];
 
@@ -224,7 +316,7 @@
         let html = '';
         invProps.forEach((p, index) => {
             html += `
-            <div class="asset-box" style="border-left: 3px solid #e67e22;" id="inv_box_${p.id}">
+            <div class="asset-box" style="border-left: 3px solid #e67e22; margin-bottom: 0;" id="inv_box_${p.id}">
                 <div class="asset-title">🏢 투자용 주택 ${index + 1} <span style="color:#e74c3c; cursor:pointer; font-size:0.8rem;" onclick="removeInvProp(${p.id})">[삭제]</span></div>
                 <div class="multi-col-group">
                     <div class="col-item"><label style="text-align:center;">현재시세($)</label><input type="number" id="inv_val_${p.id}" value="500000" oninput="calculatePV()"></div>
@@ -241,6 +333,9 @@
             </div>`;
         });
         document.getElementById('inv_props_container').innerHTML = html;
+        
+        const height = document.documentElement.scrollHeight || document.body.scrollHeight;
+        window.parent.postMessage({ type: 'resize', height: height + 20 }, '*');
     }
 
     function renderAssetsUI() {
@@ -269,7 +364,7 @@
                 </div>
                 <div class="multi-col-group" style="margin-bottom:10px;">
                     <div class="col-item">
-                        <label style="color:#c0392b;">👉 은퇴시 목표적립액 (미래가치기준, 수정가능)</label>
+                        <label style="color:#c0392b;">👉 은퇴시 목표적립액 (미래가치기준)</label>
                         <input type="number" id="${a.id}_retire" value="0" style="background:${retireBg}; font-weight:bold;">
                     </div>
                 </div>
@@ -300,6 +395,11 @@
         });
         document.getElementById('dynamic_assets_container').innerHTML = html;
         calcAssetFV();
+        
+        setTimeout(() => {
+            const height = document.documentElement.scrollHeight || document.body.scrollHeight;
+            window.parent.postMessage({ type: 'resize', height: height + 20 }, '*');
+        }, 50);
     }
 
     function syncAges() {
@@ -332,7 +432,16 @@
 
     function toggleSpouse() {
         const isCouple = document.getElementById('is_couple').value === 'true';
-        document.getElementById('spouse_section').classList.toggle('hidden', !isCouple);
+        
+        document.getElementById('spouse_section').style.display = isCouple ? 'block' : 'none';
+        
+        const dynContainer = document.getElementById('dynamic_assets_container');
+        if(isCouple) {
+            dynContainer.classList.add('is-couple');
+        } else {
+            dynContainer.classList.remove('is-couple');
+        }
+        
         renderAssetsUI(); calculatePV();
     }
 
@@ -382,7 +491,7 @@
         calcAssetFV();
     }
 
-    window.onload = function() { addInvProp(); renderAssetsUI(); calculatePV(); runSimulation(); };
+    window.onload = function() { addInvProp(); renderAssetsUI(); calculatePV(); runSimulation(); toggleSpouse(); };
 
     function calculateIndividualTax(income) {
         let fedBPA = 15705, bcBPA = 12580, fedTax = 0, bcTax = 0;
@@ -663,6 +772,13 @@
         }
 
         document.getElementById('spreadsheet_body').innerHTML = tbodyHTML;
+        
+        setTimeout(() => {
+            const height = document.documentElement.scrollHeight || document.body.scrollHeight;
+            window.parent.postMessage({ type: 'resize', height: height + 20 }, '*');
+        }, 50);
+        
+        document.getElementById('result-section').scrollIntoView({ behavior: 'smooth' });
     }
 </script>
 </body>

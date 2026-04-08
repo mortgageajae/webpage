@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>모기지아재 | BC주 전문 엔지니어 모기지 브로커</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            light: '#f0f3fa',   
+                            DEFAULT: '#334da9', 
+                            dark: '#253880',    
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        html { scroll-behavior: smooth; }
+        .gradient-bg { background: linear-gradient(135deg, #0f172a 0%, #334da9 100%); }
+        .benefit-card { transition: all 0.3s ease; }
+        .benefit-card:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+        .fade-in { animation: fadeIn 0.4s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* 카드 헤더 및 제목 두 단계 확대, 중앙 정렬, 파란 배경, 흰 글씨 */
+        .card-header { @apply bg-brand p-8 text-center text-white; }
+        .card-title { @apply text-3xl md:text-5xl font-extrabold; }
+        
+        /* 버튼 통일: 파란색 라운드 박스, 흰색 글씨, 중앙 정렬 */
+        .btn-primary { @apply w-full bg-brand hover:bg-brand-dark text-white font-bold text-lg md:text-xl py-4 rounded-xl transition shadow-xl mt-4 block text-center cursor-pointer border-none outline-none; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans pt-32 md:pt-40">
+
+    <header class="bg-white shadow-md fixed w-full z-20 top-0">
+        <div class="w-full flex justify-center bg-white">
+            <a href="#" class="w-full max-w-[1400px] flex justify-center">
+                <img src="./images/mortgageajae-banner.jpg" alt="모기지아재 로고 배너" class="w-full h-auto max-h-24 md:max-h-32 object-contain md:hidden" onerror="this.style.display='none'">
+                <img src="./images/mortgageajae-banner-web.jpg" alt="모기지아재 데스크탑 배너" class="hidden md:block w-full h-auto max-h-24 md:max-h-32 object-contain mx-auto" onerror="this.style.display='none'">
+            </a>
+        </div>
+        <div class="border-t border-gray-100 py-3 md:py-4 bg-white">
+            <div class="max-w-6xl mx-auto px-2 flex justify-center space-x-3 sm:space-x-6 md:space-x-12 text-xs sm:text-sm md:text-lg font-bold text-gray-700 whitespace-nowrap overflow-x-auto no-scrollbar">
+                <a href="#analysis" class="hover:text-brand transition text-brand">금리진단</a>
+                <a href="#tools" class="hover:text-brand transition">핵심도구</a>
+                <a href="#benefits" class="hover:text-brand transition">혜택진단</a>
+                <a href="#consolidation" class="hover:text-brand transition">부채통합</a>
+                <a href="board.html" class="hover:text-brand transition">정보보드</a>
+                <a href="https://calendar.app.google/zWG82EqskeBtwyeU7" class="hover:text-brand transition">미팅신청</a>
+            </div>
+        </div>
+    </header>
+
+    <section class="py-8 px-4">
+        <div class="max-w-6xl mx-auto gradient-bg rounded-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row items-center justify-center gap-10 p-10 md:p-16 text-white">
+            <div class="flex flex-col items-center flex-shrink-0">
+                <img src="./images/profile.jpg" alt="Justin Bae P.Eng" class="h-64 w-64 md:h-[20rem] md:w-[20rem] rounded-full border-4 border-white shadow-2xl object-cover" onerror="this.style.display='none'">
+            </div>
+            <div class="text-center md:text-left flex flex-col justify-center mt-6 md:mt-0">
+                <span class="bg-brand-dark text-white text-xs font-bold px-3 py-1 rounded-full mb-4 inline-block border border-brand-light/30 self-center md:self-start">P.Eng & BCFSA Registered Broker</span>
+                <h1 class="text-2xl md:text-3xl lg:text-4xl font-extrabold mb-5 leading-tight tracking-tight">엔지니어의 꼼꼼함으로<br>분석해드리는 최적의<br>모기지 솔루션</h1>
+                <p class="text-base text-blue-100 max-w-md mx-auto md:mx-0">복잡한 숫자와 약관, 손쉽게 풀어서 정밀하게 검토해 드립니다. 모기지아재와 함께 내집마련 전략을 세우세요.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="analysis" class="pt-8 pb-8 px-4 max-w-6xl mx-auto relative z-10">
+        <div class="bg-white p-8 rounded-xl shadow-md border border-gray-200">
+            <div class="bg-brand rounded-xl py-6 mb-4">
+                <h2 class="text-2xl md:text-3xl font-extrabold text-white text-center">모기지아재의 금리진단</h2>
+            </div>
+            
+            <p class="text-center text-sm text-gray-600 font-medium mb-8">현재 제안받으신 금리들을 입력하시면, 최신의 BC주 시장 데이터와 대조하여 최적의 오퍼인지 분석해 드립니다.</p>
+
+            <form id="mortgageForm" action="https://script.google.com/macros/s/AKfycbwMIsYYOPnqUtDs_pJx4vZ1JG_yHEvj1uoLE4AgCU6DY88v-kgyPQ-bGqJr8qWi70NBiQ/exec" method="POST" class="space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">성함</label>
+                        <input type="text" name="성함" required class="w-full border border-gray-300 focus:border-brand focus:ring-brand rounded-lg p-2 text-sm outline-none" placeholder="홍길동">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">이메일 주소</label>
+                        <input type="text" id="emailInput" name="이메일 주소" required class="w-full border border-gray-300 focus:border-brand focus:ring-brand rounded-lg p-2 text-sm outline-none" placeholder="example@email.com">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">신용 점수가 680점 이상입니까?</label>
+                        <select name="신용 점수가 680점 이상입니까?" class="w-full border border-gray-300 focus:border-brand rounded-lg p-2 text-sm outline-none bg-white">
+                            <option value="예">예 (680점 이상)</option>
+                            <option value="아니오">아니오</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">주요 소득원 유형</label>
+                        <select name="주요 소득원 유형" required class="w-full border border-gray-300 focus:border-brand rounded-lg p-2 text-sm outline-none bg-white">
+                            <option value="" disabled selected>선택해주세요</option>
+                            <option value="직장인 (T4)">직장인 (T4)</option>
+                            <option value="자영업 (Self-Employed)">자영업 (Self-Employed)</option>
+                            <option value="법인 사업자 (Incorporated)">법인 사업자 (Incorporated)</option>
+                            <option value="기타/무소득">기타 / 무소득</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">생애 최초구매 이신가요?</label>
+                        <select name="생애 최초구매" class="w-full border border-gray-300 focus:border-brand rounded-lg p-2 text-sm outline-none bg-white">
+                            <option value="예">예</option>
+                            <option value="아니오" selected>아니오</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">주택 용도</label>
+                        <select name="주택 용도" class="w-full border border-gray-300 focus:border-brand rounded-lg p-2 text-sm outline-none bg-white">
+                            <option value="본인 거주용" selected>본인 거주용 (Owner Occupied)</option>
+                            <option value="투자용">투자용 렌탈 (Rental Property)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <hr class="border-gray-100">
+
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-1">신청 목적</label>
+                    <select id="purpose" name="신청 목적 (Purpose)" required onchange="toggleFields()" class="w-full border border-gray-300 focus:border-brand rounded-lg p-2 text-sm outline-none bg-white">
+                        <option value="" disabled selected>선택해주세요</option>
+                        <option value="신규 구매">신규구매 혹은 재융자 (Purchase / Refinance)</option>
+                        <option value="Renewal">갱신 및 렌더변경 (Renewal / Switch)</option>
+                    </select>
+                </div>
+
+                <div id="purchase-fields" class="hidden grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">주택 구매가격 ($)</label>
+                        <input type="number" name="주택 구매 가격" class="w-full border border-gray-300 focus:border-brand rounded-lg p-2 text-sm outline-none" placeholder="1000000">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">다운페이먼트 금액 ($)</label>
+                        <input type="number" name="다운페이먼트 금액" class="w-full border border-gray-300 focus:border-brand rounded-lg p-2 text-sm outline-none" placeholder="200000">
+                    </div>
+                </div>
+
+                <div id="renewal-fields" class="hidden space-y-4">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">최초 주택구매 연월</label>
+                        <input type="month" id="originalDate" name="최초구매연월" onchange="checkDate()" class="w-full border border-gray-300 focus:border-brand rounded-lg p-2 text-sm outline-none">
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-1">현재 시장가치 ($)</label>
+                            <input type="number" name="현재 시장 가치" class="w-full border border-gray-300 focus:border-brand rounded-lg p-2 text-sm outline-none" placeholder="1000000">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-1">필요한 모기지금액 ($)</label>
+                            <input type="number" name="필요한 모기지 금액" class="w-full border border-gray-300 focus:border-brand rounded-lg p-2 text-sm outline-none" placeholder="남은 대출 잔액">
+                        </div>
+                    </div>
+                    <div id="original-price-container" class="hidden">
+                        <label class="block text-sm font-bold text-gray-700 mb-1">최초 구매금액 ($)</label>
+                        <input type="number" name="최초 구매금액" class="w-full border border-gray-300 focus:border-brand rounded-lg p-2 text-sm outline-none" placeholder="과거 구매 가격">
+                    </div>
+                </div>
+
+                <hr class="border-gray-100">
+
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-1">제안받은 은행/렌더 이름</label>
+                    <input type="text" name="렌더이름 입력해주세요" class="w-full border border-gray-300 focus:border-brand focus:ring-brand rounded-lg p-2 text-sm outline-none" placeholder="예: TD Bank, RBC 등">
+                </div>
+
+                <div class="bg-gray-50 p-6 rounded-xl border border-gray-200">
+                    <p class="text-sm font-bold text-gray-700 mb-3 text-center">현재 제안받은 금리입력 (최소 1개 이상)</p>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-xs text-gray-500 font-bold mb-1">3Y Fixed (%)</label>
+                            <input type="number" step="0.01" id="rate3F" name="3-Year Fixed Rate" class="w-full border border-gray-300 focus:border-brand rounded-lg p-2 text-sm text-center outline-none" placeholder="예: 4.89">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-gray-500 font-bold mb-1">5Y Fixed (%)</label>
+                            <input type="number" step="0.01" id="rate5F" name="5-Year Fixed Rate" class="w-full border border-gray-300 focus:border-brand rounded-lg p-2 text-sm text-center outline-none" placeholder="예: 4.59">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-gray-500 font-bold mb-1">5Y Variable (%)</label>
+                            <input type="number" step="0.01" id="rate5V" name="5-Year Variable Rate" class="w-full border border-gray-300 focus:border-brand rounded-lg p-2 text-sm text-center outline-none" placeholder="예: 5.70">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center mt-8">
+                    <button type="submit" class="inline-block bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-extrabold text-lg md:text-xl py-4 px-12 md:px-20 rounded-full shadow-xl transition cursor-pointer border-none outline-none">분석리포트 신청하기</button>
+                </div>
+            </form>
+            
+            <div id="successMessage" class="hidden p-16 text-center bg-white mt-8 border border-gray-200 rounded-xl">
+                <div class="text-6xl mb-4">✅</div>
+                <h2 class="text-2xl font-bold text-brand mb-2">분석 신청이 완료되었습니다.</h2>
+                <p class="text-gray-600">입력하신 이메일 메일함을 확인해 주세요. (스팸함 포함)</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="tools" class="pt-8 pb-8 px-4 max-w-6xl mx-auto">
+        <div class="grid md:grid-cols-2 gap-8">
+            
+            <div class="bg-white p-8 rounded-xl shadow-md border border-gray-200 flex flex-col">
+                <div class="bg-brand rounded-xl py-6 mb-8">
+                    <h2 class="text-2xl md:text-3xl font-extrabold text-white text-center">대출한도 계산</h2>
+                </div>
+                
+                <div class="space-y-4 text-sm flex-grow">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block font-medium text-gray-700">연소득 ($)</label>
+                            <input type="number" id="calc1-income" class="mt-1 block w-full border border-gray-300 focus:border-brand focus:ring-brand rounded-md p-2 outline-none">
+                        </div>
+                        <div>
+                            <label class="block font-medium text-gray-700">현재 예상금리 (%)</label>
+                            <input type="number" id="calc1-rate" class="mt-1 block w-full border border-gray-300 focus:border-brand focus:ring-brand rounded-md p-2 outline-none" step="0.1">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block font-medium text-gray-700">연간 재산세 ($)</label>
+                            <input type="number" id="calc1-tax" class="mt-1 block w-full border border-gray-300 focus:border-brand focus:ring-brand rounded-md p-2 outline-none" placeholder="예: 3000">
+                        </div>
+                        <div>
+                            <label class="block font-medium text-gray-700">월 스트라타피 ($)</label>
+                            <input type="number" id="calc1-strata" class="mt-1 block w-full border border-gray-300 focus:border-brand focus:ring-brand rounded-md p-2 outline-none" placeholder="예: 400 (50% 적용)">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block font-medium text-gray-700">월 난방비 ($)</label>
+                            <input type="number" id="calc1-heat" class="mt-1 block w-full border border-gray-300 focus:border-brand focus:ring-brand rounded-md p-2 outline-none" placeholder="예: 100" value="100">
+                        </div>
+                        <div>
+                            <label class="block font-medium text-gray-700">월 기타부채 ($)</label>
+                            <input type="number" id="calc1-debt" class="mt-1 block w-full border border-gray-300 focus:border-brand focus:ring-brand rounded-md p-2 outline-none" placeholder="자동차 등">
+                        </div>
+                    </div>
+                    
+                    <div class="text-center mt-8">
+                        <button onclick="calculateMaxLoan()" class="inline-block bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-extrabold text-lg md:text-xl py-4 px-12 md:px-20 rounded-full shadow-xl transition cursor-pointer border-none outline-none">최대한도계산</button>
+                    </div>
+                    
+                    <div id="calc1-result" class="mt-6 p-6 bg-brand-light rounded-xl text-center hidden border border-brand/20">
+                        <p class="text-sm text-gray-600">스트레스 테스트 및 GDS/TDS 적용 한도</p>
+                        <p class="text-4xl font-bold text-brand mt-2" id="calc1-output">$0</p>
+                        <p class="text-xs text-gray-500 mt-2" id="calc1-limiting-factor">제한 요인: -</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white p-8 rounded-xl shadow-md border border-gray-200 flex flex-col">
+                <div class="bg-brand rounded-xl py-6 mb-8">
+                    <h2 class="text-2xl md:text-3xl font-extrabold text-white text-center">페이먼트 및 잔액계산</h2>
+                </div>
+                
+                <div class="space-y-4 text-sm flex-grow">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block font-medium text-gray-700">대출금액 ($)</label>
+                            <input type="number" id="calc2-amount" class="mt-1 block w-full border border-gray-300 focus:border-yellow-500 focus:ring-yellow-500 rounded-md p-2 outline-none">
+                        </div>
+                        <div>
+                            <label class="block font-medium text-gray-700">이자율 (%)</label>
+                            <input type="number" id="calc2-rate" class="mt-1 block w-full border border-gray-300 focus:border-yellow-500 focus:ring-yellow-500 rounded-md p-2 outline-none" step="0.1">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block font-medium text-gray-700">Amortization (년)</label>
+                            <input type="number" id="calc2-amortization" class="mt-1 block w-full border border-gray-300 focus:border-yellow-500 focus:ring-yellow-500 rounded-md p-2 outline-none bg-white" value="30" placeholder="예: 30">
+                        </div>
+                        <div>
+                            <label class="block font-medium text-gray-700">계약기간 (Term)</label>
+                            <select id="calc2-term" class="mt-1 block w-full border border-gray-300 focus:border-yellow-500 focus:ring-yellow-500 rounded-md p-2 outline-none bg-white">
+                                <option value="3">3년</option><option value="5" selected>5년</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block font-medium text-gray-700">상환주기 (Payment Frequency)</label>
+                        <select id="calc2-frequency" class="mt-1 block w-full border border-gray-300 focus:border-yellow-500 focus:ring-yellow-500 rounded-md p-2 outline-none bg-white">
+                            <option value="monthly" selected>Monthly (월납)</option>
+                            <option value="biweekly">Bi-weekly (격주납)</option>
+                            <option value="accel_biweekly">Accelerated Bi-weekly (빠른 격주납)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="text-center mt-8">
+                        <button onclick="calculatePayment()" class="inline-block bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-extrabold text-lg md:text-xl py-4 px-12 md:px-20 rounded-full shadow-xl transition cursor-pointer border-none outline-none">상세재무 분석하기</button>
+                    </div>
+                    
+                    <div id="calc2-result" class="mt-6 hidden space-y-3">
+                        <div class="p-4 bg-brand-light border border-brand/20 rounded-xl flex justify-between items-center">
+                            <span class="font-medium text-gray-800">1회 납부액:</span>
+                            <span class="text-2xl font-bold text-brand" id="calc2-pmt">$0</span>
+                        </div>
+                        <div class="p-4 bg-gray-50 border border-gray-200 rounded-xl flex justify-between items-center">
+                            <span class="font-medium text-gray-800" id="calc2-balance-label">텀 종료후 남은원금:</span>
+                            <span class="text-xl font-bold text-gray-800" id="calc2-balance">$0</span>
+                        </div>
+                        <div class="p-4 bg-red-50 border border-red-200 rounded-xl flex justify-between items-center mb-4">
+                            <span class="font-medium text-red-600" id="calc2-interest-label">텀 기간 낸 총이자:</span>
+                            <span class="text-xl font-bold text-red-800" id="calc2-interest">$0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="benefits" class="py-12 px-4 max-w-6xl mx-auto">
+        <div class="bg-white p-8 rounded-xl shadow-md border border-gray-200">
+            <div class="bg-brand rounded-xl py-6 mb-8">
+                <h2 class="text-2xl md:text-3xl font-extrabold text-white text-center">정부혜택진단</h2>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                
+                <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm benefit-card flex flex-col justify-between" id="benefit-ptt-fthb">
+                    <div>
+                        <h3 class="font-bold text-brand text-lg mb-1">1. BC 취득세 면제 (생애최초)</h3>
+                        <div class="mb-3 mt-4">
+                            <label class="block text-xs font-bold text-gray-700 mb-1">주택구입 예상가격 ($)</label>
+                            <input type="number" id="price-ptt-fthb" class="w-full border border-gray-300 focus:border-brand focus:ring-brand rounded p-2 text-sm outline-none" placeholder="예: 800000" onkeyup="checkBenefit('ptt-fthb', 3)">
+                        </div>
+                        <div class="space-y-2 text-sm text-gray-700 mb-4">
+                            <label class="flex items-start space-x-2 cursor-pointer">
+                                <input type="checkbox" class="mt-1 w-4 h-4 text-brand rounded focus:ring-brand" onchange="checkBenefit('ptt-fthb', 3)">
+                                <span>캐나다 시민권자 또는 영주권자입니다.</span>
+                            </label>
+                            <label class="flex items-start space-x-2 cursor-pointer">
+                                <input type="checkbox" class="mt-1 w-4 h-4 text-brand rounded focus:ring-brand" onchange="checkBenefit('ptt-fthb', 3)">
+                                <span>집 등록일 기준 과거 12개월 연속 BC주 거주, <span class="text-yellow-600 font-bold">또는</span> 지난 6년 중 2회 이상 BC주 세금 보고를 했습니다.</span>
+                            </label>
+                            <label class="flex items-start space-x-2 cursor-pointer">
+                                <input type="checkbox" class="mt-1 w-4 h-4 text-brand rounded focus:ring-brand" onchange="checkBenefit('ptt-fthb', 3)">
+                                <span>전 세계 어디에서도 주거용 부동산을 소유한 적이 없습니다.</span>
+                            </label>
+                        </div>
+                        <div id="result-ptt-fthb" class="mt-4 p-3 text-center font-bold rounded transition border hidden mb-4"></div>
+                    </div>
+                    <a href="https://www2.gov.bc.ca/gov/content/taxes/property-taxes/property-transfer-tax/exemptions/first-time-home-buyers" target="_blank" class="text-xs text-brand hover:underline mt-2 text-right">🔗 BC주 공식 가이드라인 확인</a>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm benefit-card flex flex-col justify-between" id="benefit-ptt-new">
+                    <div>
+                        <h3 class="font-bold text-brand text-lg mb-1">2. BC 취득세 면제 (신축주택)</h3>
+                        <div class="mb-3 mt-4">
+                            <label class="block text-xs font-bold text-gray-700 mb-1">신축주택구입 예상가격 ($)</label>
+                            <input type="number" id="price-ptt-new" class="w-full border border-gray-300 focus:border-brand focus:ring-brand rounded p-2 text-sm outline-none" placeholder="예: 1000000" onkeyup="checkBenefit('ptt-new', 3)">
+                        </div>
+                        <div class="space-y-2 text-sm text-gray-700 mb-4">
+                            <label class="flex items-start space-x-2 cursor-pointer">
+                                <input type="checkbox" class="mt-1 w-4 h-4 text-brand rounded focus:ring-brand" onchange="checkBenefit('ptt-new', 3)">
+                                <span>캐나다 시민권자 또는 영주권자입니다.</span>
+                            </label>
+                            <label class="flex items-start space-x-2 cursor-pointer">
+                                <input type="checkbox" class="mt-1 w-4 h-4 text-brand rounded focus:ring-brand" onchange="checkBenefit('ptt-new', 3)">
+                                <span>해당 주택은 BC주에 위치하며 주거주지(Principal Residence)로 사용할 예정입니다.</span>
+                            </label>
+                            <label class="flex items-start space-x-2 cursor-pointer">
+                                <input type="checkbox" class="mt-1 w-4 h-4 text-brand rounded focus:ring-brand" onchange="checkBenefit('ptt-new', 3)">
+                                <span>누구도 거주한 적이 없는 신축 주택(Newly built)입니다.</span>
+                            </label>
+                        </div>
+                        <div id="result-ptt-new" class="mt-4 p-3 text-center font-bold rounded transition border hidden mb-4"></div>
+                    </div>
+                    <a href="https://www2.gov.bc.ca/gov/content/taxes/property-taxes/property-transfer-tax/exemptions/newly-built-home-exemption" target="_blank" class="text-xs text-brand hover:underline mt-2 text-right">🔗 BC주 신축 면제 가이드라인 확인</a>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm benefit-card flex flex-col justify-between" id="benefit-gst">
+                    <div>
+                        <h3 class="font-bold text-brand text-lg mb-1">3. 신축 GST 리베이트</h3>
+                        <div class="mb-3 mt-4">
+                            <label class="block text-xs font-bold text-gray-700 mb-1">신축주택구입 예상가격 ($)</label>
+                            <input type="number" id="price-gst" class="w-full border border-gray-300 focus:border-brand focus:ring-brand rounded p-2 text-sm outline-none" placeholder="예: 1000000" onkeyup="checkBenefit('gst', 4)">
+                        </div>
+                        <div class="space-y-2 text-sm text-gray-700 mb-4">
+                            <label class="flex items-start space-x-2 cursor-pointer">
+                                <input type="checkbox" class="mt-1 w-4 h-4 text-brand rounded focus:ring-brand" onchange="checkBenefit('gst', 4)">
+                                <span>캐나다 시민권자 또는 영주권자입니다.</span>
+                            </label>
+                            <label class="flex items-start space-x-2 cursor-pointer">
+                                <input type="checkbox" class="mt-1 w-4 h-4 text-brand rounded focus:ring-brand" onchange="checkBenefit('gst', 4)">
+                                <span>생애최초 주택 구매자입니다. (과거 4년간 본인/배우자 주거주지 소유이력 없음)</span>
+                            </label>
+                            <label class="flex items-start space-x-2 cursor-pointer">
+                                <input type="checkbox" class="mt-1 w-4 h-4 text-brand rounded focus:ring-brand" onchange="checkBenefit('gst', 4)">
+                                <span>2025년 5월 27일 이후 ~ 2031년 이전에 빌더와 주택 구매 계약을 체결했습니다.</span>
+                            </label>
+                            <label class="flex items-start space-x-2 cursor-pointer">
+                                <input type="checkbox" class="mt-1 w-4 h-4 text-brand rounded focus:ring-brand" onchange="checkBenefit('gst', 4)">
+                                <span>신축 주택을 구매하거나 전면 개보수하여 주거주지로 사용할 예정입니다.</span>
+                            </label>
+                        </div>
+                        <p class="text-xs text-red-500 mb-3 leading-tight">* 주의: 상세 자격 요건 및 예외 사항은 아래 정부 링크를 통해 반드시 확인해야 합니다.</p>
+                        <div id="result-gst" class="mt-2 p-3 text-center font-bold rounded transition border hidden mb-4"></div>
+                    </div>
+                    <a href="https://www.canada.ca/en/revenue-agency/services/tax/businesses/topics/gst-hst-businesses/gst-hst-rebates/first-time-home-buyers-gst-hst-rebate.html" target="_blank" class="text-xs text-brand hover:underline mt-2 text-right">🔗 CRA 연방 GST 리베이트 확인</a>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm benefit-card flex flex-col justify-between" id="benefit-eco">
+                    <div>
+                        <h3 class="font-bold text-brand text-lg mb-1">4. 모기지 보험료 25% 환급</h3>
+                        <p class="text-xs text-gray-500 mb-4">Eco Plus (CMHC, Sagen 등)</p>
+                        <div class="space-y-2 text-sm text-gray-700 mb-4">
+                            <label class="flex items-start space-x-2 cursor-pointer">
+                                <input type="checkbox" class="mt-1 w-4 h-4 text-brand rounded focus:ring-brand" onchange="checkBenefit('eco', 2)">
+                                <span>다운페이가 20% 미만이라 모기지 기본 보험에 가입합니다.</span>
+                            </label>
+                            <label class="flex items-start space-x-2 cursor-pointer">
+                                <input type="checkbox" class="mt-1 w-4 h-4 text-brand rounded focus:ring-brand" onchange="checkBenefit('eco', 2)">
+                                <span>해당 주택이 특정 에너지 효율 등급(LEED 등)을 인증받은 신축이거나, <span class="text-yellow-600 font-bold">또는</span> 기존 주택 구매 후 에너지 효율 개선 공사를 할 계획입니다.</span>
+                            </label>
+                        </div>
+                        <div id="result-eco" class="mt-4 p-3 bg-green-50 border border-green-200 text-green-800 text-center font-bold rounded hidden mb-4">🎉 보험료 25% 환급 신청이 가능합니다!</div>
+                    </div>
+                    <a href="https://www.cmhc-schl.gc.ca/professionals/project-funding-and-mortgage-financing/mortgage-loan-insurance/mortgage-loan-insurance-homeownership-programs/cmhc-eco-plus" target="_blank" class="text-xs text-brand hover:underline mt-2 text-right">🔗 CMHC Eco Plus 신청안내 확인</a>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm benefit-card flex flex-col justify-between" id="benefit-fhsa">
+                    <div>
+                        <h3 class="font-bold text-brand text-lg mb-1">5. FHSA 계좌 자격 (비과세 저축)</h3>
+                        <p class="text-xs text-gray-500 mb-4">First Home Savings Account Eligibility</p>
+                        <div class="space-y-2 text-sm text-gray-700 mb-4">
+                            <label class="flex items-start space-x-2 cursor-pointer">
+                                <input type="checkbox" class="mt-1 w-4 h-4 text-brand rounded focus:ring-brand" onchange="checkBenefit('fhsa', 3)">
+                                <span class="font-bold text-brand">BC주 거주자이며 만 19세 이상입니다. (타 주의 경우 만 18세 및 성인 연령 기준)</span>
+                            </label>
+                            <label class="flex items-start space-x-2 cursor-pointer">
+                                <input type="checkbox" class="mt-1 w-4 h-4 text-brand rounded focus:ring-brand" onchange="checkBenefit('fhsa', 3)">
+                                <span>계좌 개설 연도 및 직전 4년 동안 본인 주거주지를 소유한 적이 없습니다.</span>
+                            </label>
+                            <label class="flex items-start space-x-2 cursor-pointer">
+                                <input type="checkbox" class="mt-1 w-4 h-4 text-brand rounded focus:ring-brand" onchange="checkBenefit('fhsa', 3)">
+                                <span>(배우자가 있는 경우) 같은 기간 동안 배우자가 소유한 주택에 함께 거주한 적도 없습니다.</span>
+                            </label>
+                        </div>
+                        <div id="result-fhsa" class="mt-4 p-3 bg-green-50 border border-green-200 text-green-800 text-center font-bold rounded hidden mb-4">🎉 FHSA 계좌 개설 및 사용이 가능합니다!</div>
+                    </div>
+                    <a href="https://www.canada.ca/en/revenue-agency/services/tax/individuals/topics/first-home-savings-account.html" target="_blank" class="text-xs text-brand hover:underline mt-2 text-right">🔗 CRA FHSA 자격요건 확인</a>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm benefit-card flex flex-col justify-between" id="benefit-hbp">
+                    <div>
+                        <h3 class="font-bold text-brand text-lg mb-1">6. RRSP HBP (최대 $6만 인출)</h3>
+                        <p class="text-xs text-gray-500 mb-4">Home Buyers' Plan Conditions</p>
+                        <div class="space-y-2 text-sm text-gray-700 mb-4">
+                            <label class="flex items-start space-x-2 cursor-pointer">
+                                <input type="checkbox" class="mt-1 w-4 h-4 text-brand rounded focus:ring-brand" onchange="checkBenefit('hbp', 4)">
+                                <span>현재 연도 및 직전 4년 동안 주택을 소유하고 거주한 적이 없는 생애최초 구매자입니다.</span>
+                            </label>
+                            <label class="flex items-start space-x-2 cursor-pointer">
+                                <input type="checkbox" class="mt-1 w-4 h-4 text-brand rounded focus:ring-brand" onchange="checkBenefit('hbp', 4)">
+                                <span>주택을 구매하거나 짓기 위한 서면 계약서가 있습니다.</span>
+                            </label>
+                            <label class="flex items-start space-x-2 cursor-pointer">
+                                <input type="checkbox" class="mt-1 w-4 h-4 text-brand rounded focus:ring-brand" onchange="checkBenefit('hbp', 4)">
+                                <span>구매/완공 후 1년 이내에 해당 주택을 주거주지로 사용할 의도가 있습니다.</span>
+                            </label>
+                            <label class="flex items-start space-x-2 cursor-pointer">
+                                <input type="checkbox" class="mt-1 w-4 h-4 text-brand rounded focus:ring-brand" onchange="checkBenefit('hbp', 4)">
+                                <span>인출하려는 자금은 인출일 기준 최소 90일 이상 RRSP에 예치되어 있었습니다.</span>
+                            </label>
+                        </div>
+                        <div id="result-hbp" class="mt-4 p-3 bg-green-50 border border-green-200 text-green-800 text-center font-bold rounded hidden mb-4">🎉 RRSP HBP $60,000 인출이 가능합니다!</div>
+                    </div>
+                    <a href="https://www.canada.ca/en/revenue-agency/services/tax/individuals/topics/rrsps-related-plans/what-home-buyers-plan.html" target="_blank" class="text-xs text-brand hover:underline mt-2 text-right">🔗 CRA RRSP HBP 규정 확인</a>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section id="consolidation" class="pb-12 px-4 max-w-6xl mx-auto">
+        <div class="bg-white p-8 rounded-xl shadow-md border border-gray-200 flex flex-col">
+            
+            <div class="bg-brand rounded-xl py-6 mb-8">
+                <h2 class="text-2xl md:text-3xl font-extrabold text-white text-center">부채통합 계산</h2>
+            </div>
+            
+            <div class="space-y-10">
+                
+                <div>
+                    <h3 class="text-lg font-bold text-gray-800 mb-4 border-b-2 border-brand/20 pb-2">1. 주택 및 기존모기지 정보</h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <div class="bg-blue-50 p-3 rounded-lg border border-blue-100">
+                            <label class="block font-bold text-brand-dark text-sm mb-1">현재 예상주택가치 ($)</label>
+                            <input type="number" id="dc-home-value" class="w-full border border-gray-300 focus:border-brand rounded-md p-2 text-sm outline-none bg-white" placeholder="예: 1000000">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                        <div>
+                            <label class="block font-bold text-gray-700 text-sm mb-1">대출원금 ($)</label>
+                            <input type="number" id="dc-orig-principal" oninput="updateCurrentMortgageInfo()" class="w-full border border-gray-300 focus:border-brand rounded-md p-2 text-sm outline-none" placeholder="예: 500000">
+                        </div>
+                        <div>
+                            <label class="block font-bold text-gray-700 text-sm mb-1">상환기간 (Amortization, 년)</label>
+                            <input type="number" id="dc-orig-amz" oninput="updateCurrentMortgageInfo()" class="w-full border border-gray-300 focus:border-brand rounded-md p-2 text-sm outline-none" placeholder="예: 25">
+                        </div>
+                        <div>
+                            <label class="block font-bold text-gray-700 text-sm mb-1">계약기간 (Term, 년)</label>
+                            <select id="dc-orig-term" onchange="updateCurrentMortgageInfo()" class="w-full border border-gray-300 focus:border-brand rounded-md p-2 text-sm outline-none bg-white">
+                                <option value="3">3년</option>
+                                <option value="5" selected>5년</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                        <div class="col-span-1 md:col-span-1">
+                            <label class="block font-bold text-gray-700 text-sm mb-1">경과기간 (납부한기간)</label>
+                            <div class="flex space-x-2">
+                                <input type="number" id="dc-elapsed-years" oninput="updateCurrentMortgageInfo()" class="w-1/2 border border-gray-300 focus:border-brand rounded-md p-2 text-sm outline-none" placeholder="년(예: 3)">
+                                <input type="number" id="dc-elapsed-months" oninput="updateCurrentMortgageInfo()" class="w-1/2 border border-gray-300 focus:border-brand rounded-md p-2 text-sm outline-none" placeholder="개월(예: 6)">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block font-bold text-gray-700 text-sm mb-1">현재금리 (%)</label>
+                            <input type="number" step="0.01" id="dc-orig-rate" oninput="updateCurrentMortgageInfo()" class="w-full border border-gray-300 focus:border-brand rounded-md p-2 text-sm outline-none" placeholder="예: 4.5">
+                        </div>
+                        <div>
+                            <label class="block font-bold text-gray-700 text-sm mb-1">금리종류</label>
+                            <select id="dc-rate-type" onchange="toggleIrdInput(); updateCurrentMortgageInfo();" class="w-full border border-gray-300 focus:border-brand rounded-md p-2 text-sm outline-none bg-white">
+                                <option value="variable" selected>변동 (Variable)</option>
+                                <option value="fixed">고정 (Fixed)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="p-5 bg-brand-light rounded-xl border border-brand/20 fade-in">
+                        <div class="flex justify-between items-center mb-3">
+                            <h4 class="font-extrabold text-brand text-sm">💡 현재 모기지 요약</h4>
+                            <span class="text-xs text-brand-dark bg-white px-2 py-1 rounded shadow-sm border border-brand/10 font-bold" id="rt-remaining-term">남은기간: -개월</span>
+                        </div>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center md:text-left">
+                            <div>
+                                <span class="text-gray-500 text-sm font-bold block mb-1">남은 원금 총액</span>
+                                <span class="font-bold text-gray-800 text-lg" id="rt-rem-principal">$0</span>
+                            </div>
+                            <div>
+                                <span class="text-gray-500 text-sm font-bold block mb-1">현재 월 페이먼트</span>
+                                <span class="font-bold text-gray-800 text-lg" id="rt-monthly-pmt">$0</span>
+                            </div>
+                            <div>
+                                <span class="text-gray-500 text-sm font-bold block mb-1">이번 달 원금 상환액</span>
+                                <span class="font-bold text-brand text-lg" id="rt-principal-part">$0</span>
+                            </div>
+                            <div>
+                                <span class="text-gray-500 text-sm font-bold block mb-1">이번 달 이자 납부액</span>
+                                <span class="font-bold text-red-500 text-lg" id="rt-interest-part">$0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="flex justify-between items-center mb-4 border-b-2 border-brand/20 pb-2">
+                        <h3 class="text-lg font-bold text-gray-800">2. 통합할 기타부채</h3>
+                        <button type="button" onclick="addDebtRow()" class="bg-gray-100 hover:bg-gray-200 text-gray-800 text-xs font-bold py-1 px-3 rounded-lg shadow-sm border border-gray-300 transition">➕ 부채 추가</button>
+                    </div>
+                    <div id="debt-rows-container" class="space-y-3"></div>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-bold text-gray-800 mb-4 border-b-2 border-brand/20 pb-2">3. 새로운 리파이낸싱 조건 및 비용</h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+                        
+                        <div class="bg-gray-50 p-5 rounded-xl border border-gray-200 shadow-sm relative">
+                            <label class="block font-bold text-gray-700 text-sm mb-1">추산 페널티 금액 ($)</label>
+                            <input type="number" id="dc-penalty" class="w-full border border-gray-300 focus:border-brand rounded-md p-2 text-sm outline-none font-bold text-red-600 mb-2 bg-white" placeholder="직접 입력 또는 아래 자동계산">
+                            
+                            <a href="bank-links.html" target="_blank" class="inline-block text-xs bg-white border border-gray-300 text-gray-700 px-3 py-1.5 rounded-lg hover:bg-gray-100 transition font-bold mb-3 shadow-sm">🔗 은행별 고시금리(Posted Rates) 확인하기 ↗</a>
+                            
+                            <div id="ird-panel" class="hidden pt-3 border-t border-gray-200">
+                                <label class="block text-sm font-bold text-brand mb-3">📌 고정금리 IRD 계산</label>
+                                <div class="grid grid-cols-2 gap-3 mb-3">
+                                    <div>
+                                        <label class="block text-xs font-bold text-gray-600 mb-1">계약시 할인폭(Discount, %)</label>
+                                        <input type="number" step="0.01" id="dc-ird-discount" class="w-full border border-gray-300 rounded-md p-2 text-sm outline-none bg-white" placeholder="예: 2.00">
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-bold text-gray-600 mb-1">잔여기간 Posted 금리 (%)</label>
+                                        <input type="number" step="0.01" id="dc-ird-posted" class="w-full border border-gray-300 rounded-md p-2 text-sm outline-none bg-white" placeholder="예: 4.50">
+                                    </div>
+                                </div>
+                                <button type="button" onclick="estimatePenalty()" class="w-full text-sm bg-brand hover:bg-brand-dark text-white py-2.5 rounded-lg font-bold transition shadow-sm mb-3">Max (3개월 이자, IRD) 계산</button>
+                                
+                                <div class="bg-red-50 border border-red-200 p-3 rounded-lg">
+                                    <p class="text-xs text-red-700 font-bold mb-1">⚠️ 확인이 어려운 경우:</p>
+                                    <p class="text-[11px] text-red-600 leading-snug">각 은행별로 IRD 계산공식 및 Posted 금리 기준일이 다를 수 있습니다. 정확한 수치를 모를 경우 반드시 **현재 대출 은행에 직접 연락하여 정확한 페널티를 확인**하시기 바랍니다.</p>
+                                </div>
+                            </div>
+
+                            <div id="variable-penalty-btn">
+                                <button type="button" onclick="estimatePenalty()" class="w-full text-sm bg-brand hover:bg-brand-dark text-white py-2.5 rounded-lg font-bold transition shadow-sm">3개월 이자 페널티 자동계산</button>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block font-bold text-gray-700 text-sm mb-1">기타 부대비용 ($) (Legal, Appraisal 등)</label>
+                            <input type="number" id="dc-legal-fee" class="w-full border border-gray-300 focus:border-brand rounded-md p-2 text-sm outline-none bg-white" placeholder="예: 2000" value="2000">
+                            
+                            <label class="block font-bold text-gray-700 text-sm mb-1 mt-5">새로운 상환기간 (년)</label>
+                            <input type="number" id="dc-new-amz" class="w-full border border-gray-300 focus:border-brand rounded-md p-2 text-sm outline-none bg-white" placeholder="예: 30" value="30">
+                            
+                            <label class="block font-bold text-gray-700 text-sm mb-1 mt-5">새로운 예상금리 (%)</label>
+                            <input type="number" step="0.01" id="dc-new-rate" class="w-full border border-gray-300 focus:border-brand rounded-md p-2 text-sm outline-none bg-white" placeholder="예: 3.89">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center mt-10">
+                    <button type="button" onclick="calculateConsolidation()" class="inline-block bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-extrabold text-lg md:text-xl py-4 px-12 md:px-20 rounded-full shadow-xl transition cursor-pointer border-none outline-none">부채통합 분석 및 결과보기</button>
+                </div>
+
+                <div id="consolidation-result" class="hidden mt-10 space-y-6 fade-in">
+                    
+                    <div id="ltv-alert" class="p-4 rounded-xl font-bold text-center border"></div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-gray-100 p-6 rounded-xl border border-gray-200 shadow-sm">
+                            <h4 class="text-lg font-bold text-gray-600 border-b border-gray-300 pb-2 mb-4">현재 납부상황 (Before)</h4>
+                            <div class="flex justify-between mb-2"><span class="text-sm">기존 모기지 월 페이먼트:</span> <span class="font-bold" id="res-old-mortgage-pmt">$0</span></div>
+                            <div class="flex justify-between mb-2"><span class="text-sm">기타 부채 월 페이먼트 합계:</span> <span class="font-bold" id="res-old-other-pmt">$0</span></div>
+                            <div class="flex justify-between mb-2 text-red-500"><span class="text-sm">현재 발생중인 월 총이자:</span> <span class="font-bold" id="res-old-interest">$0</span></div>
+                            <div class="flex justify-between mt-4 pt-4 border-t border-gray-300 text-lg">
+                                <span class="font-bold">현재 총 월 상환액:</span> 
+                                <span class="font-extrabold text-gray-800" id="res-old-total-pmt">$0</span>
+                            </div>
+                        </div>
+
+                        <div class="bg-blue-50 p-6 rounded-xl border border-blue-200 shadow-sm">
+                            <h4 class="text-lg font-bold text-brand border-b border-blue-200 pb-2 mb-4">리파이낸싱 통합후 (After)</h4>
+                            <div class="flex justify-between mb-2"><span class="text-sm">새로운 총 대출원금:</span> <span class="font-bold text-gray-700" id="res-new-principal">$0</span></div>
+                            <div class="flex justify-between mb-2 text-brand"><span class="text-sm">새로운 월 발생이자:</span> <span class="font-bold" id="res-new-interest">$0</span></div>
+                            <div class="flex justify-between mt-4 pt-4 border-t border-blue-200 text-lg">
+                                <span class="font-bold text-brand">새로운 총 월 상환액:</span> 
+                                <span class="font-extrabold text-brand" id="res-new-total-pmt">$0</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-green-50 border-2 border-green-400 p-6 rounded-2xl text-center shadow-lg">
+                            <p class="text-green-800 font-bold text-lg mb-1">🎉 매월 늘어나는 여유자금</p>
+                            <p class="text-sm text-green-700 mb-3">(Cashflow 확보)</p>
+                            <p class="text-4xl md:text-5xl font-extrabold text-green-600" id="res-monthly-savings">+$0</p>
+                        </div>
+                        
+                        <div class="bg-indigo-50 border-2 border-indigo-400 p-6 rounded-2xl text-center shadow-lg">
+                            <p class="text-indigo-800 font-bold text-lg mb-1">📉 매월 아끼는 순수 이자비용</p>
+                            <p class="text-sm text-indigo-700 mb-3">(증발하는 비용 절감액)</p>
+                            <p class="text-4xl md:text-5xl font-extrabold text-indigo-600" id="res-interest-savings">+$0</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="pb-16 px-4 max-w-7xl mx-auto mt-12">
+        <div class="bg-brand-light border-2 border-brand/20 rounded-xl p-8 md:p-12 text-center shadow-sm max-w-4xl mx-auto">
+            <h3 class="text-2xl md:text-3xl font-bold text-brand mb-3">혜택적용과 한도계산이 <br> 복잡하게 느껴지시나요?</h3>
+            <p class="text-gray-700 mb-8 text-lg">매의 눈으로 고객님의 상황을 분석하여 <br> 단 1%의 혜택도 놓치지 않는 맞춤 전략을 세워드립니다.</p>
+            
+            <div class="flex flex-col items-center justify-center gap-4 mt-6">
+                <a href="https://calendar.app.google/zWG82EqskeBtwyeU7" target="_blank" class="inline-block w-full md:w-auto bg-brand hover:bg-brand-dark text-white font-bold text-lg md:text-xl py-4 px-12 rounded-full transition shadow-xl border-none outline-none">
+                    🎥 Google Meet 1:1 <br>화상상담 예약하기
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-gray-900 text-gray-400 py-8 text-center text-sm">
+        <p>Justin Bae | M.Sc. P.Eng Registered Mortgage Broker (BCFSA)</p>
+        <p class="mt-2">Email: jb@mortgageajae.ca | Phone: 250-581-6862 | KakaoTalk: mortgageajae</p>
+        <p class="mt-4 text-xs text-gray-600">&copy; 2026 Mortgageajae. All rights reserved.</p>
+    </footer>
+
+    <script>
+        function formatCurrency(num) {
+            return new Intl.NumberFormat('en-CA', { style: 'currency', currency: 'CAD', maximumFractionDigits: 0 }).format(num);
+        }
+
+        // === 핵심 버그 수정: 캐나다 모기지 월 복리 변환 함수 복구 ===
+        function getCanadianMonthlyRate(annualRatePercentage) {
+            let r = annualRatePercentage / 100;
+            return Math.pow(1 + (r / 2), 2 / 12) - 1;
+        }
+
+        function calculateStandardPTT(price) {
+            if (price <= 0) return 0;
+            let ptt = 0;
+            if (price <= 200000) { ptt = price * 0.01; } 
+            else if (price <= 2000000) { ptt = 200000 * 0.01 + (price - 200000) * 0.02; } 
+            else if (price <= 3000000) { ptt = 200000 * 0.01 + 1800000 * 0.02 + (price - 2000000) * 0.03; } 
+            else { ptt = 200000 * 0.01 + 1800000 * 0.02 + 1000000 * 0.03 + (price - 3000000) * 0.05; }
+            return ptt;
+        }
+
+        function calculateMaxLoan() {
+            const income = parseFloat(document.getElementById('calc1-income').value) || 0;
+            const rate = parseFloat(document.getElementById('calc1-rate').value) || 0;
+            const propertyTaxYearly = parseFloat(document.getElementById('calc1-tax').value) || 0;
+            const strataMonthly = parseFloat(document.getElementById('calc1-strata').value) || 0;
+            const heatingMonthly = parseFloat(document.getElementById('calc1-heat').value) || 0;
+            const otherDebtMonthly = parseFloat(document.getElementById('calc1-debt').value) || 0;
+
+            if (!income || !rate) return alert("연 소득과 현재 예상 금리를 입력해주세요.");
+
+            const stressRate = Math.max(rate + 2.0, 5.25) / 100;
+            const monthlyIncome = income / 12;
+            const propertyTaxMonthly = propertyTaxYearly / 12;
+            const housingCosts = propertyTaxMonthly + heatingMonthly + (strataMonthly * 0.5);
+
+            const maxPiGDS = (monthlyIncome * 0.39) - housingCosts;
+            const maxPiTDS = (monthlyIncome * 0.44) - housingCosts - otherDebtMonthly;
+            const actualMaxPi = Math.min(maxPiGDS, maxPiTDS);
+            
+            if (actualMaxPi <= 0) {
+                document.getElementById('calc1-output').innerText = "$0";
+                document.getElementById('calc1-limiting-factor').innerText = "부채 및 유지비가 기준을 초과하여 대출이 어렵습니다.";
+                document.getElementById('calc1-result').classList.remove('hidden');
+                return;
+            }
+
+            const monthlyRate = Math.pow(1 + (stressRate / 2), 2 / 12) - 1;
+            const months = 25 * 12; 
+            const maxLoan = actualMaxPi * ((Math.pow(1 + monthlyRate, months) - 1) / (monthlyRate * Math.pow(1 + monthlyRate, months)));
+
+            document.getElementById('calc1-output').innerText = formatCurrency(Math.max(0, maxLoan));
+            let limitReason = maxPiGDS < maxPiTDS ? "GDS (39%) 기준에 의해 한도가 결정되었습니다." : "TDS (44%) 기준에 의해 한도가 결정되었습니다.";
+            document.getElementById('calc1-limiting-factor').innerText = limitReason;
+            document.getElementById('calc1-result').classList.remove('hidden');
+        }
+
+        function calculatePayment() {
+            const principal = parseFloat(document.getElementById('calc2-amount').value);
+            const rate = parseFloat(document.getElementById('calc2-rate').value);
+            const amzYears = parseInt(document.getElementById('calc2-amortization').value);
+            const termYears = parseInt(document.getElementById('calc2-term').value);
+            const frequency = document.getElementById('calc2-frequency').value;
+
+            if (!principal || !rate || !amzYears) return alert("대출 금액, 금리, 상환기간을 입력해주세요.");
+
+            const annualRate = rate / 100;
+            const monthlyRate = Math.pow(1 + (annualRate / 2), 2 / 12) - 1;
+            const biweeklyRate = Math.pow(1 + (annualRate / 2), 2 / 26) - 1;
+
+            const pmtMonthly = principal * (monthlyRate * Math.pow(1 + monthlyRate, amzYears * 12)) / (Math.pow(1 + monthlyRate, amzYears * 12) - 1);
+
+            let payment = 0; let periodRate = 0; let periodsInTerm = 0;
+
+            if (frequency === 'monthly') { payment = pmtMonthly; periodRate = monthlyRate; periodsInTerm = termYears * 12; } 
+            else if (frequency === 'biweekly') { payment = principal * (biweeklyRate * Math.pow(1 + biweeklyRate, amzYears * 26)) / (Math.pow(1 + biweeklyRate, amzYears * 26) - 1); periodRate = biweeklyRate; periodsInTerm = termYears * 26; } 
+            else if (frequency === 'accel_biweekly') { payment = pmtMonthly / 2; periodRate = biweeklyRate; periodsInTerm = termYears * 26; }
+
+            let balance = principal; let totalInterest = 0;
+            for (let i = 0; i < periodsInTerm; i++) {
+                let interestForPeriod = balance * periodRate;
+                let principalForPeriod = payment - interestForPeriod;
+                totalInterest += interestForPeriod;
+                balance -= principalForPeriod;
+                if (balance < 0) { balance = 0; break; }
+            }
+
+            document.getElementById('calc2-pmt').innerText = formatCurrency(payment);
+            document.getElementById('calc2-balance-label').innerText = `${termYears}년 텀 종료 후 남은 원금:`;
+            document.getElementById('calc2-balance').innerText = formatCurrency(balance);
+            document.getElementById('calc2-interest-label').innerText = `${termYears}년 동안 낸 총 이자:`;
+            document.getElementById('calc2-interest').innerText = formatCurrency(totalInterest);
+            document.getElementById('calc2-result').classList.remove('hidden');
+        }
+
+        function checkBenefit(id, requiredCount) {
+            const container = document.getElementById(`benefit-${id}`);
+            const checkboxes = container.querySelectorAll('input[type="checkbox"]');
+            const resultDiv = document.getElementById(`result-${id}`);
+            let checkedCount = 0;
+            checkboxes.forEach(cb => { if (cb.checked) checkedCount++; });
+
+            if (checkedCount === requiredCount) {
+                if (id === 'ptt-fthb' || id === 'ptt-new' || id === 'gst') {
+                    const priceInput = document.getElementById(`price-${id}`);
+                    resultDiv.className = "mt-4 p-3 text-center font-bold rounded transition border mb-4"; 
+                    if (priceInput && priceInput.value) {
+                        const price = parseFloat(priceInput.value);
+                        if (id === 'gst') {
+                            let rebate = 0; let gstPaid = price * 0.05;
+                            if (price <= 1000000) { rebate = price * 0.05; } 
+                            else if (price < 1500000) { rebate = 50000 * ((1500000 - price) / 500000); }
+                            if (rebate > 0) {
+                                let rebateType = price <= 1000000 ? "전액 리베이트" : "부분 리베이트";
+                                resultDiv.innerHTML = `🎉 연방 GST ${rebateType} 신청 가능:<br><span class="text-xl font-extrabold text-brand">${formatCurrency(rebate)}</span><br><span class="text-xs font-normal mt-1 text-gray-600 block">(납부해야 할 연방 GST 5%: ${formatCurrency(gstPaid)})</span>`;
+                                resultDiv.classList.add('bg-green-50', 'text-green-800', 'border-green-200');
+                            } else {
+                                resultDiv.innerHTML = `❌ 입력하신 가격(${formatCurrency(price)})은 $1.5M 한도를 초과하여 리베이트 대상이 아닙니다.<br><span class="text-xs font-normal mt-1 block">(납부해야 할 연방 GST 5%: ${formatCurrency(gstPaid)})</span>`;
+                                resultDiv.classList.add('bg-red-50', 'text-red-800', 'border-red-200');
+                            }
+                        } else {
+                            const standardPTT = calculateStandardPTT(price);
+                            let exemption = 0;
+                            if (id === 'ptt-fthb') {
+                                if (price <= 500000) { exemption = standardPTT; } 
+                                else if (price <= 835000) { exemption = 8000; } 
+                                else if (price < 860000) { exemption = 8000 * ((860000 - price) / 25000); }
+                            } else if (id === 'ptt-new') {
+                                if (price <= 1100000) exemption = standardPTT;
+                                else if (price < 1150000) exemption = standardPTT * ((1150000 - price) / 50000);
+                            }
+                            if (exemption > 0) {
+                                resultDiv.innerHTML = `🎉 예상 면제액: <span class="text-xl font-extrabold">${formatCurrency(exemption)}</span><br><span class="text-xs font-normal mt-1 text-gray-600 block">(적용 전 원래 취득세: ${formatCurrency(standardPTT)})</span>`;
+                                resultDiv.classList.add('bg-green-50', 'text-green-800', 'border-green-200');
+                            } else {
+                                resultDiv.innerHTML = `❌ 입력하신 가격(${formatCurrency(price)})은 면제 한도를 초과하여 혜택을 받을 수 없습니다.<br><span class="text-xs font-normal mt-1 block">(예상 취득세: ${formatCurrency(standardPTT)})</span>`;
+                                resultDiv.classList.add('bg-red-50', 'text-red-800', 'border-red-200');
+                            }
+                        }
+                    } else {
+                        resultDiv.innerHTML = `ℹ️ 주택 구입 예상 가격을 입력하시면 정확한 면제/리베이트 금액이 계산됩니다.`;
+                        resultDiv.classList.add('bg-blue-50', 'text-blue-800', 'border-blue-200');
+                    }
+                    resultDiv.classList.remove('hidden'); return;
+                }
+                resultDiv.classList.remove('hidden');
+            } else { resultDiv.classList.add('hidden'); }
+        }
+
+        function toggleFields() {
+            const p = document.getElementById('purpose').value;
+            document.getElementById('purchase-fields').classList.toggle('hidden', p !== '신규 구매');
+            document.getElementById('renewal-fields').classList.toggle('hidden', p !== 'Renewal');
+        }
+
+        function checkDate() {
+            const d = document.getElementById('originalDate').value;
+            document.getElementById('original-price-container').classList.toggle('hidden', d && d < "2016-10");
+        }
+
+        document.getElementById('mortgageForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('emailInput').value;
+            if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { alert("정확한 이메일 형식을 입력해주세요."); return; }
+            const btn = e.target.querySelector('button[type="submit"]');
+            btn.innerHTML = '분석 진행 중... ⏳'; btn.disabled = true; btn.classList.add('opacity-75', 'cursor-not-allowed');
+
+            fetch(e.target.action, { method: 'POST', body: new FormData(e.target) })
+            .then(response => { e.target.classList.add('hidden'); document.getElementById('successMessage').classList.remove('hidden'); })
+            .catch(error => { alert('통신 오류가 발생했습니다.'); btn.innerHTML = '분석리포트 신청하기'; btn.disabled = false; btn.classList.remove('opacity-75', 'cursor-not-allowed'); });
+        });
+
+        // === 부채 통합 계산기 스크립트 ===
+        let internalCalculatedCurrentBalance = 0;
+        let internalCurrentMortgageInterest = 0;
+        let internalRemainingMonths = 0;
+
+        function toggleIrdInput() {
+            const type = document.getElementById('dc-rate-type').value;
+            if (type === 'fixed') {
+                document.getElementById('ird-panel').classList.remove('hidden');
+                document.getElementById('variable-penalty-btn').classList.add('hidden');
+            } else {
+                document.getElementById('ird-panel').classList.add('hidden');
+                document.getElementById('variable-penalty-btn').classList.remove('hidden');
+            }
+        }
+
+        function updateCurrentMortgageInfo() {
+            const P = parseFloat(document.getElementById('dc-orig-principal').value) || 0;
+            const amzYears = parseFloat(document.getElementById('dc-orig-amz').value) || 0;
+            const rate = parseFloat(document.getElementById('dc-orig-rate').value) || 0;
+            const termYears = parseFloat(document.getElementById('dc-orig-term').value) || 0;
+            const eYears = parseFloat(document.getElementById('dc-elapsed-years').value) || 0;
+            const eMonths = parseFloat(document.getElementById('dc-elapsed-months').value) || 0;
+
+            const remPrinEl = document.getElementById('rt-rem-principal');
+            const pmtEl = document.getElementById('rt-monthly-pmt');
+            const prinPartEl = document.getElementById('rt-principal-part');
+            const intPartEl = document.getElementById('rt-interest-part');
+            const termEl = document.getElementById('rt-remaining-term');
+
+            if(P > 0 && amzYears > 0 && rate > 0) {
+                const r_m = getCanadianMonthlyRate(rate);
+                const totalMonths = amzYears * 12;
+                const elapsedTotalMonths = (eYears * 12) + eMonths;
+                const totalTermMonths = termYears * 12;
+                
+                internalRemainingMonths = totalTermMonths - elapsedTotalMonths;
+                termEl.innerText = internalRemainingMonths > 0 ? `남은 텀: ${internalRemainingMonths}개월` : "계약 만료";
+                termEl.className = internalRemainingMonths > 0 ? "text-xs text-brand-dark bg-white px-2 py-1 rounded shadow-sm border border-brand/10 font-bold" : "text-xs text-red-600 bg-red-50 px-2 py-1 rounded shadow-sm border border-red-200 font-bold";
+
+                const M = P * (r_m * Math.pow(1 + r_m, totalMonths)) / (Math.pow(1 + r_m, totalMonths) - 1);
+                
+                let currentBal = P;
+                if(elapsedTotalMonths > 0 && elapsedTotalMonths <= totalMonths) {
+                    currentBal = P * (Math.pow(1 + r_m, totalMonths) - Math.pow(1 + r_m, elapsedTotalMonths)) / (Math.pow(1 + r_m, totalMonths) - 1);
+                } else if (elapsedTotalMonths > totalMonths) {
+                    currentBal = 0;
+                }
+
+                const interestPart = currentBal * r_m;
+                const principalPart = M - interestPart;
+
+                internalCalculatedCurrentBalance = Math.max(0, currentBal);
+                internalCurrentMortgageInterest = Math.max(0, interestPart);
+
+                remPrinEl.innerText = formatCurrency(internalCalculatedCurrentBalance);
+                pmtEl.innerText = formatCurrency(M);
+                prinPartEl.innerText = formatCurrency(Math.max(0, principalPart));
+                intPartEl.innerText = formatCurrency(internalCurrentMortgageInterest);
+            } else {
+                internalCalculatedCurrentBalance = 0;
+                internalCurrentMortgageInterest = 0;
+                internalRemainingMonths = 0;
+                termEl.innerText = "남은 텀: -개월";
+                remPrinEl.innerText = "$0"; pmtEl.innerText = "$0"; prinPartEl.innerText = "$0"; intPartEl.innerText = "$0";
+            }
+        }
+
+        let debtCount = 0;
+        function addDebtRow() {
+            debtCount++;
+            const container = document.getElementById('debt-rows-container');
+            const row = document.createElement('div');
+            row.className = 'grid grid-cols-12 gap-2 items-end border border-gray-200 p-4 rounded-xl bg-gray-50 mb-2 fade-in';
+            row.id = `debt-row-${debtCount}`;
+            row.innerHTML = `
+                <div class="col-span-12 md:col-span-3">
+                    <label class="block text-sm font-bold text-gray-600 mb-1">부채 종류</label>
+                    <input type="text" class="w-full border border-gray-300 rounded-md p-2 text-sm outline-none" placeholder="신용카드, 자동차 등">
+                </div>
+                <div class="col-span-12 md:col-span-3">
+                    <label class="block text-sm font-bold text-gray-600 mb-1">남은 원금 ($)</label>
+                    <input type="number" class="debt-bal w-full border border-gray-300 rounded-md p-2 text-sm outline-none" placeholder="예: 25000">
+                </div>
+                <div class="col-span-12 md:col-span-2">
+                    <label class="block text-sm font-bold text-gray-600 mb-1">이자율 (%)</label>
+                    <input type="number" step="0.1" class="debt-rate w-full border border-gray-300 rounded-md p-2 text-sm outline-none" placeholder="예: 19.9">
+                </div>
+                <div class="col-span-12 md:col-span-3">
+                    <label class="block text-sm font-bold text-gray-600 mb-1">현재 월 페이먼트 ($)</label>
+                    <input type="number" class="debt-pmt w-full border border-gray-300 rounded-md p-2 text-sm outline-none" placeholder="예: 800">
+                </div>
+                <div class="col-span-12 md:col-span-1 flex justify-center pb-1">
+                    <button type="button" onclick="removeDebtRow('${row.id}')" class="text-red-500 hover:text-red-700 font-bold bg-white border border-red-200 rounded p-2 text-xs" title="삭제">삭제 ✕</button>
+                </div>
+            `;
+            container.appendChild(row);
+        }
+
+        function removeDebtRow(rowId) { document.getElementById(rowId).remove(); }
+        window.onload = function() { addDebtRow(); }
+
+        function estimatePenalty() {
+            if(internalCalculatedCurrentBalance === 0) { alert("기존 모기지 정보를 먼저 정확히 입력해주세요."); return; }
+            if(internalRemainingMonths <= 0) { alert("계약 기간이 만료되어 페널티가 없습니다."); document.getElementById('dc-penalty').value = 0; return; }
+
+            const currentRate = parseFloat(document.getElementById('dc-orig-rate').value) || 0;
+            const rateType = document.getElementById('dc-rate-type').value;
+            const r_m = getCanadianMonthlyRate(currentRate);
+            
+            const threeMonthsInterest = internalCalculatedCurrentBalance * r_m * 3;
+            let finalPenalty = threeMonthsInterest;
+
+            if (rateType === 'fixed') {
+                const discount = parseFloat(document.getElementById('dc-ird-discount').value);
+                const currentPosted = parseFloat(document.getElementById('dc-ird-posted').value);
+                
+                if (isNaN(discount) || isNaN(currentPosted)) {
+                    alert("정밀 IRD 계산을 위해 '계약시 할인폭(Discount)'과 '잔여기간 Posted 금리'를 모두 입력해주세요.");
+                    document.getElementById('dc-ird-discount').focus();
+                    return;
+                }
+                
+                const rateDiff = (currentRate - (currentPosted - discount)) / 100;
+                let irdPenalty = 0;
+                if (rateDiff > 0) { irdPenalty = internalCalculatedCurrentBalance * rateDiff * (internalRemainingMonths / 12); }
+                
+                finalPenalty = Math.max(threeMonthsInterest, irdPenalty);
+                
+                if (irdPenalty > threeMonthsInterest) { alert(`고정금리 IRD가 적용되었습니다.\n(정밀 IRD: $${Math.round(irdPenalty)} > 3개월 이자: $${Math.round(threeMonthsInterest)})`); } 
+                else { alert(`3개월 이자가 IRD보다 커서 3개월 이자로 적용되었습니다.\n(3개월 이자: $${Math.round(threeMonthsInterest)} > 정밀 IRD: $${Math.round(irdPenalty)})`); }
+            } else {
+                alert(`변동금리로 3개월 이자 페널티가 적용되었습니다.\n(예상금액: $${Math.round(threeMonthsInterest)})`);
+            }
+            document.getElementById('dc-penalty').value = Math.round(finalPenalty);
+        }
+
+        function calculateConsolidation() {
+            const homeValue = parseFloat(document.getElementById('dc-home-value').value) || 0;
+            const origP = parseFloat(document.getElementById('dc-orig-principal').value) || 0;
+            const origAmzYears = parseFloat(document.getElementById('dc-orig-amz').value) || 0;
+            const origRate = parseFloat(document.getElementById('dc-orig-rate').value) || 0;
+
+            if(origP === 0 || origRate === 0 || origAmzYears === 0) { alert("기존 모기지 정보를 정확히 입력해주세요."); return; }
+
+            const r_m_old = getCanadianMonthlyRate(origRate);
+            const totalMonthsOld = origAmzYears * 12;
+            const oldMortgagePmt = origP * (r_m_old * Math.pow(1 + r_m_old, totalMonthsOld)) / (Math.pow(1 + r_m_old, totalMonthsOld) - 1);
+
+            let totalOtherDebtBal = 0, totalOtherDebtPmt = 0, totalOtherDebtInterest = 0;
+            const debtBalInputs = document.querySelectorAll('.debt-bal');
+            const debtPmtInputs = document.querySelectorAll('.debt-pmt');
+            const debtRateInputs = document.querySelectorAll('.debt-rate');
+            
+            for(let i=0; i<debtBalInputs.length; i++) {
+                const bal = parseFloat(debtBalInputs[i].value) || 0;
+                const pmt = parseFloat(debtPmtInputs[i].value) || 0;
+                const rt = parseFloat(debtRateInputs[i].value) || 0;
+                totalOtherDebtBal += bal; totalOtherDebtPmt += pmt; totalOtherDebtInterest += bal * (rt / 100 / 12);
+            }
+
+            const penalty = parseFloat(document.getElementById('dc-penalty').value) || 0;
+            const legalFees = parseFloat(document.getElementById('dc-legal-fee').value) || 0;
+            const newRate = parseFloat(document.getElementById('dc-new-rate').value) || 0;
+            const newAmzYears = parseFloat(document.getElementById('dc-new-amz').value) || 0;
+
+            if(newRate === 0 || newAmzYears === 0) { alert("새로운 리파이낸싱 조건(금리, 기간)을 입력해주세요."); return; }
+
+            const newTotalPrincipal = internalCalculatedCurrentBalance + totalOtherDebtBal + penalty + legalFees;
+            
+            const ltvAlert = document.getElementById('ltv-alert');
+            if(homeValue > 0) {
+                const ltv = (newTotalPrincipal / homeValue) * 100;
+                if(ltv > 80) {
+                    ltvAlert.className = "p-4 rounded-xl font-bold text-center border bg-red-50 text-red-700 border-red-200";
+                    ltvAlert.innerHTML = `❌ 경고: 통합 후 LTV가 ${ltv.toFixed(1)}% 로 규정(80%)을 초과합니다. (필요한 주택가치: 최소 ${formatCurrency(newTotalPrincipal / 0.8)})`;
+                } else {
+                    ltvAlert.className = "p-4 rounded-xl font-bold text-center border bg-green-50 text-green-800 border-green-200";
+                    ltvAlert.innerHTML = `✅ LTV 안정권: 통합 후 LTV는 ${ltv.toFixed(1)}% 로 규정 내에서 안전하게 진행 가능합니다.`;
+                }
+            } else { ltvAlert.className = "hidden"; }
+
+            const r_m_new = getCanadianMonthlyRate(newRate);
+            const newTotalMonths = newAmzYears * 12;
+            const newMortgagePmt = newTotalPrincipal * (r_m_new * Math.pow(1 + r_m_new, newTotalMonths)) / (Math.pow(1 + r_m_new, newTotalMonths) - 1);
+            const newFirstMonthInterest = newTotalPrincipal * r_m_new;
+
+            const oldTotalPmt = oldMortgagePmt + totalOtherDebtPmt;
+            const monthlySavings = oldTotalPmt - newMortgagePmt;
+            const oldTotalInterest = internalCurrentMortgageInterest + totalOtherDebtInterest;
+            const interestSavings = oldTotalInterest - newFirstMonthInterest;
+
+            document.getElementById('res-old-mortgage-pmt').innerText = formatCurrency(oldMortgagePmt);
+            document.getElementById('res-old-other-pmt').innerText = formatCurrency(totalOtherDebtPmt);
+            document.getElementById('res-old-interest').innerText = formatCurrency(oldTotalInterest);
+            document.getElementById('res-old-total-pmt').innerText = formatCurrency(oldTotalPmt);
+            
+            document.getElementById('res-new-principal').innerText = formatCurrency(newTotalPrincipal);
+            document.getElementById('res-new-interest').innerText = formatCurrency(newFirstMonthInterest);
+            document.getElementById('res-new-total-pmt').innerText = formatCurrency(newMortgagePmt);
+
+            const savingsEl = document.getElementById('res-monthly-savings');
+            if(monthlySavings > 0) { savingsEl.innerText = `+${formatCurrency(monthlySavings)}`; savingsEl.className = "text-4xl md:text-5xl font-extrabold text-green-600"; } 
+            else { savingsEl.innerText = formatCurrency(monthlySavings); savingsEl.className = "text-4xl md:text-5xl font-extrabold text-red-600"; }
+
+            const intSavingsEl = document.getElementById('res-interest-savings');
+            if(interestSavings > 0) { intSavingsEl.innerText = `+${formatCurrency(interestSavings)}`; intSavingsEl.className = "text-4xl md:text-5xl font-extrabold text-indigo-600"; } 
+            else { intSavingsEl.innerText = formatCurrency(interestSavings); intSavingsEl.className = "text-4xl md:text-5xl font-extrabold text-red-600"; }
+
+            document.getElementById('consolidation-result').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
