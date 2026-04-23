@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MortgageAjae</title>
+    <title>Mortgageajae</title>
     <meta name="robots" content="noindex, follow"> <script>
         // 사용자의 브라우저 언어 감지
         const userLang = navigator.language || navigator.userLanguage;
@@ -14,6 +14,11 @@
         } else {
             window.location.replace('/en/');
         }
+    </script>
+    <script>
+    if (location.protocol !== 'https:') {
+        location.replace(`https:${location.href.substring(location.protocol.length)}`);
+    }
     </script>
 </head>
 <body style="background-color: #f0f3fa; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; font-family: sans-serif; color: #334da9;">
