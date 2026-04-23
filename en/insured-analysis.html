@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insured Savings Analysis | MortgageAjae</title>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-LPHD8XR0XD"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-LPHD8XR0XD');
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            light: '#f0f3fa',   
+                            DEFAULT: '#334da9', 
+                            dark: '#253880',    
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        html { scroll-behavior: smooth; }
+        .fade-in { animation: fadeIn 0.4s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .card-header { @apply bg-brand p-8 text-center text-white; }
+        .card-title { @apply text-3xl md:text-3xl font-extrabold; }
+        .btn-primary { @apply w-full bg-brand hover:bg-brand-dark text-white font-bold text-lg md:text-xl py-4 rounded-xl transition shadow-xl mt-4 block text-center cursor-pointer border-none outline-none; }
+        
+        /* Custom scrollbar for tables */
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans p-0 m-0 overflow-hidden">
+    <section class="px-2 md:px-0 max-w-6xl mx-auto relative z-10 fade-in">
+        
+        <div class="bg-white p-4 md:p-8 rounded-xl shadow-md border border-gray-200 flex flex-col box-border w-full">
+            
+            <div class="bg-brand rounded-xl py-6 mb-8">
+                <h2 class="text-2xl md:text-3xl font-extrabold text-white text-center">Insured Savings Analysis</h2>
+            </div>
+            
+            <div class="space-y-10">
+                
+                <div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-4 border-b-2 border-brand/20 pb-2">1. Eligibility & Property Info</h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <div class="bg-blue-50 p-4 rounded-xl border border-blue-100">
+                            <label class="block font-bold text-brand-dark text-sm mb-1">Purchase Price ($)</label>
+                            <input type="number" id="ins-price" oninput="updateStep1()" class="w-full border border-gray-300 focus:border-brand rounded-md p-3 text-base outline-none bg-white font-bold text-gray-800" placeholder="e.g., 800000">
+                            <p class="text-xs text-brand mt-2 leading-tight">* For newly built homes, enter the total contract price including GST (before any rebate offset).</p>
+                        </div>
+                        
+                        <div class="bg-gray-50 p-4 rounded-xl border border-gray-200 space-y-3">
+                            <p class="text-sm font-bold text-gray-700 border-b pb-1">Mandatory Eligibility (Must meet all)</p>
+                            <label class="flex items-start space-x-2 cursor-pointer">
+                                <input type="checkbox" id="ins-owner" onchange="updateStep1()" class="mt-1 w-4 h-4 text-brand rounded focus:ring-brand" checked>
+                                <span class="text-sm text-gray-700">Will you occupy the property? (Owner-occupied)</span>
+                            </label>
+                            <label class="flex items-start space-x-2 cursor-pointer">
+                                <input type="checkbox" id="ins-credit" onchange="updateStep1()" class="mt-1 w-4 h-4 text-brand rounded focus:ring-brand" checked>
+                                <span class="text-sm text-gray-700">Is your credit score at least 600?</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-50 p-4 rounded-xl border border-gray-200">
+                        <p class="text-sm font-bold text-gray-700 mb-2 border-b pb-1">30-Year Amortization Eligibility (Requires at least one)</p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <label class="flex items-start space-x-2 cursor-pointer">
+                                <input type="checkbox" id="ins-fthb" onchange="updateStep1()" class="mt-1 w-4 h-4 text-brand rounded focus:ring-brand">
+                                <span class="text-sm text-gray-700">Are you a First-Time Home Buyer (FTHB)?</span>
+                            </label>
+                            <label class="flex items-start space-x-2 cursor-pointer">
+                                <input type="checkbox" id="ins-newbuild" onchange="updateStep1()" class="mt-1 w-4 h-4 text-brand rounded focus:ring-brand">
+                                <span class="text-sm text-gray-700">Is it a newly built home (Brand New)?</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div id="step1-alert" class="mt-4 p-3 rounded-lg font-bold text-sm hidden"></div>
+                </div>
+
+                <div id="step2-container" class="opacity-50 pointer-events-none transition-opacity duration-300">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4 border-b-2 border-brand/20 pb-2">2. Loan Setup & Premium Calculation</h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-4">
+                        <div class="col-span-1 md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block font-bold text-gray-700 text-sm mb-1">Intended Down Payment ($)</label>
+                                <input type="number" id="ins-downpayment" oninput="calculatePremiumRealTime()" class="w-full border border-gray-300 focus:border-brand rounded-md p-2 text-sm outline-none bg-white" placeholder="Enter amount">
+                                <p class="text-sm text-gray-500 mt-1" id="ins-min-down-text">Minimum Down Payment: $0 (0%)</p>
+                            </div>
+                            <div>
+                                <label class="block font-bold text-gray-700 text-sm mb-1">Amortization Period</label>
+                                <select id="ins-amz" onchange="calculatePremiumRealTime()" class="w-full border border-gray-300 focus:border-brand rounded-md p-2 text-sm outline-none bg-white">
+                                    <option value="25" selected>25 Years (Standard)</option>
+                                    <option value="30" id="amz-30-opt" disabled>30 Years (+0.2% Surcharge Applied)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-span-1 bg-brand-light p-4 rounded-xl border border-brand/20 flex flex-col justify-center text-center">
+                            <span class="text-xs font-bold text-gray-500 mb-1">Estimated Default Insurance Premium</span>
+                            <span class="text-3xl font-extrabold text-brand" id="res-gross-premium">$0</span>
+                            <span class="text-xs text-brand-dark mt-1 font-bold" id="res-ltv-rate">LTV: 0% | Rate: 0.0%</span>
+                        </div>
+                    </div>
+                    
+                    <p class="text-[11px] text-gray-500 leading-tight">* Disclaimer: The premium rates above apply to standard residential properties (1-2 units) with traditional down payments. Rates may be higher for non-traditional borrowed down payments or 3-4 unit properties.</p>
+                </div>
+
+                <div id="step3-container" class="opacity-50 pointer-events-none transition-opacity duration-300">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4 border-b-2 border-brand/20 pb-2">3. Savings & Break-even Analysis</h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <div class="bg-green-50 p-4 rounded-xl border border-green-200">
+                            <h4 class="font-bold text-green-800 text-sm mb-3">🌱 Eco Plus 25% Premium Refund</h4>
+                            <label class="flex items-start space-x-2 cursor-pointer mb-3" id="eco-label-container">
+                                <input type="checkbox" id="ins-eco-claim" onchange="updateEcoRebateDisplay(); hideResult();" class="mt-1 w-4 h-4 text-green-600 rounded focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed">
+                                <span class="text-sm text-green-900 font-medium">I will apply for the 25% refund with an energy-efficient newly built home.</span>
+                            </label>
+                            <div class="flex justify-between items-center text-sm border-t border-green-200 pt-2">
+                                <span class="text-green-700">Estimated Refund:</span>
+                                <span class="font-bold text-green-700" id="res-eco-rebate">$0</span>
+                            </div>
+                            <a href="https://www.cmhc-schl.gc.ca/consumers/home-buying/mortgage-loan-insurance-for-consumers/cmhc-eco-products/cmhc-eco-plus" target="_blank" class="block text-xs text-green-600 hover:underline mt-2 text-right">🔗 Check CMHC Eco Plus Guidelines ↗</a>
+                        </div>
+                        
+                        <div class="bg-gray-50 p-4 rounded-xl border border-gray-200">
+                            <h4 class="font-bold text-gray-800 text-sm mb-3">Rate Spread (Insured vs Uninsured)</h4>
+                            <div class="grid grid-cols-2 gap-3 mb-3">
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-600 mb-1">Current Insured Rate (%)</label>
+                                    <input type="number" step="0.01" id="ins-rate-insured" oninput="hideResult()" class="w-full border border-gray-300 rounded-md p-2 text-sm outline-none bg-white font-bold text-gray-800" value="3.60" placeholder="e.g., 3.60">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-600 mb-1">Rate Spread (%)</label>
+                                    <input type="number" step="0.01" id="ins-rate-spread" oninput="hideResult()" class="w-full border border-gray-300 rounded-md p-2 text-sm outline-none bg-white font-bold text-brand" value="0.30">
+                                </div>
+                            </div>
+                            <p class="text-xs text-gray-500 leading-tight">* Insured mortgages have lower lender risk, typically offering rates 0.2%~0.5% lower than Uninsured mortgages (which require 20%+ down payment).</p>
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-8">
+                        <button type="button" onclick="executeFinalAnalysis()" class="inline-block bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-extrabold text-lg md:text-xl py-4 px-12 md:px-20 rounded-full shadow-xl transition cursor-pointer border-none outline-none">Analyze Savings &<br>View Break-even Result</button>
+                    </div>
+
+                    <div id="final-result" class="hidden mt-10 space-y-6 fade-in">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+                            <div class="bg-gray-100 p-4 rounded-xl border border-gray-200 shadow-sm flex flex-col justify-center">
+                                <p class="text-sm text-gray-500 font-bold mb-1">Net Premium Paid</p>
+                                <p class="text-xl font-extrabold text-gray-800" id="final-net-premium">$0</p>
+                                <p class="text-xs text-gray-400 mt-1">(Gross Premium - Refund)</p>
+                            </div>
+                            <div class="bg-indigo-50 p-4 rounded-xl border border-indigo-200 shadow-sm flex flex-col justify-center">
+                                <p class="text-sm text-indigo-500 font-bold mb-1">Total Interest Saved over Amortization</p>
+                                <p class="text-xl font-extrabold text-indigo-700" id="final-interest-saving">+$0</p>
+                                <p class="text-xs text-indigo-400 mt-1">(Pure interest difference vs Uninsured)</p>
+                            </div>
+                            <div class="bg-brand text-white p-4 rounded-xl shadow-md border border-brand-dark flex flex-col justify-center">
+                                <p class="text-sm text-brand-light font-bold mb-1">Break-even Point</p>
+                                <p class="text-xl font-extrabold" id="final-breakeven-time">-</p>
+                            </div>
+                        </div>
+                        
+                        <div id="conclusion-box" class="bg-yellow-50 border border-yellow-200 p-5 rounded-xl text-center shadow-sm">
+                            <p class="text-gray-800 font-bold" id="final-conclusion-text">Awaiting analysis results.</p>
+                        </div>
+
+                        <div class="text-center mt-4">
+                            <button onclick="toggleAmortizationTable()" class="text-sm font-bold text-brand hover:text-brand-dark hover:underline focus:outline-none">
+                                🔍 View Detailed Amortization Table Comparison
+                            </button>
+                        </div>
+
+                        <div id="amortization-container" class="hidden mt-6 fade-in">
+                            <div class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden flex flex-col">
+                                <div class="bg-gray-100 border-b border-gray-300 p-4 text-center">
+                                    <h4 class="font-bold text-gray-800 text-base">Detailed Monthly Amortization Comparison</h4>
+                                    <p class="text-xs text-gray-500 mt-1">The Break-even month will be highlighted in green.</p>
+                                </div>
+                                <div class="overflow-x-auto overflow-y-auto max-h-[500px] custom-scrollbar">
+                                    <table class="min-w-full text-xs text-center border-collapse">
+                                        <thead class="sticky top-0 z-10 shadow-sm">
+                                            <tr>
+                                                <th rowspan="2" class="py-2 px-3 border border-gray-300 font-extrabold text-gray-700 bg-gray-200 align-middle">Month</th>
+                                                <th colspan="4" class="py-1 px-2 border border-blue-200 font-bold text-brand bg-blue-50">
+                                                    Insured Mortgage<br>
+                                                    <span class="text-[10px] font-normal opacity-80" id="table-head-insured"></span>
+                                                </th>
+                                                <th colspan="4" class="py-1 px-2 border border-indigo-200 font-bold text-indigo-700 bg-indigo-50">
+                                                    Uninsured Mortgage<br>
+                                                    <span class="text-[10px] font-normal opacity-80" id="table-head-uninsured"></span>
+                                                </th>
+                                            </tr>
+                                            <tr>
+                                                <th class="py-1 px-2 border border-blue-200 text-gray-600 bg-blue-50/50">Payment</th>
+                                                <th class="py-1 px-2 border border-blue-200 text-brand bg-blue-50/50">Principal</th>
+                                                <th class="py-1 px-2 border border-blue-200 text-red-500 bg-blue-50/50">Interest</th>
+                                                <th class="py-1 px-2 border border-blue-200 text-gray-600 bg-blue-50/50">Balance</th>
+                                                <th class="py-1 px-2 border border-indigo-200 text-gray-600 bg-indigo-50/50">Payment</th>
+                                                <th class="py-1 px-2 border border-indigo-200 text-indigo-600 bg-indigo-50/50">Principal</th>
+                                                <th class="py-1 px-2 border border-indigo-200 text-red-500 bg-indigo-50/50">Interest</th>
+                                                <th class="py-1 px-2 border border-indigo-200 text-gray-600 bg-indigo-50/50">Balance</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="table-body-combined" class="divide-y divide-gray-200 bg-white">
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Send height update to parent window (index.html)
+        function notifyHeightChange() {
+            setTimeout(() => {
+                const height = document.body.scrollHeight;
+                window.parent.postMessage({ type: 'resize', height: height }, '*');
+            }, 50);
+        }
+
+        function formatCurrency(num) {
+            return new Intl.NumberFormat('en-CA', { style: 'currency', currency: 'CAD', maximumFractionDigits: 0 }).format(num);
+        }
+
+        function getCanadianMonthlyRate(annualRatePercentage) {
+            let r = annualRatePercentage / 100;
+            return Math.pow(1 + (r / 2), 2 / 12) - 1;
+        }
+
+        let globalGrossPremium = 0;
+        let globalLoanAmount = 0; 
+        let isEligible = false;
+
+        function hideResult() {
+            document.getElementById('final-result').classList.add('hidden');
+            document.getElementById('amortization-container').classList.add('hidden');
+            notifyHeightChange();
+        }
+
+        function toggleAmortizationTable() {
+            const container = document.getElementById('amortization-container');
+            if(container.classList.contains('hidden')) {
+                container.classList.remove('hidden');
+                notifyHeightChange();
+            } else {
+                container.classList.add('hidden');
+                notifyHeightChange();
+            }
+        }
+
+        function updateEcoRebateDisplay() {
+            const isEco = document.getElementById('ins-eco-claim').checked;
+            const rebate = isEco ? globalGrossPremium * 0.25 : 0;
+            document.getElementById('res-eco-rebate').innerText = formatCurrency(rebate);
+        }
+
+        function updateStep1() {
+            const price = parseFloat(document.getElementById('ins-price').value) || 0;
+            const isOwner = document.getElementById('ins-owner').checked;
+            const isCreditOk = document.getElementById('ins-credit').checked;
+            const isFthb = document.getElementById('ins-fthb').checked;
+            const isNewBuild = document.getElementById('ins-newbuild').checked;
+            
+            const alertBox = document.getElementById('step1-alert');
+            const step2 = document.getElementById('step2-container');
+            const step3 = document.getElementById('step3-container');
+            const amzOpt30 = document.getElementById('amz-30-opt');
+            const ecoClaim = document.getElementById('ins-eco-claim');
+            const ecoLabelContainer = document.getElementById('eco-label-container');
+
+            hideResult();
+
+            if (isNewBuild) {
+                ecoClaim.disabled = false;
+                ecoClaim.checked = true;
+                ecoLabelContainer.classList.remove('opacity-50');
+            } else {
+                ecoClaim.disabled = true;
+                ecoClaim.checked = false;
+                ecoLabelContainer.classList.add('opacity-50');
+            }
+
+            if (price === 0) {
+                alertBox.classList.add('hidden');
+                step2.classList.add('opacity-50', 'pointer-events-none');
+                step3.classList.add('opacity-50', 'pointer-events-none');
+                isEligible = false;
+                notifyHeightChange();
+                return;
+            }
+
+            if (price >= 1500000) {
+                alertBox.innerHTML = `❌ The entered price (${formatCurrency(price)}) is $1.5M or more, exceeding Insured mortgage limits. A minimum 20% down payment is required.`;
+                alertBox.className = "mt-4 p-3 rounded-lg font-bold text-sm bg-red-50 text-red-700 border border-red-200 block";
+                step2.classList.add('opacity-50', 'pointer-events-none');
+                step3.classList.add('opacity-50', 'pointer-events-none');
+                isEligible = false;
+                notifyHeightChange();
+                return;
+            }
+
+            if (!isOwner || !isCreditOk) {
+                alertBox.innerHTML = `❌ Insured mortgages require the property to be 'Owner-occupied' and a minimum credit score of 600.`;
+                alertBox.className = "mt-4 p-3 rounded-lg font-bold text-sm bg-red-50 text-red-700 border border-red-200 block";
+                step2.classList.add('opacity-50', 'pointer-events-none');
+                step3.classList.add('opacity-50', 'pointer-events-none');
+                isEligible = false;
+                notifyHeightChange();
+                return;
+            }
+
+            isEligible = true;
+            alertBox.innerHTML = `✅ You meet the Insured mortgage requirements. Please set your down payment below.`;
+            alertBox.className = "mt-4 p-3 rounded-lg font-bold text-sm bg-green-50 text-green-800 border border-green-200 block";
+            step2.classList.remove('opacity-50', 'pointer-events-none');
+            step3.classList.remove('opacity-50', 'pointer-events-none');
+
+            if (isFthb || isNewBuild) {
+                amzOpt30.disabled = false;
+            } else {
+                amzOpt30.disabled = true;
+                document.getElementById('ins-amz').value = "25";
+            }
+
+            let minDown = 0;
+            if (price <= 500000) { minDown = price * 0.05; } 
+            else { minDown = 25000 + ((price - 500000) * 0.10); }
+
+            const percent = ((minDown / price) * 100).toFixed(2);
+            document.getElementById('ins-min-down-text').innerText = `Min Down Payment: ${formatCurrency(minDown)} (${percent}%)`;
+            
+            const downInput = document.getElementById('ins-downpayment');
+            const currentDown = parseFloat(downInput.value) || 0;
+            
+            if (currentDown === 0 || currentDown < minDown) {
+                downInput.value = price * 0.10;
+            }
+
+            calculatePremiumRealTime();
+            notifyHeightChange();
+        }
+
+        function calculatePremiumRealTime() {
+            if (!isEligible) return;
+            hideResult();
+
+            const price = parseFloat(document.getElementById('ins-price').value);
+            const down = parseFloat(document.getElementById('ins-downpayment').value) || 0;
+            const amz = parseInt(document.getElementById('ins-amz').value);
+            
+            const premEl = document.getElementById('res-gross-premium');
+            const rateEl = document.getElementById('res-ltv-rate');
+
+            if (down === 0) { premEl.innerText = "$0"; rateEl.innerText = "LTV: - | Rate: -"; return; }
+
+            let minDown = price <= 500000 ? price * 0.05 : 25000 + ((price - 500000) * 0.10);
+            if (down < minDown) {
+                premEl.innerText = "Shortfall";
+                rateEl.innerHTML = `<span class="text-red-600">Please meet the minimum down payment of ${formatCurrency(minDown)}.</span>`;
+                globalGrossPremium = 0;
+                updateEcoRebateDisplay();
+                return;
+            }
+
+            const ltv = ((price - down) / price) * 100;
+            
+            if (ltv <= 80) {
+                premEl.innerText = "Exempt (Uninsured)";
+                rateEl.innerHTML = `<span class="text-brand">Down payment is 20% or more; default insurance is not required.</span>`;
+                globalGrossPremium = 0;
+                updateEcoRebateDisplay();
+                return;
+            }
+
+            let baseRate = 0;
+            if (ltv <= 65) baseRate = 0.60;
+            else if (ltv <= 75) baseRate = 1.70;
+            else if (ltv <= 80) baseRate = 2.40;
+            else if (ltv <= 85) baseRate = 2.80;
+            else if (ltv <= 90) baseRate = 3.10;
+            else if (ltv <= 95) baseRate = 4.00;
+            else baseRate = 4.00; 
+
+            let finalRate = baseRate;
+            if (amz === 30) finalRate += 0.20;
+
+            globalLoanAmount = price - down;
+            globalGrossPremium = globalLoanAmount * (finalRate / 100);
+
+            premEl.innerText = formatCurrency(globalGrossPremium);
+            rateEl.innerText = `LTV: ${ltv.toFixed(2)}% | Premium Rate: ${finalRate.toFixed(2)}%`;
+            
+            updateEcoRebateDisplay();
+        }
+
+        function executeFinalAnalysis() {
+            if (!isEligible || globalGrossPremium === 0) {
+                alert("Please accurately enter the purchase price and down payment (<20%) to calculate the premium first.");
+                return;
+            }
+
+            const isEco = document.getElementById('ins-eco-claim').checked;
+            const insRateAnnual = parseFloat(document.getElementById('ins-rate-insured').value);
+            const spread = parseFloat(document.getElementById('ins-rate-spread').value) || 0;
+            const amz = parseInt(document.getElementById('ins-amz').value);
+
+            if (isNaN(insRateAnnual) || insRateAnnual <= 0) {
+                alert("Please enter the estimated Insured mortgage rate.");
+                document.getElementById('ins-rate-insured').focus();
+                return;
+            }
+
+            const uninsRateAnnual = insRateAnnual + spread;
+            const r_m_ins = getCanadianMonthlyRate(insRateAnnual);
+            const r_m_unins = getCanadianMonthlyRate(uninsRateAnnual);
+            const totalMonths = amz * 12;
+
+            let rebate = isEco ? globalGrossPremium * 0.25 : 0;
+            const netPremium = globalGrossPremium - rebate;
+            
+            document.getElementById('res-eco-rebate').innerText = formatCurrency(rebate);
+            document.getElementById('final-net-premium').innerText = formatCurrency(netPremium);
+
+            const totalLoanInsured = globalLoanAmount + netPremium; 
+            const totalLoanUninsured = globalLoanAmount;
+
+            const pmtInsured = totalLoanInsured * (r_m_ins * Math.pow(1 + r_m_ins, totalMonths)) / (Math.pow(1 + r_m_ins, totalMonths) - 1);
+            const pmtUninsured = totalLoanUninsured * (r_m_unins * Math.pow(1 + r_m_unins, totalMonths)) / (Math.pow(1 + r_m_unins, totalMonths) - 1);
+
+            let bal_ins = totalLoanInsured;
+            let bal_unins = totalLoanUninsured;
+            let accumInterestSave = 0; 
+            let breakEvenMonth = -1;
+
+            let tableHtmlCombined = "";
+
+            document.getElementById('table-head-insured').innerText = `Principal ${formatCurrency(totalLoanInsured)} @ ${insRateAnnual.toFixed(2)}%`;
+            document.getElementById('table-head-uninsured').innerText = `Principal ${formatCurrency(totalLoanUninsured)} @ ${uninsRateAnnual.toFixed(2)}%`;
+
+            for(let i = 1; i <= totalMonths; i++) {
+                let int_ins = bal_ins * r_m_ins;
+                let prin_ins = pmtInsured - int_ins;
+                bal_ins -= prin_ins;
+                if (bal_ins < 0) bal_ins = 0;
+
+                let int_unins = bal_unins * r_m_unins;
+                let prin_unins = pmtUninsured - int_unins;
+                bal_unins -= prin_unins;
+                if (bal_unins < 0) bal_unins = 0;
+
+                accumInterestSave += (int_unins - int_ins);
+
+                let isBreakEvenRow = false;
+                if (breakEvenMonth === -1 && accumInterestSave >= netPremium) {
+                    breakEvenMonth = i;
+                    isBreakEvenRow = true;
+                }
+
+                let trClass = isBreakEvenRow ? "bg-green-100 font-bold" : "hover:bg-gray-50";
+                
+                tableHtmlCombined += `
+                    <tr class="${trClass}">
+                        <td class="py-1 px-2 border-r border-gray-200 font-bold text-gray-600 bg-gray-50">${i}</td>
+                        <td class="py-1 px-2 border-r border-gray-100">${formatCurrency(pmtInsured)}</td>
+                        <td class="py-1 px-2 border-r border-gray-100 text-brand">${formatCurrency(prin_ins)}</td>
+                        <td class="py-1 px-2 border-r border-gray-100 text-red-500 font-medium">${formatCurrency(int_ins)}</td>
+                        <td class="py-1 px-2 border-r border-blue-200 text-gray-800">${formatCurrency(bal_ins)}</td>
+                        <td class="py-1 px-2 border-r border-gray-100">${formatCurrency(pmtUninsured)}</td>
+                        <td class="py-1 px-2 border-r border-gray-100 text-indigo-600">${formatCurrency(prin_unins)}</td>
+                        <td class="py-1 px-2 border-r border-gray-100 text-red-500 font-medium">${formatCurrency(int_unins)}</td>
+                        <td class="py-1 px-2 text-gray-800">${formatCurrency(bal_unins)}</td>
+                    </tr>
+                `;
+            }
+
+            document.getElementById('table-body-combined').innerHTML = tableHtmlCombined;
+
+            const savingEl = document.getElementById('final-interest-saving');
+            const breakevenEl = document.getElementById('final-breakeven-time');
+            const conclusionBox = document.getElementById('conclusion-box');
+            const conclusionText = document.getElementById('final-conclusion-text');
+
+            if (accumInterestSave > 0) {
+                savingEl.innerText = `+${formatCurrency(accumInterestSave)}`;
+                savingEl.className = "text-2xl font-extrabold text-indigo-700";
+
+                if (breakEvenMonth !== -1) {
+                    const beYears = Math.floor(breakEvenMonth / 12);
+                    const beMonths = breakEvenMonth % 12;
+                    breakevenEl.innerText = `${beYears} Yrs ${beMonths} Mos`;
+                    conclusionText.innerHTML = `🎉 Congratulations! Thanks to the lower rate, you might completely be break even on the net premium in <br> approx. ${beYears} Years and ${beMonths} Months (Month ${breakEvenMonth}). <br> Over the entire amortization period, you might be able to save a total of <strong>${formatCurrency(accumInterestSave)}</strong> in pure interest.`;
+                    conclusionBox.className = "bg-green-50 border border-green-200 p-5 rounded-xl text-center shadow-sm text-green-800 font-medium";
+                } else {
+                    breakevenEl.innerText = "Exceeds Amortization";
+                    conclusionText.innerHTML = `⚠️ The interest savings from the rate spread (${spread}%) are insufficient to recover the premium before the mortgage is fully paid off. (Total Interest Saved: ${formatCurrency(accumInterestSave)})<br>Consider increasing your down payment to lower or eliminate insurance premium.`;
+                    conclusionBox.className = "bg-yellow-50 border border-yellow-200 p-5 rounded-xl text-center shadow-sm text-yellow-800 font-medium";
+                }
+            } else {
+                savingEl.innerText = `${formatCurrency(accumInterestSave)}`;
+                savingEl.className = "text-2xl font-extrabold text-red-600";
+                breakevenEl.innerText = "Net Loss";
+                conclusionText.innerHTML = `❌ The rate spread is too small; the interest on the added premium principal is higher. Proceeding as Insured will increase your overall interest costs.`;
+                conclusionBox.className = "bg-red-50 border border-red-200 p-5 rounded-xl text-center shadow-sm text-red-800 font-medium";
+            }
+
+            document.getElementById('final-result').classList.remove('hidden');
+            notifyHeightChange(); 
+        }
+
+        // Initial height sync on load
+        window.onload = notifyHeightChange;
+    </script>
+</body>
+</html>

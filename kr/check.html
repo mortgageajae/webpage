@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3분 금리 진단 | 모기지아재</title>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-LPHD8XR0XD"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-LPHD8XR0XD');
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: { colors: { brand: { light: '#f0f3fa', DEFAULT: '#334da9', dark: '#253880' } } }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #f8fafc; }
+        .fade-in { animation: fadeIn 0.4s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="text-gray-800 font-sans py-10 md:py-16">
+
+    <main class="max-w-2xl mx-auto px-4">
+        <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-200">
+            
+            <div class="w-full bg-white flex flex-col items-center">
+                <img src="/images/mortgageajae-banner.jpg" alt="모기지아재 배너" class="w-full h-auto max-h-40 object-contain" onerror="this.style.display='none'">
+                
+                <div class="px-8 pt-6 pb-4 text-center border-b border-gray-100 w-full">
+                    <h1 class="text-2xl font-extrabold text-brand mb-3">모기지아재의 금리진단</h1>
+                    <p class="text-gray-600 text-sm md:text-base leading-relaxed">
+                        안녕하세요, 모기지브로커 Justin Bae입니다.<br>
+                        현재 제안받으신 금리들을 입력하시면, 최신의 BC주 시장 데이터와 대조하여 최적의 오퍼인지 분석해 드립니다.
+                    </p>
+                    <a href="index.html" class="inline-block mt-4 text-sm font-bold text-brand hover:text-brand-dark transition underline">← 홈페이지로 돌아가기</a>
+                </div>
+            </div>
+
+            <form id="mortgageForm" action="https://script.google.com/macros/s/AKfycbwMIsYYOPnqUtDs_pJx4vZ1JG_yHEvj1uoLE4AgCU6DY88v-kgyPQ-bGqJr8qWi70NBiQ/exec" method="POST" class="p-8 space-y-6">
+                
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">성함</label>
+                        <input type="text" name="성함" required class="w-full border border-gray-300 focus:border-brand focus:ring-brand rounded-lg p-3 outline-none" placeholder="홍길동">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">이메일 주소</label>
+                        <input type="text" id="emailInput" name="이메일 주소" required class="w-full border border-gray-300 focus:border-brand focus:ring-brand rounded-lg p-3 outline-none" placeholder="example@email.com">
+                    </div>
+                </div>
+
+                <hr class="border-gray-100">
+
+                <div class="space-y-4">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-1">신용 점수가 680점 이상입니까?</label>
+                            <select name="신용 점수가 680점 이상입니까?" class="w-full border border-gray-300 focus:border-brand focus:ring-brand rounded-lg p-3 outline-none bg-white">
+                                <option value="예">예 (680점 이상)</option>
+                                <option value="아니오">아니오 (680점 미만 또는 모름)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-1">생애 최초구매 이신가요?</label>
+                            <select name="생애 최초구매" class="w-full border border-gray-300 focus:border-brand focus:ring-brand rounded-lg p-3 outline-none bg-white">
+                                <option value="예">예</option>
+                                <option value="아니오" selected>아니오</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-1">주택 용도</label>
+                            <select name="주택 용도" class="w-full border border-gray-300 focus:border-brand focus:ring-brand rounded-lg p-3 outline-none bg-white">
+                                <option value="본인 거주용" selected>본인 거주용 (Owner Occupied)</option>
+                                <option value="투자용">투자용 렌탈 (Rental Property)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-1">주요 소득원</label>
+                            <select name="주요 소득원 유형" required class="w-full border border-gray-300 focus:border-brand focus:ring-brand rounded-lg p-3 outline-none bg-white">
+                                <option value="" disabled selected>선택해주세요</option>
+                                <option value="직장인 (T4)">직장인 (T4)</option>
+                                <option value="자영업 (Self-Employed)">자영업 (Self-Employed)</option>
+                                <option value="법인 사업자 (Incorporated)">법인 사업자 (Incorporated)</option>
+                                <option value="기타/무소득">기타 / 무소득</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="border-gray-100">
+
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-1">신청 목적</label>
+                    <select id="purpose" name="신청 목적 (Purpose)" required onchange="toggleFields()" class="w-full border border-gray-300 focus:border-brand focus:ring-brand rounded-lg p-3 outline-none bg-white">
+                        <option value="" disabled selected>선택해주세요</option>
+                        <option value="신규 구매">신규 구매 (Purchase / 재융자 포함)</option>
+                        <option value="Renewal">갱신 및 기관 이동 (Renewal / Switch)</option>
+                    </select>
+                </div>
+
+                <div id="purchase-fields" class="hidden fade-in grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">주택 구매(예상) 가격</label>
+                        <div class="relative">
+                            <span class="absolute left-3 top-3 text-gray-500">$</span>
+                            <input type="number" name="주택 구매 가격" class="w-full border border-gray-300 focus:border-brand focus:ring-brand rounded-lg p-3 pl-8 outline-none" placeholder="1000000">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">다운페이먼트 금액</label>
+                        <div class="relative">
+                            <span class="absolute left-3 top-3 text-gray-500">$</span>
+                            <input type="number" name="다운페이먼트 금액" class="w-full border border-gray-300 focus:border-brand focus:ring-brand rounded-lg p-3 pl-8 outline-none" placeholder="200000">
+                        </div>
+                    </div>
+                </div>
+
+                <div id="renewal-fields" class="hidden fade-in space-y-4">
+                    
+                    <div class="bg-blue-50 p-4 rounded-lg border border-blue-100">
+                        <label class="block text-sm font-bold text-brand mb-1">최초 주택 구매 연월 <span class="text-xs font-normal text-gray-600">(규정 예외 적용 확인용)</span></label>
+                        <input type="month" id="originalDate" name="최초구매연월" onchange="checkDate()" class="w-full border border-gray-300 focus:border-brand focus:ring-brand rounded-lg p-2 outline-none">
+                        <p class="text-xs text-blue-600 mt-2">* 2016년 10월 이전에 구매하신 주택의 경우, 집값 한도 예외가 적용되어 더 좋은 금리(Insured)를 받으실 수 있습니다.</p>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-1">현재 시장 가치 (예상)</label>
+                            <div class="relative">
+                                <span class="absolute left-3 top-3 text-gray-500">$</span>
+                                <input type="number" name="현재 시장 가치" class="w-full border border-gray-300 focus:border-brand focus:ring-brand rounded-lg p-3 pl-8 outline-none" placeholder="1000000">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-1">필요한 모기지 금액</label>
+                            <div class="relative">
+                                <span class="absolute left-3 top-3 text-gray-500">$</span>
+                                <input type="number" name="필요한 모기지 금액" class="w-full border border-gray-300 focus:border-brand focus:ring-brand rounded-lg p-3 pl-8 outline-none" placeholder="남은 대출 잔액">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="original-price-container" class="mt-2 hidden">
+                        <label class="block text-sm font-bold text-gray-700 mb-1">최초 구매금액 (당시 매매가)</label>
+                        <div class="relative">
+                            <span class="absolute left-3 top-3 text-gray-500">$</span>
+                            <input type="number" name="최초 구매금액" class="w-full border border-gray-300 focus:border-brand focus:ring-brand rounded-lg p-3 pl-8 outline-none" placeholder="과거 구매 가격">
+                        </div>
+                        <p class="text-xs text-gray-500 mt-1">* 2016년 10월 이후 구매건은 최초 구매가가 100만불 미만이어야 최우대 금리(Insured) 요건을 충족할 수 있습니다.</p>
+                    </div>
+
+                </div>
+
+                <hr class="border-gray-100">
+
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-1">제안받은 은행/렌더 이름 (선택)</label>
+                    <input type="text" name="렌더이름 입력해주세요" class="w-full border border-gray-300 focus:border-brand focus:ring-brand rounded-lg p-3 outline-none" placeholder="예: TD Bank, RBC 등">
+                </div>
+
+                <div class="mt-4">
+                    <label class="block text-sm font-bold text-gray-700 mb-2">현재 제안받은 금리 <span class="text-xs font-bold text-red-500 bg-red-50 px-2 py-1 rounded">(아래 세 가지 중 최소 1개 이상 필수 입력)</span></label>
+                    <div class="space-y-3 bg-gray-50 p-4 rounded-lg border border-gray-200">
+                        <div class="flex items-center space-x-2">
+                            <span class="w-32 text-sm font-medium text-gray-700">3년 고정 (3Y Fixed):</span>
+                            <input type="number" step="0.01" id="rate3F" name="3-Year Fixed Rate" class="flex-1 border border-gray-300 focus:border-brand rounded-lg p-2 outline-none" placeholder="예: 4.89">
+                            <span class="text-gray-500 font-bold">%</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <span class="w-32 text-sm font-medium text-gray-700">5년 고정 (5Y Fixed):</span>
+                            <input type="number" step="0.01" id="rate5F" name="5-Year Fixed Rate" class="flex-1 border border-gray-300 focus:border-brand rounded-lg p-2 outline-none" placeholder="예: 4.59">
+                            <span class="text-gray-500 font-bold">%</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <span class="w-32 text-sm font-medium text-gray-700">5년 변동 (5Y Var):</span>
+                            <input type="number" step="0.01" id="rate5V" name="5-Year Variable Rate" class="flex-1 border border-gray-300 focus:border-brand rounded-lg p-2 outline-none" placeholder="예: 5.70">
+                            <span class="text-gray-500 font-bold">%</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <button type="submit" class="w-full bg-brand hover:bg-brand-dark text-white font-bold text-lg py-4 rounded-xl transition shadow-lg mt-6 flex justify-center items-center">
+                    분석 시작 🚀
+                </button>
+            </form>
+            
+            <div id="successMessage" class="hidden p-10 text-center bg-white">
+                <div class="text-5xl mb-4">✅</div>
+                <h2 class="text-2xl font-bold text-brand mb-2">분석 완료!</h2>
+                <p class="text-gray-600">입력하신 이메일로 엔지니어링 진단 리포트가 발송되었습니다.<br>메일함을 확인해 주세요. (스팸함도 확인 부탁드립니다.)</p>
+                <a href="index.html" class="inline-block mt-8 bg-brand-light hover:bg-gray-200 text-brand-dark font-bold py-3 px-6 rounded-lg transition border border-brand/20">홈페이지로 돌아가기</a>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        // 1. 대출 목적에 따른 필드 표시/숨김
+        function toggleFields() {
+            const purpose = document.getElementById('purpose').value;
+            const purchaseFields = document.getElementById('purchase-fields');
+            const renewalFields = document.getElementById('renewal-fields');
+
+            if (purpose === '신규 구매') {
+                purchaseFields.classList.remove('hidden');
+                renewalFields.classList.add('hidden');
+            } else if (purpose === 'Renewal') {
+                purchaseFields.classList.add('hidden');
+                renewalFields.classList.remove('hidden');
+                checkDate(); // 갱신 선택 시 날짜 조건 확인
+            } else {
+                purchaseFields.classList.add('hidden');
+                renewalFields.classList.add('hidden');
+            }
+        }
+
+        // 2. 2016년 10월 전후 판별하여 최초구매금액 표시 여부 결정
+        function checkDate() {
+            const dateVal = document.getElementById('originalDate').value;
+            const origPriceContainer = document.getElementById('original-price-container');
+            
+            // 날짜가 입력되었고, 2016년 10월 '이전(미만)'이면 최초구매금액 숨김
+            if (dateVal && dateVal < "2016-10") {
+                origPriceContainer.classList.add('hidden');
+            } else {
+                // 날짜가 비어있거나 2016년 10월 '이후'면 표시
+                origPriceContainer.classList.remove('hidden');
+            }
+        }
+
+        // 3. 폼 제출 시 비동기 전송 및 엄격한 유효성 검사
+        document.getElementById('mortgageForm').addEventListener('submit', function(e) {
+            e.preventDefault(); 
+            
+            // [A] 이메일 정규식 유효성 이중 검사 (팝업 노출)
+            const emailInput = document.getElementById('emailInput').value;
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailPattern.test(emailInput)) {
+                alert("올바른 이메일 주소 형식을 입력해주세요.\n(예: example@gmail.com)");
+                document.getElementById('emailInput').focus();
+                return;
+            }
+
+            // [B] 금리 입력 여부 확인 (최소 1개 이상)
+            const rate3F = document.getElementById('rate3F').value;
+            const rate5F = document.getElementById('rate5F').value;
+            const rate5V = document.getElementById('rate5V').value;
+            
+            if (!rate3F && !rate5F && !rate5V) {
+                alert("정확한 비교 진단을 위해 제안받으신 금리를 최소 1개 이상 입력해 주세요.");
+                return;
+            }
+
+            const form = e.target;
+            const submitBtn = form.querySelector('button[type="submit"]');
+            
+            // 전송 중 버튼 상태 변경 (중복 클릭 방지)
+            submitBtn.innerHTML = '분석 진행 중... ⏳';
+            submitBtn.classList.add('opacity-75', 'cursor-not-allowed');
+            submitBtn.disabled = true;
+
+            const data = new FormData(form);
+
+            // API로 데이터 전송
+            fetch(form.action, {
+                method: 'POST',
+                body: data
+            })
+            .then(response => {
+                form.classList.add('hidden');
+                document.getElementById('successMessage').classList.remove('hidden');
+                window.scrollTo(0, 0);
+            })
+            .catch(error => {
+                alert('데이터 전송 중 통신 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
+                submitBtn.innerHTML = '분석 시작 🚀';
+                submitBtn.disabled = false;
+                submitBtn.classList.remove('opacity-75', 'cursor-not-allowed');
+            });
+        });
+    </script>
+</body>
+</html>

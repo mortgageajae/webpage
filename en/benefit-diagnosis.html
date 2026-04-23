@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Benefit Eligibility | MortgageAjae</title>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-LPHD8XR0XD"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-LPHD8XR0XD');
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { light: '#f0f3fa', DEFAULT: '#334da9', dark: '#253880' }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        html { scroll-behavior: smooth; }
+        .fade-in { animation: fadeIn 0.4s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        .benefit-card { transition: all 0.3s ease; }
+        .benefit-card:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans p-0 m-0 overflow-hidden">
+    <section id="benefits" class="px-2 md:px-0 max-w-6xl mx-auto relative z-10 fade-in">
+        <div class="bg-white p-8 rounded-xl shadow-md border border-gray-200 w-full box-border">
+            <div class="bg-brand rounded-xl py-6 mb-8">
+                <h2 class="text-2xl md:text-3xl font-extrabold text-white text-center">Government Benefit Eligibility</h2>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                
+                <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm benefit-card flex flex-col justify-between" id="benefit-ptt-fthb">
+                    <div>
+                        <h3 class="font-bold text-brand text-lg mb-1">1. BC PTT Exemption (First-Time Home Buyer)</h3>
+                        <div class="mb-3 mt-4">
+                            <label class="block text-xs font-bold text-gray-700 mb-1">Estimated Purchase Price ($)</label>
+                            <input type="number" id="price-ptt-fthb" class="w-full border border-gray-300 focus:border-brand focus:ring-brand rounded p-2 text-sm outline-none" placeholder="e.g., 800000" onkeyup="checkBenefit('ptt-fthb', 3)">
+                        </div>
+                        <div class="space-y-2 text-sm text-gray-700 mb-4">
+                            <label class="flex items-start space-x-2 cursor-pointer">
+                                <input type="checkbox" class="mt-1 w-4 h-4 text-brand rounded focus:ring-brand" onchange="checkBenefit('ptt-fthb', 3)">
+                                <span>I am a Canadian Citizen or Permanent Resident.</span>
+                            </label>
+                            <label class="flex items-start space-x-2 cursor-pointer">
+                                <input type="checkbox" class="mt-1 w-4 h-4 text-brand rounded focus:ring-brand" onchange="checkBenefit('ptt-fthb', 3)">
+                                <span>I have lived in BC for 12 consecutive months before the registration date, <span class="text-yellow-600 font-bold">OR</span> filed BC taxes for at least 2 of the last 6 years.</span>
+                            </label>
+                            <label class="flex items-start space-x-2 cursor-pointer">
+                                <input type="checkbox" class="mt-1 w-4 h-4 text-brand rounded focus:ring-brand" onchange="checkBenefit('ptt-fthb', 3)">
+                                <span>I have never owned residential property anywhere in the world.</span>
+                            </label>
+                        </div>
+                        <div id="result-ptt-fthb" class="mt-4 p-3 text-center font-bold rounded transition border hidden mb-4"></div>
+                    </div>
+                    <a href="https://www2.gov.bc.ca/gov/content/taxes/property-taxes/property-transfer-tax/exemptions/first-time-home-buyers" target="_blank" class="text-xs text-brand hover:underline mt-2 text-right">🔗 Check BC Official Guidelines</a>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm benefit-card flex flex-col justify-between" id="benefit-ptt-new">
+                    <div>
+                        <h3 class="font-bold text-brand text-lg mb-1">2. BC PTT Exemption (Newly Built)</h3>
+                        <div class="mb-3 mt-4">
+                            <label class="block text-xs font-bold text-gray-700 mb-1">Estimated Purchase Price ($)</label>
+                            <input type="number" id="price-ptt-new" class="w-full border border-gray-300 focus:border-brand focus:ring-brand rounded p-2 text-sm outline-none" placeholder="e.g., 1000000" onkeyup="checkBenefit('ptt-new', 3)">
+                        </div>
+                        <div class="space-y-2 text-sm text-gray-700 mb-4">
+                            <label class="flex items-start space-x-2 cursor-pointer">
+                                <input type="checkbox" class="mt-1 w-4 h-4 text-brand rounded focus:ring-brand" onchange="checkBenefit('ptt-new', 3)">
+                                <span>I am a Canadian Citizen or Permanent Resident.</span>
+                            </label>
+                            <label class="flex items-start space-x-2 cursor-pointer">
+                                <input type="checkbox" class="mt-1 w-4 h-4 text-brand rounded focus:ring-brand" onchange="checkBenefit('ptt-new', 3)">
+                                <span>The property is located in BC and will be used as my Principal Residence.</span>
+                            </label>
+                            <label class="flex items-start space-x-2 cursor-pointer">
+                                <input type="checkbox" class="mt-1 w-4 h-4 text-brand rounded focus:ring-brand" onchange="checkBenefit('ptt-new', 3)">
+                                <span>The home is newly built and has never been occupied.</span>
+                            </label>
+                        </div>
+                        <div id="result-ptt-new" class="mt-4 p-3 text-center font-bold rounded transition border hidden mb-4"></div>
+                    </div>
+                    <a href="https://www2.gov.bc.ca/gov/content/taxes/property-taxes/property-transfer-tax/exemptions/newly-built-home-exemption" target="_blank" class="text-xs text-brand hover:underline mt-2 text-right">🔗 Check BC Newly Built Guidelines</a>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm benefit-card flex flex-col justify-between" id="benefit-gst">
+                    <div>
+                        <h3 class="font-bold text-brand text-lg mb-1">3. New Housing GST Rebate</h3>
+                        <div class="mb-3 mt-4">
+                            <label class="block text-xs font-bold text-gray-700 mb-1">Estimated Purchase Price ($)</label>
+                            <input type="number" id="price-gst" class="w-full border border-gray-300 focus:border-brand focus:ring-brand rounded p-2 text-sm outline-none" placeholder="e.g., 1000000" onkeyup="checkBenefit('gst', 4)">
+                        </div>
+                        <div class="space-y-2 text-sm text-gray-700 mb-4">
+                            <label class="flex items-start space-x-2 cursor-pointer">
+                                <input type="checkbox" class="mt-1 w-4 h-4 text-brand rounded focus:ring-brand" onchange="checkBenefit('gst', 4)">
+                                <span>I am a Canadian Citizen or Permanent Resident.</span>
+                            </label>
+                            <label class="flex items-start space-x-2 cursor-pointer">
+                                <input type="checkbox" class="mt-1 w-4 h-4 text-brand rounded focus:ring-brand" onchange="checkBenefit('gst', 4)">
+                                <span>I am a first-time home buyer (neither I nor my spouse owned a principal residence in the past 4 years).</span>
+                            </label>
+                            <label class="flex items-start space-x-2 cursor-pointer">
+                                <input type="checkbox" class="mt-1 w-4 h-4 text-brand rounded focus:ring-brand" onchange="checkBenefit('gst', 4)">
+                                <span>I signed the purchase agreement with the builder between May 27, 2025, and before 2031.</span>
+                            </label>
+                            <label class="flex items-start space-x-2 cursor-pointer">
+                                <input type="checkbox" class="mt-1 w-4 h-4 text-brand rounded focus:ring-brand" onchange="checkBenefit('gst', 4)">
+                                <span>I am purchasing or substantially renovating a new home to use as my principal residence.</span>
+                            </label>
+                        </div>
+                        <p class="text-xs text-red-500 mb-3 leading-tight">* Note: Detailed eligibility and exceptions must be verified via the government link below.</p>
+                        <div id="result-gst" class="mt-2 p-3 text-center font-bold rounded transition border hidden mb-4"></div>
+                    </div>
+                    <a href="https://www.canada.ca/en/revenue-agency/services/tax/businesses/topics/gst-hst-businesses/gst-hst-rebates/first-time-home-buyers-gst-hst-rebate.html" target="_blank" class="text-xs text-brand hover:underline mt-2 text-right">🔗 Check CRA Federal GST Rebate</a>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm benefit-card flex flex-col justify-between" id="benefit-eco">
+                    <div>
+                        <h3 class="font-bold text-brand text-lg mb-1">4. 25% Premium Refund</h3>
+                        <p class="text-xs text-gray-500 mb-4">Eco Plus (CMHC, Sagen, etc.)</p>
+                        <div class="space-y-2 text-sm text-gray-700 mb-4">
+                            <label class="flex items-start space-x-2 cursor-pointer">
+                                <input type="checkbox" class="mt-1 w-4 h-4 text-brand rounded focus:ring-brand" onchange="checkBenefit('eco', 2)">
+                                <span>My down payment is under 20% and I am obtaining default mortgage insurance.</span>
+                            </label>
+                            <label class="flex items-start space-x-2 cursor-pointer">
+                                <input type="checkbox" class="mt-1 w-4 h-4 text-brand rounded focus:ring-brand" onchange="checkBenefit('eco', 2)">
+                                <span>The home is newly built with specific energy efficiency certifications (e.g., LEED), <span class="text-yellow-600 font-bold">OR</span> I plan to make energy-efficient upgrades after purchasing.</span>
+                            </label>
+                        </div>
+                        <div id="result-eco" class="mt-4 p-3 bg-green-50 border border-green-200 text-green-800 text-center font-bold rounded hidden mb-4">🎉 You are eligible to apply for the 25% premium refund!</div>
+                    </div>
+                    <a href="https://www.cmhc-schl.gc.ca/professionals/project-funding-and-mortgage-financing/mortgage-loan-insurance/mortgage-loan-insurance-homeownership-programs/cmhc-eco-plus" target="_blank" class="text-xs text-brand hover:underline mt-2 text-right">🔗 Check CMHC Eco Plus Guidelines</a>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm benefit-card flex flex-col justify-between" id="benefit-fhsa">
+                    <div>
+                        <h3 class="font-bold text-brand text-lg mb-1">5. FHSA Eligibility</h3>
+                        <p class="text-xs text-gray-500 mb-4">First Home Savings Account</p>
+                        <div class="space-y-2 text-sm text-gray-700 mb-4">
+                            <label class="flex items-start space-x-2 cursor-pointer">
+                                <input type="checkbox" class="mt-1 w-4 h-4 text-brand rounded focus:ring-brand" onchange="checkBenefit('fhsa', 3)">
+                                <span class="font-bold text-brand">I am a BC resident and at least 19 years old. (18 or age of majority in other provinces).</span>
+                            </label>
+                            <label class="flex items-start space-x-2 cursor-pointer">
+                                <input type="checkbox" class="mt-1 w-4 h-4 text-brand rounded focus:ring-brand" onchange="checkBenefit('fhsa', 3)">
+                                <span>I have not owned a principal residence in the year the account is opened or the preceding 4 calendar years.</span>
+                            </label>
+                            <label class="flex items-start space-x-2 cursor-pointer">
+                                <input type="checkbox" class="mt-1 w-4 h-4 text-brand rounded focus:ring-brand" onchange="checkBenefit('fhsa', 3)">
+                                <span>(If applicable) I have not lived in a home owned by my spouse/common-law partner during the same period.</span>
+                            </label>
+                        </div>
+                        <div id="result-fhsa" class="mt-4 p-3 bg-green-50 border border-green-200 text-green-800 text-center font-bold rounded hidden mb-4">🎉 You are eligible to open and use an FHSA!</div>
+                    </div>
+                    <a href="https://www.canada.ca/en/revenue-agency/services/tax/individuals/topics/first-home-savings-account.html" target="_blank" class="text-xs text-brand hover:underline mt-2 text-right">🔗 Check CRA FHSA Requirements</a>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-sm benefit-card flex flex-col justify-between" id="benefit-hbp">
+                    <div>
+                        <h3 class="font-bold text-brand text-lg mb-1">6. RRSP HBP (Up to $60K)</h3>
+                        <p class="text-xs text-gray-500 mb-4">Home Buyers' Plan Conditions</p>
+                        <div class="space-y-2 text-sm text-gray-700 mb-4">
+                            <label class="flex items-start space-x-2 cursor-pointer">
+                                <input type="checkbox" class="mt-1 w-4 h-4 text-brand rounded focus:ring-brand" onchange="checkBenefit('hbp', 4)">
+                                <span>I am considered a first-time home buyer (have not owned and occupied a home in the current year or preceding 4 years).</span>
+                            </label>
+                            <label class="flex items-start space-x-2 cursor-pointer">
+                                <input type="checkbox" class="mt-1 w-4 h-4 text-brand rounded focus:ring-brand" onchange="checkBenefit('hbp', 4)">
+                                <span>I have a written agreement to buy or build a qualifying home.</span>
+                            </label>
+                            <label class="flex items-start space-x-2 cursor-pointer">
+                                <input type="checkbox" class="mt-1 w-4 h-4 text-brand rounded focus:ring-brand" onchange="checkBenefit('hbp', 4)">
+                                <span>I intend to occupy the home as my principal residence within 1 year after buying/building it.</span>
+                            </label>
+                            <label class="flex items-start space-x-2 cursor-pointer">
+                                <input type="checkbox" class="mt-1 w-4 h-4 text-brand rounded focus:ring-brand" onchange="checkBenefit('hbp', 4)">
+                                <span>The funds I plan to withdraw have been in my RRSP for at least 90 days.</span>
+                            </label>
+                        </div>
+                        <div id="result-hbp" class="mt-4 p-3 bg-green-50 border border-green-200 text-green-800 text-center font-bold rounded hidden mb-4">🎉 You are eligible to withdraw up to $60,000 under the RRSP HBP!</div>
+                    </div>
+                    <a href="https://www.canada.ca/en/revenue-agency/services/tax/individuals/topics/rrsps-related-plans/what-home-buyers-plan.html" target="_blank" class="text-xs text-brand hover:underline mt-2 text-right">🔗 Check CRA RRSP HBP Rules</a>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Parent window height notification function
+        function notifyHeightChange() {
+            setTimeout(() => {
+                const height = document.body.scrollHeight;
+                window.parent.postMessage({ type: 'resize', height: height }, '*');
+            }, 50);
+        }
+
+        function formatCurrency(num) {
+            return new Intl.NumberFormat('en-CA', { style: 'currency', currency: 'CAD', maximumFractionDigits: 0 }).format(num);
+        }
+
+        function calculateStandardPTT(price) {
+            if (price <= 0) return 0;
+            let ptt = 0;
+            if (price <= 200000) { ptt = price * 0.01; } 
+            else if (price <= 2000000) { ptt = 200000 * 0.01 + (price - 200000) * 0.02; } 
+            else if (price <= 3000000) { ptt = 200000 * 0.01 + 1800000 * 0.02 + (price - 2000000) * 0.03; } 
+            else { ptt = 200000 * 0.01 + 1800000 * 0.02 + 1000000 * 0.03 + (price - 3000000) * 0.05; }
+            return ptt;
+        }
+
+        function checkBenefit(id, requiredCount) {
+            const container = document.getElementById(`benefit-${id}`);
+            const checkboxes = container.querySelectorAll('input[type="checkbox"]');
+            const resultDiv = document.getElementById(`result-${id}`);
+            let checkedCount = 0;
+            checkboxes.forEach(cb => { if (cb.checked) checkedCount++; });
+
+            if (checkedCount === requiredCount) {
+                if (id === 'ptt-fthb' || id === 'ptt-new' || id === 'gst') {
+                    const priceInput = document.getElementById(`price-${id}`);
+                    resultDiv.className = "mt-4 p-3 text-center font-bold rounded transition border mb-4"; 
+                    if (priceInput && priceInput.value) {
+                        const price = parseFloat(priceInput.value);
+                        if (id === 'gst') {
+                            let rebate = 0; let gstPaid = price * 0.05;
+                            if (price <= 1000000) { rebate = price * 0.05; } 
+                            else if (price < 1500000) { rebate = 50000 * ((1500000 - price) / 500000); }
+                            
+                            if (rebate > 0) {
+                                let rebateType = price <= 1000000 ? "Full Rebate" : "Partial Rebate";
+                                resultDiv.innerHTML = `🎉 Eligible for Federal GST ${rebateType}:<br><span class="text-xl font-extrabold text-brand">${formatCurrency(rebate)}</span><br><span class="text-xs font-normal mt-1 text-gray-600 block">(Federal GST 5% payable: ${formatCurrency(gstPaid)})</span>`;
+                                resultDiv.classList.add('bg-green-50', 'text-green-800', 'border-green-200');
+                            } else {
+                                resultDiv.innerHTML = `❌ The entered price (${formatCurrency(price)}) exceeds the $1.5M limit and is not eligible for a rebate.<br><span class="text-xs font-normal mt-1 block">(Federal GST 5% payable: ${formatCurrency(gstPaid)})</span>`;
+                                resultDiv.classList.add('bg-red-50', 'text-red-800', 'border-red-200');
+                            }
+                        } else {
+                            const standardPTT = calculateStandardPTT(price);
+                            let exemption = 0;
+                            if (id === 'ptt-fthb') {
+                                if (price <= 500000) { exemption = standardPTT; } 
+                                else if (price <= 835000) { exemption = 8000; } 
+                                else if (price < 860000) { exemption = 8000 * ((860000 - price) / 25000); }
+                            } else if (id === 'ptt-new') {
+                                if (price <= 1100000) exemption = standardPTT;
+                                else if (price < 1150000) exemption = standardPTT * ((1150000 - price) / 50000);
+                            }
+                            
+                            if (exemption > 0) {
+                                resultDiv.innerHTML = `🎉 Estimated Exemption: <span class="text-xl font-extrabold">${formatCurrency(exemption)}</span><br><span class="text-xs font-normal mt-1 text-gray-600 block">(Original PTT before exemption: ${formatCurrency(standardPTT)})</span>`;
+                                resultDiv.classList.add('bg-green-50', 'text-green-800', 'border-green-200');
+                            } else {
+                                resultDiv.innerHTML = `❌ The entered price (${formatCurrency(price)}) exceeds the exemption limit.<br><span class="text-xs font-normal mt-1 block">(Estimated PTT: ${formatCurrency(standardPTT)})</span>`;
+                                resultDiv.classList.add('bg-red-50', 'text-red-800', 'border-red-200');
+                            }
+                        }
+                    } else {
+                        resultDiv.innerHTML = `ℹ️ Enter an estimated purchase price to calculate the exact exemption/rebate amount.`;
+                        resultDiv.classList.add('bg-blue-50', 'text-blue-800', 'border-blue-200');
+                    }
+                    resultDiv.classList.remove('hidden'); 
+                    notifyHeightChange(); 
+                    return;
+                }
+                resultDiv.classList.remove('hidden');
+                notifyHeightChange(); 
+            } else { 
+                resultDiv.classList.add('hidden'); 
+                notifyHeightChange(); 
+            }
+        }
+
+        // Initial height calculation on load
+        window.onload = function() {
+            notifyHeightChange();
+        };
+    </script>
+</body>
+</html>

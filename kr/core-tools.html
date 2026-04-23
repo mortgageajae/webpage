@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>핵심계산도구 | 모기지아재</title>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-LPHD8XR0XD"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-LPHD8XR0XD');
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { light: '#f0f3fa', DEFAULT: '#334da9', dark: '#253880' }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        html { scroll-behavior: smooth; }
+        .fade-in { animation: fadeIn 0.4s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans p-0 m-0 overflow-hidden">
+    <section id="tools" class="px-2 md:px-0 max-w-6xl mx-auto relative z-10 fade-in">
+        <div class="grid md:grid-cols-2 gap-8">
+            
+            <div class="bg-white p-8 rounded-xl shadow-md border border-gray-200 flex flex-col w-full box-border">
+                <div class="bg-brand rounded-xl py-6 mb-8">
+                    <h2 class="text-2xl md:text-3xl font-extrabold text-white text-center">대출한도계산</h2>
+                </div>
+                
+                <div class="space-y-4 text-sm flex-grow">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block font-medium text-gray-700">연소득 ($)</label>
+                            <input type="number" id="calc1-income" class="mt-1 block w-full border border-gray-300 focus:border-brand focus:ring-brand rounded-md p-2 outline-none">
+                        </div>
+                        <div>
+                            <label class="block font-medium text-gray-700">현재 예상금리 (%)</label>
+                            <input type="number" id="calc1-rate" class="mt-1 block w-full border border-gray-300 focus:border-brand focus:ring-brand rounded-md p-2 outline-none" step="0.1">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block font-medium text-gray-700">연간 재산세 ($)</label>
+                            <input type="number" id="calc1-tax" class="mt-1 block w-full border border-gray-300 focus:border-brand focus:ring-brand rounded-md p-2 outline-none" placeholder="예: 3000">
+                        </div>
+                        <div>
+                            <label class="block font-medium text-gray-700">월 스트라타피 ($)</label>
+                            <input type="number" id="calc1-strata" class="mt-1 block w-full border border-gray-300 focus:border-brand focus:ring-brand rounded-md p-2 outline-none" placeholder="예: 400 (50% 적용)">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block font-medium text-gray-700">월 난방비 ($)</label>
+                            <input type="number" id="calc1-heat" class="mt-1 block w-full border border-gray-300 focus:border-brand focus:ring-brand rounded-md p-2 outline-none" placeholder="예: 100" value="100">
+                        </div>
+                        <div>
+                            <label class="block font-medium text-gray-700">월 기타부채 ($)</label>
+                            <input type="number" id="calc1-debt" class="mt-1 block w-full border border-gray-300 focus:border-brand focus:ring-brand rounded-md p-2 outline-none" placeholder="자동차 등">
+                        </div>
+                    </div>
+                    
+                    <div class="text-center mt-8">
+                        <button onclick="calculateMaxLoan()" class="inline-block bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-extrabold text-lg md:text-xl py-4 px-12 md:px-20 rounded-full shadow-xl transition cursor-pointer border-none outline-none">최대한도계산</button>
+                    </div>
+                    
+                    <div id="calc1-result" class="mt-6 p-6 bg-brand-light rounded-xl text-center hidden border border-brand/20 fade-in">
+                        <p class="text-sm text-gray-600">스트레스 테스트 및 GDS/TDS 적용 한도</p>
+                        <p class="text-4xl font-bold text-brand mt-2" id="calc1-output">$0</p>
+                        <p class="text-xs text-gray-500 mt-2" id="calc1-limiting-factor">제한 요인: -</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white p-8 rounded-xl shadow-md border border-gray-200 flex flex-col w-full box-border">
+                <div class="bg-brand rounded-xl py-6 mb-8">
+                    <h2 class="text-2xl md:text-3xl font-extrabold text-white text-center">페이먼트 및 잔액계산</h2>
+                </div>
+                
+                <div class="space-y-4 text-sm flex-grow">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block font-medium text-gray-700">대출금액 ($)</label>
+                            <input type="number" id="calc2-amount" class="mt-1 block w-full border border-gray-300 focus:border-yellow-500 focus:ring-yellow-500 rounded-md p-2 outline-none">
+                        </div>
+                        <div>
+                            <label class="block font-medium text-gray-700">이자율 (%)</label>
+                            <input type="number" id="calc2-rate" class="mt-1 block w-full border border-gray-300 focus:border-yellow-500 focus:ring-yellow-500 rounded-md p-2 outline-none" step="0.1">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block font-medium text-gray-700">Amortization (년)</label>
+                            <input type="number" id="calc2-amortization" class="mt-1 block w-full border border-gray-300 focus:border-yellow-500 focus:ring-yellow-500 rounded-md p-2 outline-none bg-white" value="30" placeholder="예: 30">
+                        </div>
+                        <div>
+                            <label class="block font-medium text-gray-700">계약기간 (Term)</label>
+                            <select id="calc2-term" class="mt-1 block w-full border border-gray-300 focus:border-yellow-500 focus:ring-yellow-500 rounded-md p-2 outline-none bg-white">
+                                <option value="3">3년</option><option value="5" selected>5년</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block font-medium text-gray-700">상환주기 (Payment Frequency)</label>
+                        <select id="calc2-frequency" class="mt-1 block w-full border border-gray-300 focus:border-yellow-500 focus:ring-yellow-500 rounded-md p-2 outline-none bg-white">
+                            <option value="monthly" selected>Monthly (월납)</option>
+                            <option value="biweekly">Bi-weekly (격주납)</option>
+                            <option value="accel_biweekly">Accelerated Bi-weekly (빠른 격주납)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="text-center mt-8">
+                        <button onclick="calculatePayment()" class="inline-block bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-extrabold text-lg md:text-xl py-4 px-12 md:px-20 rounded-full shadow-xl transition cursor-pointer border-none outline-none">상세재무 분석하기</button>
+                    </div>
+                    
+                    <div id="calc2-result" class="mt-6 hidden space-y-3 fade-in">
+                        <div class="p-4 bg-brand-light border border-brand/20 rounded-xl flex justify-between items-center">
+                            <span class="font-medium text-gray-800">1회 납부액:</span>
+                            <span class="text-2xl font-bold text-brand" id="calc2-pmt">$0</span>
+                        </div>
+                        <div class="p-4 bg-gray-50 border border-gray-200 rounded-xl flex justify-between items-center">
+                            <span class="font-medium text-gray-800" id="calc2-balance-label">텀 종료후 남은원금:</span>
+                            <span class="text-xl font-bold text-gray-800" id="calc2-balance">$0</span>
+                        </div>
+                        <div class="p-4 bg-red-50 border border-red-200 rounded-xl flex justify-between items-center mb-4">
+                            <span class="font-medium text-red-600" id="calc2-interest-label">텀 기간 낸 총이자:</span>
+                            <span class="text-xl font-bold text-red-800" id="calc2-interest">$0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // 부모 창(index.html)에 현재 높이를 알려주는 함수
+        function notifyHeightChange() {
+            setTimeout(() => {
+                const height = document.body.scrollHeight;
+                window.parent.postMessage({ type: 'resize', height: height }, '*');
+            }, 50);
+        }
+
+        function formatCurrency(num) {
+            return new Intl.NumberFormat('en-CA', { style: 'currency', currency: 'CAD', maximumFractionDigits: 0 }).format(num);
+        }
+
+        function calculateMaxLoan() {
+            const income = parseFloat(document.getElementById('calc1-income').value) || 0;
+            const rate = parseFloat(document.getElementById('calc1-rate').value) || 0;
+            const propertyTaxYearly = parseFloat(document.getElementById('calc1-tax').value) || 0;
+            const strataMonthly = parseFloat(document.getElementById('calc1-strata').value) || 0;
+            const heatingMonthly = parseFloat(document.getElementById('calc1-heat').value) || 0;
+            const otherDebtMonthly = parseFloat(document.getElementById('calc1-debt').value) || 0;
+
+            if (!income || !rate) return alert("연 소득과 현재 예상 금리를 입력해주세요.");
+
+            const stressRate = Math.max(rate + 2.0, 5.25) / 100;
+            const monthlyIncome = income / 12;
+            const propertyTaxMonthly = propertyTaxYearly / 12;
+            const housingCosts = propertyTaxMonthly + heatingMonthly + (strataMonthly * 0.5);
+
+            const maxPiGDS = (monthlyIncome * 0.39) - housingCosts;
+            const maxPiTDS = (monthlyIncome * 0.44) - housingCosts - otherDebtMonthly;
+            const actualMaxPi = Math.min(maxPiGDS, maxPiTDS);
+            
+            if (actualMaxPi <= 0) {
+                document.getElementById('calc1-output').innerText = "$0";
+                document.getElementById('calc1-limiting-factor').innerText = "부채 및 유지비가 기준을 초과하여 대출이 어렵습니다.";
+                document.getElementById('calc1-result').classList.remove('hidden');
+                notifyHeightChange(); // 높이 변경 알림
+                return;
+            }
+
+            const monthlyRate = Math.pow(1 + (stressRate / 2), 2 / 12) - 1;
+            const months = 25 * 12; 
+            const maxLoan = actualMaxPi * ((Math.pow(1 + monthlyRate, months) - 1) / (monthlyRate * Math.pow(1 + monthlyRate, months)));
+
+            document.getElementById('calc1-output').innerText = formatCurrency(Math.max(0, maxLoan));
+            let limitReason = maxPiGDS < maxPiTDS ? "GDS (39%) 기준에 의해 한도가 결정되었습니다." : "TDS (44%) 기준에 의해 한도가 결정되었습니다.";
+            document.getElementById('calc1-limiting-factor').innerText = limitReason;
+            document.getElementById('calc1-result').classList.remove('hidden');
+            
+            notifyHeightChange(); // 높이 변경 알림
+        }
+
+        function calculatePayment() {
+            const principal = parseFloat(document.getElementById('calc2-amount').value);
+            const rate = parseFloat(document.getElementById('calc2-rate').value);
+            const amzYears = parseInt(document.getElementById('calc2-amortization').value);
+            const termYears = parseInt(document.getElementById('calc2-term').value);
+            const frequency = document.getElementById('calc2-frequency').value;
+
+            if (!principal || !rate || !amzYears) return alert("대출 금액, 금리, 상환기간을 입력해주세요.");
+
+            const annualRate = rate / 100;
+            const monthlyRate = Math.pow(1 + (annualRate / 2), 2 / 12) - 1;
+            const biweeklyRate = Math.pow(1 + (annualRate / 2), 2 / 26) - 1;
+
+            const pmtMonthly = principal * (monthlyRate * Math.pow(1 + monthlyRate, amzYears * 12)) / (Math.pow(1 + monthlyRate, amzYears * 12) - 1);
+
+            let payment = 0; let periodRate = 0; let periodsInTerm = 0;
+
+            if (frequency === 'monthly') { payment = pmtMonthly; periodRate = monthlyRate; periodsInTerm = termYears * 12; } 
+            else if (frequency === 'biweekly') { payment = principal * (biweeklyRate * Math.pow(1 + biweeklyRate, amzYears * 26)) / (Math.pow(1 + biweeklyRate, amzYears * 26) - 1); periodRate = biweeklyRate; periodsInTerm = termYears * 26; } 
+            else if (frequency === 'accel_biweekly') { payment = pmtMonthly / 2; periodRate = biweeklyRate; periodsInTerm = termYears * 26; }
+
+            let balance = principal; let totalInterest = 0;
+            for (let i = 0; i < periodsInTerm; i++) {
+                let interestForPeriod = balance * periodRate;
+                let principalForPeriod = payment - interestForPeriod;
+                totalInterest += interestForPeriod;
+                balance -= principalForPeriod;
+                if (balance < 0) { balance = 0; break; }
+            }
+
+            document.getElementById('calc2-pmt').innerText = formatCurrency(payment);
+            document.getElementById('calc2-balance-label').innerText = `${termYears}년 텀 종료 후 남은 원금:`;
+            document.getElementById('calc2-balance').innerText = formatCurrency(balance);
+            document.getElementById('calc2-interest-label').innerText = `${termYears}년 동안 낸 총 이자:`;
+            document.getElementById('calc2-interest').innerText = formatCurrency(totalInterest);
+            document.getElementById('calc2-result').classList.remove('hidden');
+            
+            notifyHeightChange(); // 높이 변경 알림
+        }
+
+        // 페이지 로드 시 초기 높이 계산
+        window.onload = function() {
+            notifyHeightChange();
+        };
+    </script>
+</body>
+</html>

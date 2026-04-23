@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insights & Newsletters | MortgageAjae</title>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-LPHD8XR0XD"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-LPHD8XR0XD');
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { light: '#f0f3fa', DEFAULT: '#334da9', dark: '#253880' }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Base margin/scroll reset for iframe embedding */
+        html, body { margin: 0; padding: 0; background-color: transparent; }
+        
+        .markdown-body h1 { font-size: 2.25rem; font-weight: 800; margin-bottom: 1.5rem; color: #111827; }
+        .markdown-body h2 { font-size: 1.5rem; font-weight: 700; margin-top: 2rem; margin-bottom: 1rem; color: #1f2937; border-bottom: 2px solid #f0f3fa; padding-bottom: 0.5rem;}
+        .markdown-body h3 { font-size: 1.25rem; font-weight: 700; margin-top: 1.5rem; margin-bottom: 0.75rem; color: #374151; }
+        .markdown-body p { margin-bottom: 1.25rem; line-height: 1.75; color: #4b5563; }
+        .markdown-body ul { list-style-type: disc; margin-left: 1.5rem; margin-bottom: 1.5rem; color: #4b5563; }
+        .markdown-body li { margin-bottom: 0.5rem; }
+        .markdown-body blockquote { border-left: 4px solid #334da9; background-color: #f0f3fa; padding: 1rem; margin-bottom: 1.5rem; font-style: italic; color: #374151; border-radius: 0 0.5rem 0.5rem 0; }
+        .markdown-body table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
+        .markdown-body th, .markdown-body td { border: 1px solid #e5e7eb; padding: 0.75rem; text-align: center; }
+        .markdown-body th { background-color: #f9fafb; font-weight: 700; color: #1f2937; }
+        .tab-btn { transition: all 0.3s ease; }
+        .fade-in { animation: fadeIn 0.4s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="text-gray-800 font-sans pt-2 md:pt-4">
+
+    <div class="max-w-6xl mx-auto px-2 md:px-4 pb-10">
+        
+        <div id="list-view" class="fade-in">
+            <div class="mb-8 text-center">
+                <h1 class="text-2xl font-extrabold text-brand mb-4">Insights & Newsletters</h1>
+                <p class="text-gray-600 text-sm">Check out market trends and the latest mortgage news<br>analyzed from an expert's perspective.</p>
+            </div>
+
+            <div class="flex justify-center space-x-2 md:space-x-4 mb-10">
+                <button id="tab-all" class="tab-btn px-5 md:px-8 py-2 md:py-3 rounded-full font-bold text-sm md:text-base bg-brand text-white shadow-md" onclick="filterPosts('all')">All Posts</button>
+                <button id="tab-board" class="tab-btn px-5 md:px-8 py-2 md:py-3 rounded-full font-bold text-sm md:text-base bg-white text-gray-600 border border-gray-200 hover:bg-gray-100" onclick="filterPosts('Info Board')">Info Board</button>
+                <button id="tab-news" class="tab-btn px-5 md:px-8 py-2 md:py-3 rounded-full font-bold text-sm md:text-base bg-white text-gray-600 border border-gray-200 hover:bg-gray-100" onclick="filterPosts('Newsletter')">Newsletter</button>
+            </div>
+
+            <div id="board-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                </div>
+        </div>
+
+        <div id="detail-view" class="hidden fade-in">
+            <button onclick="closePost()" class="mb-6 flex items-center text-gray-600 hover:text-brand font-bold bg-white border border-gray-200 px-4 py-2 rounded-lg shadow-sm transition">
+                ← Back to List
+            </button>
+            
+            <div class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+                <div id="post-header-image" class="w-full h-64 md:h-96 bg-gray-200 bg-cover bg-center hidden"></div>
+                <div class="p-6 md:p-12">
+                    <div class="flex items-center space-x-3 mb-6">
+                        <span id="post-type" class="bg-gray-800 text-white px-2 py-1 rounded text-xs font-bold">Type</span>
+                        <span id="post-category" class="bg-blue-50 text-brand px-3 py-1 rounded-md text-sm font-bold border border-blue-100">Category</span>
+                        <span id="post-date" class="text-gray-500 text-sm">Date</span>
+                    </div>
+                    <div id="post-content" class="markdown-body"></div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-10">
+                <button onclick="closePost()" class="bg-gray-800 hover:bg-gray-900 text-white font-bold py-3 px-10 rounded-full shadow-md transition">
+                    Back to List
+                </button>
+            </div>
+        </div>
+        
+    </div>
+
+    <script>
+        // Notify parent window (index.html) of height changes
+        function notifyHeightChange() {
+            setTimeout(() => {
+                const height = document.documentElement.scrollHeight || document.body.scrollHeight;
+                window.parent.postMessage({ type: 'resize', height: height + 50 }, '*');
+            }, 150);
+        }
+
+        const postFiles = [
+            'trend20260311.md',
+            'creditscore.md' 
+        ];
+
+        let allPostsData = []; 
+        let currentFilteredPosts = []; 
+
+        async function loadAllPosts() {
+            const boardGrid = document.getElementById('board-grid');
+            boardGrid.innerHTML = '<p class="col-span-3 text-center py-10 text-gray-500">Loading data...</p>';
+            allPostsData = [];
+
+            for (const file of postFiles) {
+                try {
+                    const response = await fetch('./' + file + '?v=' + new Date().getTime());
+                    if (!response.ok) continue; 
+                    
+                    const text = await response.text();
+                    const match = text.match(/---[\r\n]+([\s\S]+?)[\r\n]+---[\r\n]+([\s\S]+)/);
+                    
+                    if (match) {
+                        const frontmatterRaw = match[1];
+                        const markdownContent = match[2];
+                        
+                        const titleMatch = frontmatterRaw.match(/title:\s*"?([^"\n]+)"?/);
+                        const categoryMatch = frontmatterRaw.match(/category:\s*"?([^"\n]+)"?/);
+                        const typeMatch = frontmatterRaw.match(/type:\s*"?([^"\n]+)"?/);
+                        const dateMatch = frontmatterRaw.match(/date:\s*"?([^"\n]+)"?/);
+                        const thumbnailMatch = frontmatterRaw.match(/thumbnail:\s*"?([^"\n]+)"?/);
+                        const summaryMatch = frontmatterRaw.match(/summary:\s*"?([^"\n]+)"?/);
+
+                        allPostsData.push({
+                            title: titleMatch ? titleMatch[1] : 'No Title',
+                            category: categoryMatch ? categoryMatch[1] : 'Notice',
+                            type: typeMatch ? typeMatch[1] : 'Info Board', 
+                            date: dateMatch ? dateMatch[1] : '2000-01-01',
+                            thumbnail: thumbnailMatch ? thumbnailMatch[1] : '',
+                            summary: summaryMatch ? summaryMatch[1] : '',
+                            content: markdownContent
+                        });
+                    }
+                } catch (error) {
+                    console.error('Failed to load file:', file, error);
+                }
+            }
+
+            allPostsData.sort((a, b) => new Date(b.date) - new Date(a.date));
+            filterPosts('all');
+        }
+
+        function filterPosts(filterType) {
+            const tabs = {
+                'all': document.getElementById('tab-all'),
+                'Info Board': document.getElementById('tab-board'),
+                'Newsletter': document.getElementById('tab-news')
+            };
+
+            for (const key in tabs) {
+                if (key === filterType) {
+                    tabs[key].className = "tab-btn px-5 md:px-8 py-2 md:py-3 rounded-full font-bold text-sm md:text-base bg-brand text-white shadow-md";
+                } else {
+                    tabs[key].className = "tab-btn px-5 md:px-8 py-2 md:py-3 rounded-full font-bold text-sm md:text-base bg-white text-gray-600 border border-gray-200 hover:bg-gray-100";
+                }
+            }
+
+            if (filterType === 'all') {
+                currentFilteredPosts = allPostsData;
+            } else {
+                currentFilteredPosts = allPostsData.filter(post => post.type === filterType);
+            }
+
+            const boardGrid = document.getElementById('board-grid');
+            if (currentFilteredPosts.length === 0) {
+                boardGrid.innerHTML = `<p class="col-span-3 text-center py-16 text-gray-500 font-bold text-lg">No posts available.</p>`;
+                notifyHeightChange();
+                return;
+            }
+
+            let htmlString = '';
+            currentFilteredPosts.forEach((post, index) => {
+                const typeBadgeColor = post.type === 'Newsletter' ? 'bg-yellow-400 text-gray-900' : 'bg-gray-800 text-white';
+
+                htmlString += `
+                    <div class="bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden hover:shadow-xl transition cursor-pointer flex flex-col h-full transform hover:-translate-y-1" onclick="openPost(${index})">
+                        <div class="h-48 bg-gray-200 bg-cover bg-center relative" style="background-image: url('${post.thumbnail}');">
+                            <span class="absolute top-3 left-3 ${typeBadgeColor} px-2 py-1 rounded text-xs font-bold shadow-sm">${post.type}</span>
+                        </div>
+                        <div class="p-6 flex flex-col flex-grow">
+                            <div class="flex justify-between items-center mb-3">
+                                <span class="bg-blue-50 text-brand px-2 py-1 rounded text-xs font-bold border border-blue-100">${post.category}</span>
+                                <span class="text-xs text-gray-500 font-medium">${post.date}</span>
+                            </div>
+                            <h3 class="font-bold text-xl mb-3 text-gray-800 leading-snug">${post.title}</h3>
+                            <p class="text-gray-600 text-sm flex-grow line-clamp-3">${post.summary}</p>
+                        </div>
+                    </div>
+                `;
+            });
+            boardGrid.innerHTML = htmlString;
+            notifyHeightChange();
+        }
+
+        // Hide list view and show detail view
+        function openPost(index) {
+            const postData = currentFilteredPosts[index];
+            const headerImage = document.getElementById('post-header-image');
+            
+            if(postData.thumbnail) {
+                headerImage.style.backgroundImage = `url('${postData.thumbnail}')`;
+                headerImage.classList.remove('hidden');
+            } else {
+                headerImage.classList.add('hidden');
+            }
+            
+            document.getElementById('post-type').innerText = postData.type;
+            document.getElementById('post-category').innerText = postData.category;
+            document.getElementById('post-date').innerText = postData.date;
+            document.getElementById('post-content').innerHTML = marked.parse(postData.content);
+            
+            // Switch view
+            document.getElementById('list-view').classList.add('hidden');
+            document.getElementById('detail-view').classList.remove('hidden');
+            
+            // Request parent (index.html) to scroll to top
+            window.parent.postMessage({ type: 'scrollToTop' }, '*');
+            notifyHeightChange();
+        }
+
+        // Hide detail view and show list view
+        function closePost() {
+            document.getElementById('detail-view').classList.add('hidden');
+            document.getElementById('list-view').classList.remove('hidden');
+            
+            window.parent.postMessage({ type: 'scrollToTop' }, '*');
+            notifyHeightChange();
+        }
+
+        window.onload = loadAllPosts;
+    </script>
+</body>
+</html>

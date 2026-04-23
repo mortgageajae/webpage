@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MortgageAjae | BC Professional Engineer Mortgage Broker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { light: '#f0f3fa', DEFAULT: '#334da9', dark: '#253880' }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        html { scroll-behavior: smooth; }
+        .gradient-bg { background: linear-gradient(135deg, #0f172a 0%, #334da9 100%); }
+        .tool-card { transition: all 0.3s ease; }
+        .tool-card:hover { transform: translateY(-5px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); border-color: #334da9; }
+        .fade-in { animation: fadeIn 0.4s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* Hide scrollbar (for mobile tab menu) */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        /* Active tab styles */
+        .tab-active { border-bottom: 3px solid #334da9; color: #334da9; font-weight: 800; }
+        .tab-inactive { color: #6b7280; font-weight: 600; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans flex flex-col min-h-screen">
+
+    <header class="bg-white shadow-sm fixed w-full z-30 top-0">
+        <div class="w-full max-w-6xl mx-auto flex justify-center bg-white h-full items-center">
+            <a href="javascript:void(0)" onclick="showDashboard()" class="w-full block">
+                <img src="./images/mortgageajae-banner.jpg" alt="MortgageAjae Logo Banner" class="w-full h-auto object-cover md:hidden" onerror="this.style.display='none'">
+                <img src="./images/mortgageajae-banner-web.jpg" alt="MortgageAjae Desktop Banner" class="hidden md:block w-full h-auto object-cover" onerror="this.style.display='none'">
+            </a>
+        </div>
+    </header>
+
+    <div id="sub-nav" class="fixed w-full z-20 bg-white border-b border-gray-200 shadow-md top-[auto] fade-in" > 
+        <div class="max-w-6xl mx-auto px-2 flex justify-start lg:justify-center gap-3 md:gap-4 lg:gap-5 overflow-x-auto no-scrollbar whitespace-nowrap pt-3 text-[13px] md:text-sm lg:text-[15px]">
+            <button onclick="showDashboard()" class="pb-3 px-1 md:px-2 tab-active hover:text-brand transition flex-shrink-0" id="btn-main-dash">Main Dashboard</button>
+            <button onclick="loadTool('rate-diagnosis.html', this, 1)" class="calc-tab pb-3 px-1 md:px-2 tab-inactive hover:text-brand transition flex-shrink-0">Rate Diagnosis</button>
+            <button onclick="loadTool('budget-calculator.html', this, 2)" class="calc-tab pb-3 px-1 md:px-2 tab-inactive hover:text-brand transition flex-shrink-0">Total Budget</button>
+            <button onclick="loadTool('benefit-diagnosis.html', this, 3)" class="calc-tab pb-3 px-1 md:px-2 tab-inactive hover:text-brand transition flex-shrink-0">Benefit Eligibility</button>
+            <button onclick="loadTool('debt-consolidation.html', this, 4)" class="calc-tab pb-3 px-1 md:px-2 tab-inactive hover:text-brand transition flex-shrink-0">Debt Consolidation</button>
+            <button onclick="loadTool('switch.html', this, 5)" class="calc-tab pb-3 px-1 md:px-2 tab-inactive hover:text-brand transition flex-shrink-0">Mortgage Switch</button>
+            <button onclick="loadTool('core-tools.html', this, 6)" class="calc-tab pb-3 px-1 md:px-2 tab-inactive hover:text-brand transition flex-shrink-0">Limits & Payments</button>
+            <button onclick="loadTool('insured-analysis.html', this, 7)" class="calc-tab pb-3 px-1 md:px-2 tab-inactive hover:text-brand transition flex-shrink-0">Insured Profitability</button>
+            <button onclick="loadTool('retirement.html', this, 8)" class="calc-tab pb-3 px-1 md:px-2 tab-inactive hover:text-brand transition flex-shrink-0">Retirement Planning</button>
+            <button onclick="loadTool('board.html', this, 9)" class="calc-tab pb-3 px-1 md:px-2 tab-inactive hover:text-brand transition flex-shrink-0">Info Board</button>
+        </div>
+    </div>
+
+    <main class="flex-grow pt-[120px] md:pt-[180px]" id="main-content">
+        
+        <div id="dashboard-view" class="fade-in">
+            <section class="py-6 pb-0 px-4">
+                <div class="max-w-6xl mx-auto gradient-bg rounded-3xl overflow-hidden shadow-xl flex flex-col md:flex-row items-center justify-center gap-8 p-8 md:p-12 text-white">
+                    <div class="flex flex-col items-center flex-shrink-0">
+                        <img src="./images/profile.jpg" alt="Justin Bae P.Eng" class="h-48 w-48 md:h-64 md:w-64 rounded-full border-4 border-white shadow-2xl object-cover" onerror="this.style.display='none'">
+                    </div>
+                    <div class="text-center md:text-left flex flex-col justify-center">
+                        <span class="bg-brand-dark text-white text-xs font-bold px-3 py-1 rounded-full mb-4 inline-block border border-brand-light/30 self-center md:self-start">P.Eng & BCFSA Registered Broker</span>
+                        <h1 class="text-2xl md:text-4xl font-extrabold mb-4 leading-tight tracking-tight">Optimal Solutions Analyzed<br>With an Engineer's Precision</h1>
+                        <p class="text-sm md:text-base text-blue-100 max-w-md mx-auto md:mx-0">We precisely review complex numbers and terms. Please select the analysis tool you need.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="py-10 pb-4 px-4 max-w-6xl mx-auto">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div onclick="loadTool('rate-diagnosis.html', null, 1)" class="tool-card bg-white p-8 rounded-2xl border border-gray-200 shadow-sm flex flex-col h-full cursor-pointer">
+                        <h3 class="text-xl md:text-2xl font-extrabold text-gray-800 mb-3">Mortgage Rate Diagnosis</h3>
+                        <p class="text-gray-500 text-sm md:text-base mb-6 flex-grow leading-relaxed">Enter your proposed rate conditions, and we will analyze if it's the optimal offer by comparing it with the latest BC market data.</p>
+                        <div class="font-bold text-brand flex items-center mt-auto">Start Diagnosis <span>→</span></div>
+                    </div>
+                    <div onclick="loadTool('budget-calculator.html', null, 2)" class="tool-card bg-white p-8 rounded-2xl border border-gray-200 shadow-sm flex flex-col h-full cursor-pointer">
+                        <h3 class="text-xl md:text-2xl font-extrabold text-gray-800 mb-3">Comprehensive Purchase Budget</h3>
+                        <p class="text-gray-500 text-sm md:text-base mb-6 flex-grow leading-relaxed">Calculates the total cash required at closing by combining down payment, Property Transfer Tax (PTT), mortgage insurance premiums, and other related costs.</p>
+                        <div class="font-bold text-brand flex items-center mt-auto">Calculate Budget <span>→</span></div>
+                    </div>
+                    <div onclick="loadTool('benefit-diagnosis.html', null, 3)" class="tool-card bg-white p-8 rounded-2xl border border-gray-200 shadow-sm flex flex-col h-full cursor-pointer">
+                        <h3 class="text-xl md:text-2xl font-extrabold text-gray-800 mb-3">Government Benefit Eligibility</h3>
+                        <p class="text-gray-500 text-sm md:text-base mb-6 flex-grow leading-relaxed">Checks your eligibility for easily missed essential benefits like PTT exemption, New Housing GST rebate, Eco Plus 25% rebate, FHSA, and RRSP withdrawals.</p>
+                        <div class="font-bold text-brand flex items-center mt-auto">Diagnose Eligibility <span>→</span></div>
+                    </div>
+                    <div onclick="loadTool('debt-consolidation.html', null, 4)" class="tool-card bg-white p-8 rounded-2xl border border-gray-200 shadow-sm flex flex-col h-full cursor-pointer">
+                        <h3 class="text-xl md:text-2xl font-extrabold text-gray-800 mb-3">Debt Consolidation Analysis</h3>
+                        <p class="text-gray-500 text-sm md:text-base mb-6 flex-grow leading-relaxed">Calculates whether consolidating high-interest debt (credit cards, auto loans) is beneficial for your monthly cash flow, even when factoring in mortgage breaking penalties.</p>
+                        <div class="font-bold text-brand flex items-center mt-auto">Calculate Consolidation <span>→</span></div>
+                    </div>
+                    <div onclick="loadTool('switch.html', null, 5)" class="tool-card bg-white p-8 rounded-2xl border border-gray-200 shadow-sm flex flex-col h-full cursor-pointer">
+                        <h3 class="text-xl md:text-2xl font-extrabold text-gray-800 mb-3">Mortgage Switch Analysis</h3>
+                        <p class="text-gray-500 text-sm md:text-base mb-6 flex-grow leading-relaxed">Diagnoses the feasibility of switching by comparing the penalty incurred when moving your mortgage to another institution against the interest savings over the remaining term.</p>
+                        <div class="font-bold text-brand flex items-center mt-auto">Start Switch Analysis <span>→</span></div>
+                    </div>
+                    <div onclick="loadTool('core-tools.html', null, 6)" class="tool-card bg-white p-8 rounded-2xl border border-gray-200 shadow-sm flex flex-col h-full cursor-pointer">
+                        <h3 class="text-xl md:text-2xl font-extrabold text-gray-800 mb-3">Loan Limits & Payments</h3>
+                        <p class="text-gray-500 text-sm md:text-base mb-6 flex-grow leading-relaxed">Calculates maximum limits based on GDS/TDS criteria, payments by frequency (monthly, bi-weekly, etc.), and long-term interest costs.</p>
+                        <div class="font-bold text-brand flex items-center mt-auto">Run Tool <span>→</span></div>
+                    </div>
+                    <div onclick="loadTool('insured-analysis.html', null, 7)" class="tool-card bg-white p-8 rounded-2xl border border-gray-200 shadow-sm flex flex-col h-full cursor-pointer">
+                        <h3 class="text-xl md:text-2xl font-extrabold text-gray-800 mb-3">Insured Profitability Analysis</h3>
+                        <p class="text-gray-500 text-sm md:text-base mb-6 flex-grow leading-relaxed">Compares whether it is advantageous to intentionally keep the down payment under 20% to receive an insured rate discount, even if a 20%+ down payment is possible.</p>
+                        <div class="font-bold text-brand flex items-center mt-auto">Analyze Profitability <span>→</span></div>
+                    </div>
+                    <div onclick="loadTool('retirement.html', null, 8)" class="tool-card bg-white p-8 rounded-2xl border border-gray-200 shadow-sm flex flex-col h-full cursor-pointer">
+                        <h3 class="text-xl md:text-2xl font-extrabold text-gray-800 mb-3">Retirement Financial Planning</h3>
+                        <p class="text-gray-500 text-sm md:text-base mb-6 flex-grow leading-relaxed">Provides strategies for stable post-retirement cash flow by comprehensively considering mortgage repayment plans, home equity value, and personal pensions.</p>
+                        <div class="font-bold text-brand flex items-center mt-auto">Start Financial Planning <span>→</span></div>
+                    </div>
+                    <div onclick="loadTool('board.html', null, 9)" class="tool-card bg-white p-8 rounded-2xl border border-gray-200 shadow-sm flex flex-col h-full cursor-pointer">
+                        <h3 class="text-xl md:text-2xl font-extrabold text-gray-800 mb-3">Mortgage Info Board</h3>
+                        <p class="text-gray-500 text-sm md:text-base mb-6 flex-grow leading-relaxed">Check out BC real estate market trends, the latest mortgage news, and useful home-buying tips straight from a professional broker.</p>
+                        <div class="font-bold text-brand flex items-center mt-auto">Read Columns <span>→</span></div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div id="calculator-view" class="hidden fade-in max-w-6xl mx-auto w-full px-2 md:px-4 pt-4 md:pt-6">
+            <iframe id="tool-frame" src="" class="w-full border-none overflow-hidden" scrolling="no"></iframe>
+        </div>
+    </main>
+
+    <section class="pb-4 px-4 w-full max-w-6xl mx-auto mt-2">
+        <div class="bg-brand border-2 border-brand-dark rounded-2xl p-4 md:p-6 text-center shadow-xl text-white">
+            <h3 class="text-2xl md:text-2xl font-extrabold mb-3">Need a Consultation?</h3>
+            <p class="text-blue-100 mb-8 text-sm md:text-base">We analyze your situation with an eagle eye<br>to build a customized strategy that won't miss even a 1% benefit.<br>If the calculation results feel too complex,<br>please request a 1:1 video consultation at any time.</p>
+            <a href="https://calendar.app.google/zWG82EqskeBtwyeU7" target="_blank" class="inline-block bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-extrabold text-base md:text-lg py-4 px-10 rounded-full transition shadow-xl">
+                🎥 Book a 1:1 Video Consultation Now
+            </a>
+        </div>
+    </section>
+
+    <footer class="bg-gray-900 text-gray-400 py-8 text-center text-sm w-full mt-auto">
+        <p>Justin Bae | M.Sc. P.Eng Registered Mortgage Broker (BCFSA)</p>
+        <p class="mt-2">Email: jb@mortgageajae.ca | Phone: 250-581-6862 | KakaoTalk: mortgageajae</p>
+        <p class="mt-2 text-xs text-gray-600">&copy; 2026 Mortgageajae. All rights reserved.</p>
+    </footer>
+
+    <script>
+        function adjustHeaderPadding() {
+            const header = document.querySelector('header');
+            const headerHeight = header.offsetHeight;
+            const subNav = document.getElementById('sub-nav');
+            const mainContent = document.getElementById('main-content');
+            subNav.style.top = headerHeight + 'px';
+            mainContent.style.paddingTop = (headerHeight + subNav.offsetHeight) + 'px';
+        }
+
+        window.addEventListener('resize', adjustHeaderPadding);
+        window.addEventListener('load', adjustHeaderPadding);
+
+        function showDashboard() {
+            document.getElementById('dashboard-view').classList.remove('hidden');
+            document.getElementById('calculator-view').classList.add('hidden');
+            document.getElementById('tool-frame').src = ""; 
+            
+            const tabs = document.querySelectorAll('.calc-tab');
+            tabs.forEach(tab => {
+                tab.classList.remove('tab-active');
+                tab.classList.add('tab-inactive');
+            });
+            document.getElementById('btn-main-dash').classList.add('tab-active');
+            document.getElementById('btn-main-dash').classList.remove('tab-inactive');
+
+            window.scrollTo(0, 0); 
+            adjustHeaderPadding();
+        }
+
+        function loadTool(htmlFileName, clickedTabBtn = null, tabIndex = null) {
+            document.getElementById('dashboard-view').classList.add('hidden');
+            document.getElementById('calculator-view').classList.remove('hidden');
+            document.getElementById('tool-frame').src = htmlFileName;
+            
+            document.getElementById('btn-main-dash').classList.remove('tab-active');
+            document.getElementById('btn-main-dash').classList.add('tab-inactive');
+            
+            const tabs = document.querySelectorAll('.calc-tab');
+            tabs.forEach(tab => {
+                tab.classList.remove('tab-active');
+                tab.classList.add('tab-inactive');
+            });
+
+            if(clickedTabBtn) {
+                clickedTabBtn.classList.remove('tab-inactive');
+                clickedTabBtn.classList.add('tab-active');
+            } else if(tabIndex !== null) {
+                const targetTab = tabs[tabIndex - 1]; 
+                if(targetTab) {
+                    targetTab.classList.remove('tab-inactive');
+                    targetTab.classList.add('tab-active');
+                }
+            }
+            
+            adjustHeaderPadding(); 
+            window.scrollTo(0, 0);
+        }
+
+        window.addEventListener('message', function(event) {
+            if (event.data.type === 'resize') {
+                const iframe = document.getElementById('tool-frame');
+                iframe.style.height = (event.data.height + 20) + 'px';
+            } else if (event.data.type === 'scrollToTop') {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        });
+    </script>
+</body>
+</html>

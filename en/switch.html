@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mortgage Switch | MortgageAjae</title>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-LPHD8XR0XD"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-LPHD8XR0XD');
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { light: '#f0f3fa', DEFAULT: '#334da9', dark: '#253880' }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        html { scroll-behavior: smooth; }
+        .fade-in { animation: fadeIn 0.4s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans p-0 m-0">
+    <section id="switch-calculator" class="px-2 md:px-0 max-w-6xl mx-auto relative z-10 fade-in pb-10">
+        <div class="bg-white p-8 rounded-xl shadow-md border border-gray-200 flex flex-col w-full box-border mt-4">
+            
+            <div class="bg-brand rounded-xl py-6 mb-8">
+                <h2 class="text-2xl md:text-3xl font-extrabold text-white text-center">Mortgage Switch Analysis</h2>
+            </div>
+            
+            <div class="space-y-10">
+                
+                <div>
+                    <h3 class="text-lg font-bold text-gray-800 mb-4 border-b-2 border-brand/20 pb-2">1. Home & Current Mortgage Info</h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                        <div class="bg-blue-50 p-3 rounded-lg border border-blue-100">
+                            <label class="block font-bold text-brand-dark text-sm mb-1">Original Purchase/Refinance Price ($)</label>
+                            <input type="number" id="sw-orig-price" oninput="checkInsurable()" class="w-full border border-gray-300 focus:border-brand rounded-md p-2 text-sm outline-none bg-white" placeholder="e.g., 800000">
+                        </div>
+                        <div class="bg-blue-50 p-3 rounded-lg border border-blue-100">
+                            <label class="block font-bold text-brand-dark text-sm mb-1">Purchase/Refinance Date (Month/Year)</label>
+                            <input type="month" id="sw-orig-date" onchange="checkInsurable()" class="w-full border border-gray-300 focus:border-brand rounded-md p-2 text-sm outline-none bg-white">
+                        </div>
+                        <div class="bg-blue-50 p-3 rounded-lg border border-blue-100">
+                            <label class="block font-bold text-brand-dark text-sm mb-1">Estimated Current Value ($)</label>
+                            <input type="number" id="sw-current-value" oninput="checkInsurable()" class="w-full border border-gray-300 focus:border-brand rounded-md p-2 text-sm outline-none bg-white" placeholder="e.g., 1000000">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                        <div>
+                            <label class="block font-bold text-gray-700 text-sm mb-1">Original Loan Amount ($)</label>
+                            <input type="number" id="dc-orig-principal" oninput="updateCurrentMortgageInfo()" class="w-full border border-gray-300 focus:border-brand rounded-md p-2 text-sm outline-none" placeholder="e.g., 500000">
+                        </div>
+                        <div>
+                            <label class="block font-bold text-gray-700 text-sm mb-1">Original Amortization (Yrs)</label>
+                            <input type="number" id="dc-orig-amz" oninput="updateCurrentMortgageInfo()" class="w-full border border-gray-300 focus:border-brand rounded-md p-2 text-sm outline-none" placeholder="e.g., 25">
+                        </div>
+                        <div>
+                            <label class="block font-bold text-gray-700 text-sm mb-1">Mortgage Term (Yrs)</label>
+                            <select id="dc-orig-term" onchange="updateCurrentMortgageInfo()" class="w-full border border-gray-300 focus:border-brand rounded-md p-2 text-sm outline-none bg-white">
+                                <option value="3">3 Years</option>
+                                <option value="5" selected>5 Years</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                        <div class="col-span-1 md:col-span-1">
+                            <label class="block font-bold text-gray-700 text-sm mb-1">Elapsed Time (Time Paid)</label>
+                            <div class="flex space-x-2">
+                                <input type="number" id="dc-elapsed-years" oninput="updateCurrentMortgageInfo()" class="w-1/2 border border-gray-300 focus:border-brand rounded-md p-2 text-sm outline-none" placeholder="Yrs (e.g., 3)">
+                                <input type="number" id="dc-elapsed-months" oninput="updateCurrentMortgageInfo()" class="w-1/2 border border-gray-300 focus:border-brand rounded-md p-2 text-sm outline-none" placeholder="Mos (e.g., 6)">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block font-bold text-gray-700 text-sm mb-1">Current Rate (%)</label>
+                            <input type="number" step="0.01" id="dc-orig-rate" oninput="updateCurrentMortgageInfo()" class="w-full border border-gray-300 focus:border-brand rounded-md p-2 text-sm outline-none" placeholder="e.g., 4.5">
+                        </div>
+                        <div>
+                            <label class="block font-bold text-gray-700 text-sm mb-1">Rate Type</label>
+                            <select id="dc-rate-type" onchange="toggleIrdInput(); updateCurrentMortgageInfo();" class="w-full border border-gray-300 focus:border-brand rounded-md p-2 text-sm outline-none bg-white">
+                                <option value="variable" selected>Variable</option>
+                                <option value="fixed">Fixed</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 mb-6">
+                        <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                            <label class="block font-bold text-gray-700 text-sm mb-1">Current Mortgage Charge Type</label>
+                            <select id="sw-charge-type" onchange="updateChargeType()" class="w-full md:w-1/2 border border-gray-300 focus:border-brand rounded-md p-2 text-sm outline-none bg-white mb-2">
+                                <option value="standard" selected>Standard Charge</option>
+                                <option value="collateral">Collateral Charge</option>
+                            </select>
+                            <p class="text-xs text-brand-dark bg-blue-50 inline-block px-3 py-1.5 rounded border border-blue-100 leading-snug">💡 If you are with a major bank or have a HELOC attached, it is highly likely a Collateral Charge. Please check your mortgage documents.</p>
+                        </div>
+                    </div>
+
+                    <div class="p-5 bg-brand-light rounded-xl border border-brand/20 fade-in">
+                        <div class="flex justify-between items-center mb-3">
+                            <h4 class="font-extrabold text-brand text-sm">💡 Current Mortgage Summary</h4>
+                            <span class="text-xs text-brand-dark bg-white px-2 py-1 rounded shadow-sm border border-brand/10 font-bold" id="rt-remaining-term">Remaining Term: - mos</span>
+                        </div>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center md:text-left">
+                            <div>
+                                <span class="text-gray-500 text-sm font-bold block mb-1">Remaining Principal</span>
+                                <span class="font-bold text-gray-800 text-lg" id="rt-rem-principal">$0</span>
+                            </div>
+                            <div>
+                                <span class="text-gray-500 text-sm font-bold block mb-1">Current Monthly Payment</span>
+                                <span class="font-bold text-gray-800 text-lg" id="rt-monthly-pmt">$0</span>
+                            </div>
+                            <div>
+                                <span class="text-gray-500 text-sm font-bold block mb-1">Principal Paid This Month</span>
+                                <span class="font-bold text-brand text-lg" id="rt-principal-part">$0</span>
+                            </div>
+                            <div>
+                                <span class="text-gray-500 text-sm font-bold block mb-1">Interest Paid This Month</span>
+                                <span class="font-bold text-red-500 text-lg" id="rt-interest-part">$0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-bold text-gray-800 mb-4 border-b-2 border-brand/20 pb-2">2. New Switch Terms & Costs</h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+                        
+                        <div class="bg-gray-50 p-5 rounded-xl border border-gray-200 shadow-sm relative">
+                            <label class="block font-bold text-gray-700 text-sm mb-1">Estimated Penalty Amount ($)</label>
+                            <input type="number" id="dc-penalty" class="w-full border border-gray-300 focus:border-brand rounded-md p-2 text-sm outline-none font-bold text-red-600 mb-2 bg-white" placeholder="Enter manually or auto-calculate below">
+                            
+                            <a href="bank-links.html" class="inline-block text-xs bg-white border border-gray-300 text-gray-700 px-3 py-1.5 rounded-lg hover:bg-gray-100 transition font-bold mb-3 shadow-sm">🔗 Check Bank Posted Rates →</a>
+                            
+                            <div id="ird-panel" class="hidden pt-3 border-t border-gray-200">
+                                <label class="block text-sm font-bold text-brand mb-3">📌 Fixed Rate IRD Calculation</label>
+                                <div class="grid grid-cols-2 gap-3 mb-3">
+                                    <div>
+                                        <label class="block text-xs font-bold text-gray-600 mb-1">Original Discount (%)</label>
+                                        <input type="number" step="0.01" id="dc-ird-discount" class="w-full border border-gray-300 rounded-md p-2 text-sm outline-none bg-white" placeholder="e.g., 2.00">
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-bold text-gray-600 mb-1">Remaining Term Posted Rate (%)</label>
+                                        <input type="number" step="0.01" id="dc-ird-posted" class="w-full border border-gray-300 rounded-md p-2 text-sm outline-none bg-white" placeholder="e.g., 4.50">
+                                    </div>
+                                </div>
+                                <button type="button" onclick="estimatePenalty()" class="w-full text-sm bg-brand hover:bg-brand-dark text-white py-2.5 rounded-lg font-bold transition shadow-sm mb-3">Calculate Max (3 Mos Interest, IRD)</button>
+                                
+                                <div class="bg-red-50 border border-red-200 p-3 rounded-lg">
+                                    <p class="text-xs text-red-700 font-bold mb-1">⚠️ If unsure:</p>
+                                    <p class="text-[11px] text-red-600 leading-snug">Each bank has different IRD formulas and posted rate policies. If you do not know the exact figures, please **contact your current lender directly to confirm the exact penalty.**</p>
+                                </div>
+                            </div>
+
+                            <div id="variable-penalty-btn">
+                                <button type="button" onclick="estimatePenalty()" class="w-full text-sm bg-brand hover:bg-brand-dark text-white py-2.5 rounded-lg font-bold transition shadow-sm">Auto-calculate 3 Months Interest Penalty</button>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block font-bold text-gray-700 text-sm mb-1">Other Closing Costs ($) (Legal, Appraisal, etc.)</label>
+                            <input type="number" id="dc-legal-fee" class="w-full border border-gray-300 focus:border-brand rounded-md p-2 text-sm outline-none bg-white" placeholder="e.g., 0" value="0">
+                            
+                            <label class="block font-bold text-gray-700 text-sm mb-1 mt-5 flex justify-between">
+                                <span>New Amortization (Years)</span>
+                                <span class="text-xs font-normal text-gray-500">※ Auto-fills remaining amortization</span>
+                            </label>
+                            <input type="number" step="0.1" id="dc-new-amz" class="w-full border border-gray-300 focus:border-brand rounded-md p-2 text-sm outline-none bg-gray-100" placeholder="Auto-calculated" readonly>
+
+                            <label class="block font-bold text-gray-700 text-sm mb-1 mt-5">New Estimated Rate (%)</label>
+                            <input type="number" step="0.01" id="dc-new-rate" class="w-full border border-gray-300 focus:border-brand rounded-md p-2 text-sm outline-none bg-white" placeholder="e.g., 3.89">
+
+                            <div id="insurable-check-panel" class="mt-5 p-4 rounded-lg border bg-blue-50 border-blue-200 hidden transition-all fade-in">
+                                <div class="flex justify-between items-center mb-2 border-b border-blue-200 pb-2">
+                                    <span class="font-bold text-gray-700 text-sm">Estimated Current LTV:</span> 
+                                    <span id="disp-ltv" class="font-extrabold text-brand-dark text-xl">0%</span>
+                                </div>
+                                <div class="flex justify-between items-center text-sm">
+                                    <span class="font-bold text-gray-700">Insurable Eligibility:</span> 
+                                    <span id="disp-insurable" class="font-bold px-2 py-1 rounded bg-white shadow-sm border">Pending</span>
+                                </div>
+                                <p id="disp-insurable-desc" class="text-xs text-gray-600 mt-3 leading-snug bg-white/60 p-2 rounded"></p>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center mt-10">
+                    <button type="button" onclick="calculateSwitch()" class="inline-block bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-extrabold text-lg md:text-xl py-4 px-12 md:px-20 rounded-full shadow-xl transition cursor-pointer border-none outline-none">Analyze Switch & View Results</button>
+                </div>
+
+                <div id="switch-result" class="hidden mt-10 space-y-6 fade-in">
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-gray-100 p-6 rounded-xl border border-gray-200 shadow-sm">
+                            <h4 class="text-lg font-bold text-gray-600 border-b border-gray-300 pb-2 mb-4">Current Status (Before)</h4>
+                            <div class="flex justify-between mb-2"><span class="text-sm">Current Monthly Payment:</span> <span class="font-bold" id="res-old-pmt">$0</span></div>
+                            <div class="flex justify-between mb-2 text-red-500"><span class="text-sm">Total Interest over Remaining Term:</span> <span class="font-bold" id="res-old-term-interest">$0</span></div>
+                        </div>
+
+                        <div class="bg-blue-50 p-6 rounded-xl border border-blue-200 shadow-sm">
+                            <h4 class="text-lg font-bold text-brand border-b border-blue-200 pb-2 mb-4">After Switch</h4>
+                            <div class="flex justify-between mb-2"><span class="text-sm">New Monthly Payment:</span> <span class="font-bold text-gray-700" id="res-new-pmt">$0</span></div>
+                            <div class="flex justify-between mb-2 text-brand"><span class="text-sm">Total Interest over Remaining Term:</span> <span class="font-bold" id="res-new-term-interest">$0</span></div>
+                            <div class="flex justify-between mt-4 pt-4 border-t border-blue-200 text-lg">
+                                <span class="font-bold text-gray-600 text-sm mt-1">Total Switch Cost:</span> 
+                                <span class="font-extrabold text-red-500" id="res-switch-cost">$0</span>
+                            </div>
+                            <div class="text-xs text-right text-gray-500 mt-1">(Penalty + Closing Costs)</div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-green-50 border-2 border-green-400 p-6 rounded-2xl text-center shadow-lg">
+                            <p class="text-green-800 font-bold text-lg mb-1">📉 Interest Savings Over Remaining Term</p>
+                            <p class="text-sm text-green-700 mb-3">(Interest saved over the same period)</p>
+                            <p class="text-xl md:text-2xl font-extrabold text-green-600" id="res-interest-savings">+$0</p>
+                        </div>
+                        
+                        <div class="bg-indigo-50 border-2 border-indigo-400 p-6 rounded-2xl text-center shadow-lg">
+                            <p class="text-indigo-800 font-bold text-lg mb-1">💰 Net Benefit of Switching</p>
+                            <p class="text-sm text-indigo-700 mb-3">(Interest Savings - Total Switch Cost)</p>
+                            <p class="text-xl md:text-2xl font-extrabold" id="res-net-benefit">+$0</p>
+                        </div>
+                    </div>
+                    
+                    <div id="result-message" class="text-center font-bold text-lg p-4 rounded-xl"></div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        function notifyHeightChange() {
+            setTimeout(() => {
+                const contentWrapper = document.getElementById('switch-calculator');
+                
+                if (contentWrapper) {
+                    const height = contentWrapper.offsetHeight;
+                    window.parent.postMessage({ type: 'resize', height: height + 20 }, '*');
+                }
+            }, 100);
+        }
+
+        function formatCurrency(num) {
+            return new Intl.NumberFormat('en-CA', { style: 'currency', currency: 'CAD', maximumFractionDigits: 0 }).format(num);
+        }
+
+        function getCanadianMonthlyRate(annualRatePercentage) {
+            let r = annualRatePercentage / 100;
+            return Math.pow(1 + (r / 2), 2 / 12) - 1;
+        }
+
+        function getInterestOverMonths(principal, monthlyRate, pmt, months) {
+            let balance = principal;
+            let totalInterest = 0;
+            for(let i=0; i<months; i++) {
+                let interest = balance * monthlyRate;
+                totalInterest += interest;
+                balance = balance + interest - pmt;
+                if(balance < 0) balance = 0;
+            }
+            return totalInterest;
+        }
+
+        let internalCalculatedCurrentBalance = 0;
+        let internalRemainingMonths = 0;
+        let internalOldMonthlyPmt = 0;
+
+        function toggleIrdInput() {
+            const type = document.getElementById('dc-rate-type').value;
+            if (type === 'fixed') {
+                document.getElementById('ird-panel').classList.remove('hidden');
+                document.getElementById('variable-penalty-btn').classList.add('hidden');
+            } else {
+                document.getElementById('ird-panel').classList.add('hidden');
+                document.getElementById('variable-penalty-btn').classList.remove('hidden');
+            }
+            notifyHeightChange(); 
+        }
+
+        function updateChargeType() {
+            const type = document.getElementById('sw-charge-type').value;
+            const legalFeeEl = document.getElementById('dc-legal-fee');
+            if(type === 'collateral') {
+                legalFeeEl.value = 800;
+            } else {
+                legalFeeEl.value = 0;
+            }
+        }
+
+        function checkInsurable() {
+            const curValue = parseFloat(document.getElementById('sw-current-value').value) || 0;
+            const origPrice = parseFloat(document.getElementById('sw-orig-price').value) || 0;
+            const origDateStr = document.getElementById('sw-orig-date').value; 
+            const origAmz = parseFloat(document.getElementById('dc-orig-amz').value) || 0;
+            const bal = internalCalculatedCurrentBalance;
+            const panel = document.getElementById('insurable-check-panel');
+
+            if(curValue > 0 && bal > 0) {
+                panel.classList.remove('hidden');
+                const ltv = (bal / curValue) * 100;
+                document.getElementById('disp-ltv').innerText = ltv.toFixed(1) + '%';
+                
+                let insurableText = "Insurable";
+                let insurableClass = "text-green-700 border-green-300";
+                let desc = "✅ With an LTV under 80% and maintaining the existing amortization, you are likely eligible for better Insurable rates.";
+
+                if (ltv > 80) {
+                    insurableText = "High-Ratio (Existing Insurance Required)";
+                    insurableClass = "text-orange-600 border-orange-300";
+                    desc = "⚠️ LTV exceeds 80%. A switch is only possible if default insurance (CMHC, Sagen, etc.) was obtained at origination.";
+                }
+                
+                let isGrandfathered = false;
+                if (origDateStr) {
+                    if (origDateStr <= "2016-11") {
+                        isGrandfathered = true;
+                    }
+                }
+
+                if (!isGrandfathered) {
+                    if (origPrice >= 1000000 && curValue >= 1000000) {
+                        insurableText = "Uninsurable";
+                        insurableClass = "text-red-600 border-red-300";
+                        desc = "❌ Originated after Nov 30, 2016, and both original and current values are $1M+, making it Uninsurable.";
+                    }
+                } else {
+                    if (origPrice >= 1000000 || curValue >= 1000000) {
+                        desc += " <br>📌 Originated before Nov 2016, so the $1M limit exemption (Grandfathered) applies.";
+                    }
+                }
+
+                if (origAmz > 30) {
+                    insurableText = "Uninsurable";
+                    insurableClass = "text-red-600 border-red-300";
+                    desc = "❌ The original amortization exceeds 30 years, so Uninsurable rules may apply.";
+                }
+
+                const dispEl = document.getElementById('disp-insurable');
+                dispEl.innerText = insurableText;
+                dispEl.className = `font-bold px-2 py-1 rounded bg-white shadow-sm border ${insurableClass}`;
+                document.getElementById('disp-insurable-desc').innerHTML = desc;
+            } else {
+                panel.classList.add('hidden');
+            }
+            notifyHeightChange();
+        }
+
+        function updateCurrentMortgageInfo() {
+            const P = parseFloat(document.getElementById('dc-orig-principal').value) || 0;
+            const amzYears = parseFloat(document.getElementById('dc-orig-amz').value) || 0;
+            const rate = parseFloat(document.getElementById('dc-orig-rate').value) || 0;
+            const termYears = parseFloat(document.getElementById('dc-orig-term').value) || 0;
+            const eYears = parseFloat(document.getElementById('dc-elapsed-years').value) || 0;
+            const eMonths = parseFloat(document.getElementById('dc-elapsed-months').value) || 0;
+
+            const remPrinEl = document.getElementById('rt-rem-principal');
+            const pmtEl = document.getElementById('rt-monthly-pmt');
+            const prinPartEl = document.getElementById('rt-principal-part');
+            const intPartEl = document.getElementById('rt-interest-part');
+            const termEl = document.getElementById('rt-remaining-term');
+
+            if(P > 0 && amzYears > 0 && rate > 0) {
+                const r_m = getCanadianMonthlyRate(rate);
+                const totalMonths = amzYears * 12;
+                const elapsedTotalMonths = (eYears * 12) + eMonths;
+                const totalTermMonths = termYears * 12;
+                
+                internalRemainingMonths = totalTermMonths - elapsedTotalMonths;
+                termEl.innerText = internalRemainingMonths > 0 ? `Remaining Term: ${internalRemainingMonths} mos` : "Term Expired";
+                termEl.className = internalRemainingMonths > 0 ? "text-xs text-brand-dark bg-white px-2 py-1 rounded shadow-sm border border-brand/10 font-bold" : "text-xs text-red-600 bg-red-50 px-2 py-1 rounded shadow-sm border border-red-200 font-bold";
+
+                const M = P * (r_m * Math.pow(1 + r_m, totalMonths)) / (Math.pow(1 + r_m, totalMonths) - 1);
+                internalOldMonthlyPmt = M;
+                
+                let currentBal = P;
+                if(elapsedTotalMonths > 0 && elapsedTotalMonths <= totalMonths) {
+                    currentBal = P * (Math.pow(1 + r_m, totalMonths) - Math.pow(1 + r_m, elapsedTotalMonths)) / (Math.pow(1 + r_m, totalMonths) - 1);
+                } else if (elapsedTotalMonths > totalMonths) {
+                    currentBal = 0;
+                }
+
+                const interestPart = currentBal * r_m;
+                const principalPart = M - interestPart;
+
+                internalCalculatedCurrentBalance = Math.max(0, currentBal);
+
+                remPrinEl.innerText = formatCurrency(internalCalculatedCurrentBalance);
+                pmtEl.innerText = formatCurrency(M);
+                prinPartEl.innerText = formatCurrency(Math.max(0, principalPart));
+                intPartEl.innerText = formatCurrency(Math.max(0, interestPart));
+
+                const remainingAmzYears = Math.max(0, amzYears - eYears - (eMonths / 12));
+                document.getElementById('dc-new-amz').value = remainingAmzYears.toFixed(2);
+
+                checkInsurable(); 
+
+            } else {
+                internalCalculatedCurrentBalance = 0;
+                internalRemainingMonths = 0;
+                internalOldMonthlyPmt = 0;
+                termEl.innerText = "Remaining Term: - mos";
+                remPrinEl.innerText = "$0"; pmtEl.innerText = "$0"; prinPartEl.innerText = "$0"; intPartEl.innerText = "$0";
+                document.getElementById('dc-new-amz').value = "";
+                checkInsurable(); 
+            }
+        }
+
+        window.onload = function() { 
+            updateChargeType();
+            notifyHeightChange(); 
+        }
+
+        function estimatePenalty() {
+            if(internalCalculatedCurrentBalance === 0) { alert("Please enter your current mortgage information accurately first."); return; }
+            if(internalRemainingMonths <= 0) { alert("The term has expired, so there is no penalty."); document.getElementById('dc-penalty').value = 0; return; }
+
+            const currentRate = parseFloat(document.getElementById('dc-orig-rate').value) || 0;
+            const rateType = document.getElementById('dc-rate-type').value;
+            const r_m = getCanadianMonthlyRate(currentRate);
+            
+            const threeMonthsInterest = internalCalculatedCurrentBalance * r_m * 3;
+            let finalPenalty = threeMonthsInterest;
+
+            if (rateType === 'fixed') {
+                const discount = parseFloat(document.getElementById('dc-ird-discount').value);
+                const currentPosted = parseFloat(document.getElementById('dc-ird-posted').value);
+                
+                if (isNaN(discount) || isNaN(currentPosted)) {
+                    alert("For a precise IRD calculation, please enter both the 'Original Discount' and the 'Posted Rate for Remaining Term'.");
+                    document.getElementById('dc-ird-discount').focus();
+                    return;
+                }
+                
+                const rateDiff = (currentRate - (currentPosted - discount)) / 100;
+                let irdPenalty = 0;
+                if (rateDiff > 0) { irdPenalty = internalCalculatedCurrentBalance * rateDiff * (internalRemainingMonths / 12); }
+                
+                finalPenalty = Math.max(threeMonthsInterest, irdPenalty);
+                
+                if (irdPenalty > threeMonthsInterest) { alert(`Fixed rate IRD applied.\n(Calculated IRD: $${Math.round(irdPenalty)} > 3 Months Interest: $${Math.round(threeMonthsInterest)})`); } 
+                else { alert(`3 Months Interest applied (greater than IRD).\n(3 Months Interest: $${Math.round(threeMonthsInterest)} > Calculated IRD: $${Math.round(irdPenalty)})`); }
+            } else {
+                alert(`Variable rate 3 months interest penalty applied.\n(Estimated Amount: $${Math.round(threeMonthsInterest)})`);
+            }
+            document.getElementById('dc-penalty').value = Math.round(finalPenalty);
+        }
+
+        function calculateSwitch() {
+            if(internalCalculatedCurrentBalance === 0) { alert("Please enter your current mortgage principal, term, and rate information accurately."); return; }
+
+            const origRate = parseFloat(document.getElementById('dc-orig-rate').value) || 0;
+            const penalty = parseFloat(document.getElementById('dc-penalty').value) || 0;
+            const legalFees = parseFloat(document.getElementById('dc-legal-fee').value) || 0;
+            const newRate = parseFloat(document.getElementById('dc-new-rate').value) || 0;
+            const newAmzYears = parseFloat(document.getElementById('dc-new-amz').value) || 0;
+
+            if(newRate === 0 || newAmzYears === 0) { alert("Please enter the new estimated switch rate."); return; }
+
+            const totalSwitchCost = penalty + legalFees;
+            const r_m_old = getCanadianMonthlyRate(origRate);
+            const r_m_new = getCanadianMonthlyRate(newRate);
+            
+            const oldTermInterest = getInterestOverMonths(internalCalculatedCurrentBalance, r_m_old, internalOldMonthlyPmt, internalRemainingMonths);
+
+            const newTotalMonths = newAmzYears * 12;
+            const newMortgagePmt = internalCalculatedCurrentBalance * (r_m_new * Math.pow(1 + r_m_new, newTotalMonths)) / (Math.pow(1 + r_m_new, newTotalMonths) - 1);
+            const newTermInterest = getInterestOverMonths(internalCalculatedCurrentBalance, r_m_new, newMortgagePmt, internalRemainingMonths);
+
+            const interestSavings = oldTermInterest - newTermInterest;
+            const netBenefit = interestSavings - totalSwitchCost;
+
+            document.getElementById('res-old-pmt').innerText = formatCurrency(internalOldMonthlyPmt);
+            document.getElementById('res-old-term-interest').innerText = formatCurrency(oldTermInterest);
+            
+            document.getElementById('res-new-pmt').innerText = formatCurrency(newMortgagePmt);
+            document.getElementById('res-new-term-interest').innerText = formatCurrency(newTermInterest);
+            document.getElementById('res-switch-cost').innerText = formatCurrency(totalSwitchCost);
+
+            const intSavingsEl = document.getElementById('res-interest-savings');
+            if(interestSavings > 0) { 
+                intSavingsEl.innerText = `+${formatCurrency(interestSavings)}`; 
+                intSavingsEl.className = "text-2xl md:text-5xl font-extrabold text-green-600"; 
+            } else { 
+                intSavingsEl.innerText = formatCurrency(interestSavings); 
+                intSavingsEl.className = "text-2xl md:text-5xl font-extrabold text-red-600"; 
+            }
+
+            const netBenefitEl = document.getElementById('res-net-benefit');
+            const resultMsgEl = document.getElementById('result-message');
+            
+            if(netBenefit > 0) { 
+                netBenefitEl.innerText = `+${formatCurrency(netBenefit)}`; 
+                netBenefitEl.className = "text-2xl md:text-3xl font-extrabold text-indigo-600"; 
+                resultMsgEl.className = "text-center font-bold text-lg p-4 rounded-xl bg-indigo-50 text-indigo-800 border border-indigo-200 mt-6";
+                resultMsgEl.innerText = `👍 It is financially beneficial to switch! (Net Benefit: ${formatCurrency(netBenefit)})`;
+            } else { 
+                netBenefitEl.innerText = formatCurrency(netBenefit); 
+                netBenefitEl.className = "text-2xl md:text-3xl font-extrabold text-red-600"; 
+                resultMsgEl.className = "text-center font-bold text-lg p-4 rounded-xl bg-red-50 text-red-800 border border-red-200 mt-6";
+                resultMsgEl.innerText = `🛑 The costs of switching outweigh the savings. We recommend keeping your current mortgage.`;
+            }
+
+            document.getElementById('switch-result').classList.remove('hidden');
+            
+            setTimeout(notifyHeightChange, 150);
+            
+            document.getElementById('switch-result').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+    </script>
+</body>
+</html>

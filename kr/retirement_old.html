@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title> 은퇴 재정설계 시뮬레이터</title>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-LPHD8XR0XD"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-LPHD8XR0XD');
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root { --primary: #2c3e50; --secondary: #2980b9; --accent: #e74c3c; --bg: #f4f7f6; --box: #ffffff; }
+        * { box-sizing: border-box; }
+        body { font-family: 'Malgun Gothic', sans-serif; background-color: var(--bg); margin: 0; padding: 10px; color: #333; }
+        .container { display: flex; flex-wrap: wrap; gap: 15px; max-width: 1500px; margin: 0 auto; }
+        .panel { background: var(--box); padding: 15px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); width: 100%; }
+        
+        h2 { margin-top: 0; color: var(--primary); font-size: 1.2rem; border-bottom: 2px solid var(--secondary); padding-bottom: 10px; }
+        h3 { font-size: 1.05rem; color: var(--primary); margin: 15px 0 10px 0; }
+        fieldset { border: 1px solid #ddd; border-radius: 8px; padding: 12px; background: #fafafa; margin-bottom: 10px; }
+        legend { font-weight: bold; color: var(--secondary); background: white; padding: 0 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 0.95rem; }
+        
+        .person-section { border-left: 4px solid var(--secondary); padding-left: 10px; margin-bottom: 15px; background: white; padding: 12px; border-radius: 6px; }
+        .person-section.spouse { border-left-color: #9b59b6; }
+        .asset-box { border: 1px solid #eee; padding: 12px; border-radius: 6px; margin-bottom: 12px; background: white; }
+        .asset-title { font-weight: bold; color: var(--primary); margin-bottom: 10px; font-size: 0.95rem; }
+        
+        .tax-tag { font-size: 0.7rem; color: white; padding: 3px 6px; border-radius: 3px; vertical-align: middle; margin-left: 5px; display: inline-block; }
+        .tag-100 { background: #e74c3c; } .tag-50 { background: #e67e22; } .tag-0 { background: #27ae60; }
+        .pv-preview { background: #e8f4f8; border-left: 4px solid #3498db; padding: 10px; font-size: 0.85rem; margin-top: 10px; border-radius: 4px; line-height: 1.4; word-break: keep-all; }
+        
+        /* 모바일 기본 입력폼 스타일 (수직 배치) */
+        .input-group { display: flex; flex-direction: column; align-items: flex-start; margin-bottom: 12px; }
+        .input-group label { font-size: 0.85rem; margin-bottom: 5px; font-weight: 600; color: #444; width: 100%; }
+        .input-wrapper { display: flex; align-items: center; gap: 8px; width: 100%; }
+        .input-wrapper input, .input-wrapper select { flex: 1; width: 100%; padding: 10px 8px; border: 1px solid #ccc; border-radius: 6px; text-align: right; font-size: 0.8rem; /* 모바일 터치 방지 최소크기 */ }
+        
+        /* 테이블 반응형 스타일 */
+        .table-container { overflow-x: auto; margin-top: 10px; border-radius: 6px; border: 1px solid #ddd; }
+        table.breakdown-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; text-align: right; min-width: 300px; }
+        table.breakdown-table th, table.breakdown-table td { border-bottom: 1px solid #eee; padding: 10px 8px; }
+        table.breakdown-table th { background-color: var(--primary); color: white; text-align: center; }
+        table.breakdown-table td:first-child { text-align: left; font-weight: bold; background: #f9f9f9; }
+        .row-total { background-color: #eaf2f8 !important; font-weight: bold; color: var(--secondary); font-size: 1.0rem; }
+        .row-tax { color: #e74c3c; background: #fadbd8 !important; }
+        .highlight-rm { color: #27ae60; font-weight: bold; background: #e9f7ef !important; }
+
+        .chart-container { position: relative; height: 250px; width: 100%; background: white; padding: 10px 0; border-radius: 8px; border: 1px solid #eee; margin-bottom: 15px; }
+        
+        .calc-btn { width: 100%; padding: 16px; background: var(--secondary); color: white; border: none; border-radius: 8px; font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: 0.3s; margin-top: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .calc-btn:active { background: #1f6391; transform: translateY(2px); }
+        .hidden { display: none !important; }
+
+        /* PC (Desktop) 전용 레이아웃 */
+        @media (min-width: 992px) {
+            body { padding: 20px; }
+            .container { gap: 20px; }
+            .panel { padding: 25px; }
+            .input-panel { flex: 1 1 450px; max-height: 90vh; overflow-y: auto; padding-right: 15px; }
+            .output-panel { flex: 1 1 600px; max-height: 90vh; overflow-y: auto; padding-right: 15px; }
+            
+            /* 데스크톱은 좌우 배치 유지 */
+            .input-group { flex-direction: row; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+            .input-group label { margin-bottom: 0; width: auto; flex: 1; }
+            .input-wrapper { width: auto; justify-content: flex-end; }
+            .input-wrapper input, .input-wrapper select { width: 100px; flex: none; font-size: 0.9rem; padding: 6px; }
+            
+            table.breakdown-table { font-size: 1rem; }
+            table.breakdown-table th, table.breakdown-table td { padding: 12px; }
+            .row-total { font-size: 1.0rem; }
+            .chart-container { height: 320px; padding: 15px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="panel input-panel">
+        <h2>📊 입력데이터 & 목표설정</h2>
+        
+        <fieldset>
+            <legend>1. 가구형태 및 목표 상속가액</legend>
+            <div class="input-group">
+                <label>가구 형태</label>
+                <select id="is_couple" onchange="toggleSpouse(); calculatePV();">
+                    <option value="false">개인 (Single)</option>
+                    <option value="true" selected>부부 (Couple)</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <label style="color:#27ae60;">목표 상속가액 (현재가치)</label>
+                <div class="input-wrapper"><input type="number" id="target_estate" value="1000000" step="10000"></div>
+            </div>
+            <div class="input-group">
+                <label>연 물가상승률(%) (현재가치계산용)</label>
+                <div class="input-wrapper"><input type="number" id="rate_inflation" value="2.5" step="0.1" oninput="calculatePV()"></div>
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend>2. 연령 및 정부/기업 연금</legend>
+            <div class="person-section">
+                <h3 style="color: var(--secondary); margin-top:0;">👤 본인 (Primary)</h3>
+                <div class="input-group"><label>현재나이 / 은퇴나이 / 기대수명</label>
+                    <div class="input-wrapper"><input type="number" id="p1_age" value="55" oninput="calculatePV()"><input type="number" id="p1_retire" value="65" oninput="calculatePV()"><input type="number" id="p1_life" value="90"></div>
+                </div>
+                <div class="input-group"><label>CPP 연수 / 소득(%) / 시작나이</label>
+                    <div class="input-wrapper"><input type="number" id="p1_cpp_yr" value="35" oninput="calculatePV()"><input type="number" id="p1_cpp_pct" value="70" oninput="calculatePV()"><input type="number" id="p1_cpp_start" value="65" oninput="calculatePV()"></div>
+                </div>
+                <div class="input-group"><label>OAS 거주연수 / 시작나이</label>
+                    <div class="input-wrapper"><input type="number" id="p1_oas_yr" value="30" oninput="calculatePV()"><input type="number" id="p1_oas_start" value="65" oninput="calculatePV()"></div>
+                </div>
+                <div class="input-group"><label style="color:#27ae60;">월 기업연금 (DB Pension)</label>
+                    <div class="input-wrapper"><input type="number" id="p1_db" value="0"></div>
+                </div>
+            </div>
+            
+            <div class="person-section spouse" id="spouse_section">
+                <h3 style="color: #9b59b6; margin-top:0;">👤 배우자 (Spouse)</h3>
+                <div class="input-group"><label>현재나이 / 은퇴나이 / 기대수명</label>
+                    <div class="input-wrapper"><input type="number" id="p2_age" value="52" oninput="calculatePV()"><input type="number" id="p2_retire" value="62" oninput="calculatePV()"><input type="number" id="p2_life" value="92"></div>
+                </div>
+                <div class="input-group"><label>CPP 연수 / 소득(%) / 시작나이</label>
+                    <div class="input-wrapper"><input type="number" id="p2_cpp_yr" value="20" oninput="calculatePV()"><input type="number" id="p2_cpp_pct" value="50" oninput="calculatePV()"><input type="number" id="p2_cpp_start" value="65" oninput="calculatePV()"></div>
+                </div>
+                <div class="input-group"><label>OAS 거주연수 / 시작나이</label>
+                    <div class="input-wrapper"><input type="number" id="p2_oas_yr" value="25" oninput="calculatePV()"><input type="number" id="p2_oas_start" value="65" oninput="calculatePV()"></div>
+                </div>
+                <div class="input-group"><label style="color:#27ae60;">월 기업연금 (DB Pension)</label>
+                    <div class="input-wrapper"><input type="number" id="p2_db" value="0"></div>
+                </div>
+            </div>
+            <div id="pension_preview" class="pv-preview">실시간 예상 연금 계산중...</div>
+        </fieldset>
+
+        <fieldset>
+            <legend>3. 부동산 및 부채 (가구 통합)</legend>
+            <div class="input-group"><label>주택 상승률 / 역모기지 이율</label>
+                <div class="input-wrapper"><input type="number" id="rate_home" value="3.5" step="0.1" oninput="calculatePV()"><input type="number" id="rate_rm" value="6.5" step="0.1"></div>
+            </div>
+            
+            <div class="asset-box">
+                <div class="asset-title">🏠 거주용 주택 (Primary)</div>
+                <div class="input-group"><label>현재시세 / 현재 모기지 잔액</label>
+                    <div class="input-wrapper"><input type="number" id="home_val" value="1500000" oninput="calculatePV()"><input type="number" id="home_mtg_curr" value="300000"></div>
+                </div>
+                <div class="input-group"><label>월 렌트수익 / 월 렌트비용</label>
+                    <div class="input-wrapper"><input type="number" id="home_rent_inc" value="1500"><input type="number" id="home_rent_exp" value="300"></div>
+                </div>
+                <div class="input-group"><label style="color:#2980b9;">은퇴시 모기지 잔액 (Payout용)</label>
+                    <div class="input-wrapper"><input type="number" id="home_mtg_retire" value="100000"></div>
+                </div>
+            </div>
+
+            <div class="asset-box">
+                <div class="asset-title">🏢 투자용 주택 (Investment)</div>
+                <div class="input-group"><label>현재시세 / 현재 모기지 잔액</label>
+                    <div class="input-wrapper"><input type="number" id="inv_val" value="0" oninput="calculatePV()"><input type="number" id="inv_mtg_curr" value="0"></div>
+                </div>
+                <div class="input-group"><label>월 렌트수익 / 월 렌트비용</label>
+                    <div class="input-wrapper"><input type="number" id="inv_rent_inc" value="0"><input type="number" id="inv_rent_exp" value="0"></div>
+                </div>
+                <div class="input-group"><label style="color:#2980b9;">은퇴시 모기지 잔액 (Payout용)</label>
+                    <div class="input-wrapper"><input type="number" id="inv_mtg_retire" value="0"></div>
+                </div>
+            </div>
+            <div id="re_pv_preview" class="pv-preview">은퇴시점 부동산 현재가치 영역</div>
+        </fieldset>
+
+        <fieldset>
+            <legend>4. 금융 투자자산 (부부 개별)</legend>
+            <div class="asset-box" style="border-left: 3px solid var(--secondary);">
+                <div class="asset-title">👤 본인 금융자산</div>
+                <div class="input-group"><label>RRSP 현재 잔액/이율 <span class="tax-tag tag-100">100%과세</span></label>
+                    <div class="input-wrapper"><input type="number" id="p1_rrsp_curr" value="300000" oninput="calcAssetFV()"><input type="number" id="p1_rrsp_rate" value="4.0" step="0.1" oninput="calcAssetFV()"></div>
+                </div>
+                <div class="input-group"><label style="color:#c0392b;">👉 은퇴시 목표 미래가치 (수정가능)</label>
+                    <div class="input-wrapper"><input type="number" id="p1_rrsp_retire" value="0" style="background:#fadbd8; font-weight:bold;"></div>
+                </div>
+                
+                <div class="input-group"><label>TFSA 현재 잔액/이율 <span class="tax-tag tag-0">비과세</span></label>
+                    <div class="input-wrapper"><input type="number" id="p1_tfsa_curr" value="80000" oninput="calcAssetFV()"><input type="number" id="p1_tfsa_rate" value="5.0" step="0.1" oninput="calcAssetFV()"></div>
+                </div>
+                <div class="input-group"><label style="color:#27ae60;">👉 은퇴시 목표 미래가치 (수정가능)</label>
+                    <div class="input-wrapper"><input type="number" id="p1_tfsa_retire" value="0" style="background:#d5f5e3; font-weight:bold;"></div>
+                </div>
+
+                <div class="input-group"><label>Non-Reg 잔액/이율 <span class="tax-tag tag-50">50%과세</span></label>
+                    <div class="input-wrapper"><input type="number" id="p1_non_curr" value="50000" oninput="calcAssetFV()"><input type="number" id="p1_non_rate" value="4.0" step="0.1" oninput="calcAssetFV()"></div>
+                </div>
+                <div class="input-group"><label style="color:#e67e22;">👉 은퇴시 목표 미래가치 (수정가능)</label>
+                    <div class="input-wrapper"><input type="number" id="p1_non_retire" value="0" style="background:#fdebd0; font-weight:bold;"></div>
+                </div>
+            </div>
+
+            <div class="asset-box spouse" id="spouse_asset_section" style="border-left: 3px solid #9b59b6;">
+                <div class="asset-title">👤 배우자 금융자산</div>
+                <div class="input-group"><label>RRSP 현재 잔액/이율 <span class="tax-tag tag-100">100%과세</span></label>
+                    <div class="input-wrapper"><input type="number" id="p2_rrsp_curr" value="100000" oninput="calcAssetFV()"><input type="number" id="p2_rrsp_rate" value="4.0" step="0.1" oninput="calcAssetFV()"></div>
+                </div>
+                <div class="input-group"><label style="color:#c0392b;">👉 은퇴시 목표 미래가치 (수정가능)</label>
+                    <div class="input-wrapper"><input type="number" id="p2_rrsp_retire" value="0" style="background:#fadbd8; font-weight:bold;"></div>
+                </div>
+                
+                <div class="input-group"><label>TFSA 현재 잔액/이율 <span class="tax-tag tag-0">비과세</span></label>
+                    <div class="input-wrapper"><input type="number" id="p2_tfsa_curr" value="20000" oninput="calcAssetFV()"><input type="number" id="p2_tfsa_rate" value="5.0" step="0.1" oninput="calcAssetFV()"></div>
+                </div>
+                <div class="input-group"><label style="color:#27ae60;">👉 은퇴시 목표 미래가치 (수정가능)</label>
+                    <div class="input-wrapper"><input type="number" id="p2_tfsa_retire" value="0" style="background:#d5f5e3; font-weight:bold;"></div>
+                </div>
+
+                <div class="input-group"><label>Non-Reg 잔액/이율 <span class="tax-tag tag-50">50%과세</span></label>
+                    <div class="input-wrapper"><input type="number" id="p2_non_curr" value="10000" oninput="calcAssetFV()"><input type="number" id="p2_non_rate" value="4.0" step="0.1" oninput="calcAssetFV()"></div>
+                </div>
+                <div class="input-group"><label style="color:#e67e22;">👉 은퇴시 목표 미래가치 (수정가능)</label>
+                    <div class="input-wrapper"><input type="number" id="p2_non_retire" value="0" style="background:#fdebd0; font-weight:bold;"></div>
+                </div>
+            </div>
+        </fieldset>
+
+        <button class="calc-btn" onclick="runSimulation()">은퇴 캐쉬플로우 결과 보기</button>
+    </div>
+
+    <div class="panel output-panel">
+        <h2>💡 예상 월 생활비 결과 (현재가치 기준)</h2>
+        <div style="font-size:0.85rem; color:#666; margin-bottom: 10px; line-height:1.5; word-break: keep-all;">
+            * 설정하신 <b>목표 상속가액($<span id="txt_target_estate" style="color:#27ae60; font-weight:bold;"></span>)</b>을 안전하게 확보한 상태에서 매월 쓸 수 있는 <b>세후 현금흐름</b>입니다.
+        </div>
+        
+        <div class="table-container">
+            <table class="breakdown-table">
+                <thead>
+                    <tr>
+                        <th>현금흐름구성</th>
+                        <th>현재가치기준 현금흐름</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>가구연금 (CPP+OAS+DB)</td><td id="tbl_pension">$0</td></tr>
+                    <tr><td>투자금인출 (금융자산총합)</td><td id="tbl_invest">$0</td></tr>
+                    <tr><td>부동산 순 임대수익</td><td id="tbl_rent">$0</td></tr>
+                    <tr class="highlight-rm"><td>역모기지 수령 (Tax-free)</td><td id="tbl_rm">$0</td></tr>
+                    <tr class="row-tax"><td>세금/OAS 환수액</td><td id="tbl_tax">-$0</td></tr>
+                    <tr class="row-total"><td>최종 세후 월 생활비</td><td id="tbl_net">$0</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div>
+            <h3>📊 세후 월 생활비 구성 비율</h3>
+            <div class="chart-container">
+                <canvas id="cashflowChart"></canvas>
+            </div>
+        </div>
+
+        <div>
+            <h3>📈 상속가능자산(현재가치기준) 추적곡선</h3>
+            <div class="chart-container">
+                <canvas id="estateChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let cfChart, estChart;
+
+    function toggleSpouse() {
+        const isCouple = document.getElementById('is_couple').value === 'true';
+        document.getElementById('spouse_section').classList.toggle('hidden', !isCouple);
+        document.getElementById('spouse_asset_section').classList.toggle('hidden', !isCouple);
+    }
+
+    function calcMonthlyCPP(years, percent, startAge) {
+        let base = 1364.17 * (Math.min(years, 40) / 40) * (percent / 100);
+        let adj = startAge < 65 ? (startAge - 65) * 0.006 : (startAge - 65) * 0.007; 
+        return Math.max(0, base * (1 + (adj * 12))); 
+    }
+    function calcMonthlyOAS(years, startAge) {
+        let base = 713.34 * (Math.min(years, 40) / 40);
+        let adj = startAge > 65 ? (startAge - 65) * 0.006 : 0; 
+        return Math.max(0, base * (1 + (adj * 12)));
+    }
+
+    function calcAssetFV() {
+        const p1Yrs = Math.max(0, parseInt(document.getElementById('p1_retire').value) - parseInt(document.getElementById('p1_age').value));
+        const p2Yrs = Math.max(0, parseInt(document.getElementById('p2_retire').value) - parseInt(document.getElementById('p2_age').value));
+        
+        const calc = (currId, rateId, retId, yrs) => {
+            const curr = parseFloat(document.getElementById(currId).value) || 0;
+            const rate = parseFloat(document.getElementById(rateId).value) / 100;
+            document.getElementById(retId).value = Math.round(curr * Math.pow(1 + rate, yrs));
+        };
+        calc('p1_rrsp_curr', 'p1_rrsp_rate', 'p1_rrsp_retire', p1Yrs);
+        calc('p1_tfsa_curr', 'p1_tfsa_rate', 'p1_tfsa_retire', p1Yrs);
+        calc('p1_non_curr', 'p1_non_rate', 'p1_non_retire', p1Yrs);
+        
+        calc('p2_rrsp_curr', 'p2_rrsp_rate', 'p2_rrsp_retire', p2Yrs);
+        calc('p2_tfsa_curr', 'p2_tfsa_rate', 'p2_tfsa_retire', p2Yrs);
+        calc('p2_non_curr', 'p2_non_rate', 'p2_non_retire', p2Yrs);
+    }
+
+    function calculatePV() {
+        const isCouple = document.getElementById('is_couple').value === 'true';
+        const years = Math.max(0, parseInt(document.getElementById('p1_retire').value) - parseInt(document.getElementById('p1_age').value));
+        const infRate = parseFloat(document.getElementById('rate_inflation').value) / 100;
+        const homeRate = parseFloat(document.getElementById('rate_home').value) / 100;
+
+        const p1C = calcMonthlyCPP(document.getElementById('p1_cpp_yr').value, document.getElementById('p1_cpp_pct').value, document.getElementById('p1_cpp_start').value);
+        const p1O = calcMonthlyOAS(document.getElementById('p1_oas_yr').value, document.getElementById('p1_oas_start').value);
+        let penHTML = `<b>[실시간 예상 월 연금]</b><br>본인: CPP $${Math.round(p1C).toLocaleString()} | OAS $${Math.round(p1O).toLocaleString()}`;
+        if(isCouple) {
+            const p2C = calcMonthlyCPP(document.getElementById('p2_cpp_yr').value, document.getElementById('p2_cpp_pct').value, document.getElementById('p2_cpp_start').value);
+            const p2O = calcMonthlyOAS(document.getElementById('p2_oas_yr').value, document.getElementById('p2_oas_start').value);
+            penHTML += `<br>배우자: CPP $${Math.round(p2C).toLocaleString()} | OAS $${Math.round(p2O).toLocaleString()}`;
+        }
+        document.getElementById('pension_preview').innerHTML = penHTML;
+
+        const homeFV = (parseFloat(document.getElementById('home_val').value) || 0) * Math.pow(1 + homeRate, years);
+        const invFV = (parseFloat(document.getElementById('inv_val').value) || 0) * Math.pow(1 + homeRate, years);
+        document.getElementById('re_pv_preview').innerHTML = `<b>은퇴 시점(${years}년 뒤) 부동산 PV:</b><br>거주용 <span style="color:#e74c3c;">$${Math.round(homeFV/Math.pow(1+infRate,years)).toLocaleString()}</span> | 투자용 <span style="color:#e74c3c;">$${Math.round(invFV/Math.pow(1+infRate,years)).toLocaleString()}</span>`;
+        
+        calcAssetFV();
+    }
+
+    window.onload = function() { toggleSpouse(); calculatePV(); runSimulation(); };
+
+    function calculateIndividualTax(income) {
+        let fedBPA = 15705, bcBPA = 12580, fedTax = 0, bcTax = 0;
+        let tFed = Math.max(0, income - fedBPA);
+        if(tFed > 0) {
+            fedTax += Math.max(0, Math.min(tFed, 55867 - fedBPA) * 0.15);
+            fedTax += Math.max(0, Math.min(Math.max(0, tFed - (55867-fedBPA)), 111733 - 55867) * 0.205);
+            fedTax += Math.max(0, Math.min(Math.max(0, tFed - (111733-fedBPA)), 173205 - 111733) * 0.26);
+        }
+        let tBc = Math.max(0, income - bcBPA);
+        if(tBc > 0) {
+            bcTax += Math.max(0, Math.min(tBc, 47937 - bcBPA) * 0.0506);
+            bcTax += Math.max(0, Math.min(Math.max(0, tBc - (47937-bcBPA)), 95875 - 47937) * 0.077);
+            bcTax += Math.max(0, Math.min(Math.max(0, tBc - (95875-bcBPA)), 110076 - 95875) * 0.105);
+        }
+        return fedTax + bcTax;
+    }
+    function calcClawback(oasAmount, income) { return Math.min(oasAmount, income > 90997 ? (income - 90997) * 0.15 : 0); }
+
+    function getAnnualDrawPV(retireFVId, ageId, retireId, lifeId, infRate) {
+        const retireValFV = parseFloat(document.getElementById(retireFVId).value) || 0;
+        const retireWait = Math.max(0, parseInt(document.getElementById(retireId).value) - parseInt(document.getElementById(ageId).value));
+        const retireDuration = Math.max(0, parseInt(document.getElementById(lifeId).value) - parseInt(document.getElementById(retireId).value));
+        if (retireDuration <= 0) return 0;
+        return (retireValFV / Math.pow(1 + infRate, retireWait)) / retireDuration;
+    }
+
+    function runSimulation() {
+        const isCouple = document.getElementById('is_couple').value === 'true';
+        const targetEstatePV = parseFloat(document.getElementById('target_estate').value);
+        document.getElementById('txt_target_estate').innerText = targetEstatePV.toLocaleString();
+        
+        const infRate = parseFloat(document.getElementById('rate_inflation').value) / 100;
+        const hr = parseFloat(document.getElementById('rate_home').value) / 100;
+        const rmRate = parseFloat(document.getElementById('rate_rm').value) / 100;
+
+        const p1Cpp = calcMonthlyCPP(document.getElementById('p1_cpp_yr').value, document.getElementById('p1_cpp_pct').value, document.getElementById('p1_cpp_start').value) * 12;
+        const p1Oas = calcMonthlyOAS(document.getElementById('p1_oas_yr').value, document.getElementById('p1_oas_start').value) * 12;
+        const p1Db = parseFloat(document.getElementById('p1_db').value) * 12;
+        const p2Cpp = isCouple ? calcMonthlyCPP(document.getElementById('p2_cpp_yr').value, document.getElementById('p2_cpp_pct').value, document.getElementById('p2_cpp_start').value) * 12 : 0;
+        const p2Oas = isCouple ? calcMonthlyOAS(document.getElementById('p2_oas_yr').value, document.getElementById('p2_oas_start').value) * 12 : 0;
+        const p2Db = isCouple ? parseFloat(document.getElementById('p2_db').value) * 12 : 0;
+        const totalRent = (parseFloat(document.getElementById('home_rent_inc').value) - parseFloat(document.getElementById('home_rent_exp').value) + parseFloat(document.getElementById('inv_rent_inc').value) - parseFloat(document.getElementById('inv_rent_exp').value)) * 12;
+
+        let p1Base = p1Cpp + (isCouple ? totalRent/2 + (p1Db+p2Db)/2 : totalRent + p1Db);
+        let p2Base = isCouple ? p2Cpp + totalRent/2 + (p1Db+p2Db)/2 : 0;
+
+        let p1Rrsp = getAnnualDrawPV('p1_rrsp_retire', 'p1_age', 'p1_retire', 'p1_life', infRate);
+        let p2Rrsp = isCouple ? getAnnualDrawPV('p2_rrsp_retire', 'p2_age', 'p2_retire', 'p2_life', infRate) : 0;
+        let p1Tfsa = getAnnualDrawPV('p1_tfsa_retire', 'p1_age', 'p1_retire', 'p1_life', infRate);
+        let p2Tfsa = isCouple ? getAnnualDrawPV('p2_tfsa_retire', 'p2_age', 'p2_retire', 'p2_life', infRate) : 0;
+        let p1Non = getAnnualDrawPV('p1_non_retire', 'p1_age', 'p1_retire', 'p1_life', infRate);
+        let p2Non = isCouple ? getAnnualDrawPV('p2_non_retire', 'p2_age', 'p2_retire', 'p2_life', infRate) : 0;
+
+        let p1TotTaxable = p1Base + p1Oas + p1Rrsp + (p1Non * 0.5);
+        let p2TotTaxable = p2Base + p2Oas + p2Rrsp + (p2Non * 0.5);
+        
+        let totalTax = calculateIndividualTax(p1TotTaxable) + (isCouple ? calculateIndividualTax(p2TotTaxable) : 0);
+        let totalClaw = calcClawback(p1Oas, p1TotTaxable) + (isCouple ? calcClawback(p2Oas, p2TotTaxable) : 0);
+
+        const p1RetireWait = Math.max(0, parseInt(document.getElementById('p1_retire').value) - parseInt(document.getElementById('p1_age').value));
+        const maxLifeWait = isCouple ? Math.max(parseInt(document.getElementById('p1_life').value) - parseInt(document.getElementById('p1_age').value), parseInt(document.getElementById('p2_life').value) - parseInt(document.getElementById('p2_age').value)) : parseInt(document.getElementById('p1_life').value) - parseInt(document.getElementById('p1_age').value);
+        const retirementDuration = Math.max(1, maxLifeWait - p1RetireWait);
+
+        const currHomeVal = parseFloat(document.getElementById('home_val').value) + parseFloat(document.getElementById('inv_val').value);
+        const homeFVAtLife = currHomeVal * Math.pow(1 + hr, maxLifeWait);
+        const targetEstateFV = targetEstatePV * Math.pow(1 + infRate, maxLifeWait);
+        
+        const maxDebtFV = homeFVAtLife - targetEstateFV;
+        const initialMortgage = parseFloat(document.getElementById('home_mtg_retire').value) + parseFloat(document.getElementById('inv_mtg_retire').value);
+        const initialDebtAtLife = initialMortgage * Math.pow(1 + rmRate, retirementDuration);
+
+        let annualRMFV = 0, clusterRM = 0;
+        if (maxDebtFV > initialDebtAtLife) {
+            let availableDebt = maxDebtFV - initialDebtAtLife;
+            let fvFactor = rmRate > 0 ? (Math.pow(1 + rmRate, retirementDuration) - 1) / rmRate : retirementDuration;
+            annualRMFV = availableDebt / (fvFactor * (1 + rmRate));
+            let annualRMPV = Math.max(0, annualRMFV / Math.pow(1 + infRate, p1RetireWait));
+            clusterRM = annualRMPV / 12;
+        }
+
+        let clusterPension = (p1Cpp + p2Cpp + p1Oas + p2Oas + p1Db + p2Db) / 12;
+        let clusterInvest = (p1Rrsp + p2Rrsp + p1Tfsa + p2Tfsa + p1Non + p2Non) / 12;
+        let clusterRent = totalRent / 12;
+        let clusterTaxClaw = (totalTax + totalClaw) / 12;
+        let netCashflow = clusterPension + clusterInvest + clusterRent + clusterRM - clusterTaxClaw;
+
+        document.getElementById('tbl_pension').innerText = "$" + Math.round(clusterPension).toLocaleString();
+        document.getElementById('tbl_invest').innerText = "$" + Math.round(clusterInvest).toLocaleString();
+        document.getElementById('tbl_rent').innerText = "$" + Math.round(clusterRent).toLocaleString();
+        document.getElementById('tbl_rm').innerText = "$" + Math.round(clusterRM).toLocaleString();
+        document.getElementById('tbl_tax').innerText = "-$" + Math.round(clusterTaxClaw).toLocaleString();
+        document.getElementById('tbl_net').innerText = "$" + Math.round(netCashflow).toLocaleString();
+
+        const ctx1 = document.getElementById('cashflowChart').getContext('2d');
+        if (cfChart) cfChart.destroy();
+        cfChart = new Chart(ctx1, {
+            type: 'bar',
+            data: {
+                labels: ['월 캐쉬플로우 구성'],
+                datasets: [
+                    { label: '연금(CPP/OAS/DB)', data: [clusterPension], backgroundColor: '#3498db' },
+                    { label: '투자금(RRSP/TFSA/Non)', data: [clusterInvest], backgroundColor: '#f39c12' },
+                    { label: '부동산 렌트', data: [clusterRent], backgroundColor: '#f1c40f' },
+                    { label: '역모기지 보너스(Tax-free)', data: [clusterRM], backgroundColor: '#27ae60' },
+                    { label: '[-] 세금 및 환수', data: [-clusterTaxClaw], backgroundColor: '#c0392b' }
+                ]
+            },
+            options: { 
+                indexAxis: 'y', 
+                responsive: true, maintainAspectRatio: false, 
+                scales: { x: { stacked: true }, y: { stacked: true } },
+                plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 10 } } } }
+            }
+        });
+
+        let labels = [], estB = [], targetLine = [];
+        let currHomeFV_Iter = currHomeVal * Math.pow(1+hr, p1RetireWait);
+        let mortB_Iter = initialMortgage;
+        
+        for (let i = 0; i <= retirementDuration; i++) {
+            labels.push(`${i}년차`);
+            let pvDisc = Math.pow(1 + infRate, p1RetireWait + i);
+            estB.push((currHomeFV_Iter - mortB_Iter) / pvDisc);
+            targetLine.push(targetEstatePV);
+            
+            currHomeFV_Iter *= (1 + hr);
+            mortB_Iter = (mortB_Iter + annualRMFV) * (1 + rmRate);
+        }
+
+        const ctx2 = document.getElementById('estateChart').getContext('2d');
+        if (estChart) estChart.destroy();
+        estChart = new Chart(ctx2, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [
+                    { label: '예상 상속 자산(PV)', data: estB, borderColor: '#2ecc71', backgroundColor: 'rgba(46, 204, 113, 0.2)', fill: true, tension: 0.1, pointRadius: 2 },
+                    { label: '목표 상속가액(PV)', data: targetLine, borderColor: '#e74c3c', borderDash: [5, 5], fill: false, pointRadius: 0 }
+                ]
+            },
+            options: { responsive: true, maintainAspectRatio: false, interaction: { mode: 'index', intersect: false }, plugins: { legend: { position: 'bottom', labels: { font: { size: 10 } } } } }
+        });
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>은퇴 재정설계 시뮬레이터</title>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-LPHD8XR0XD"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-LPHD8XR0XD');
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root { --primary: #2c3e50; --secondary: #2980b9; --accent: #e74c3c; --bg: #f4f7f6; --box: #ffffff; }
+        * { box-sizing: border-box; }
+        
+        html, body { margin: 0; padding: 0; background-color: var(--bg); }
+        body { font-family: 'Malgun Gothic', sans-serif; color: #333; }
+        
+        .brand-header {
+            background-color: #334da9;
+            border-radius: 12px;
+            padding: 24px;
+            margin: 10px 10px 0 10px;
+            text-align: center;
+        }
+        .brand-header h1 {
+            color: #ffffff;
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin: 0;
+            letter-spacing: -0.5px;
+        }
+        
+        .container { display: flex; flex-direction: column; max-width: 100%; margin: 0 auto; padding: 10px; gap: 20px; align-items: center; }
+        .panel { background: var(--box); padding: 15px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); width: 100%; }
+        
+        h2 { margin-top: 0; color: var(--primary); font-size: 1.2rem; border-bottom: 2px solid var(--secondary); padding-bottom: 10px; }
+        h3 { font-size: 1.05rem; color: var(--primary); margin: 15px 0 10px 0; }
+        fieldset { border: 1px solid #ddd; border-radius: 8px; padding: 12px; background: #fafafa; margin-bottom: 15px; }
+        legend { font-weight: bold; color: var(--secondary); background: white; padding: 0 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 0.95rem; }
+        
+        .person-section { border-left: 4px solid var(--secondary); padding-left: 10px; margin-bottom: 15px; background: white; padding: 12px; border-radius: 6px; }
+        .person-section.spouse { border-left-color: #9b59b6; }
+        .asset-box { border: 1px solid #eee; padding: 12px; border-radius: 6px; margin-bottom: 12px; background: white; }
+        .asset-title { font-weight: bold; color: var(--primary); margin-bottom: 10px; font-size: 0.95rem; display: flex; justify-content: space-between; align-items: center;}
+        
+        .tax-tag { font-size: 0.7rem; color: white; padding: 3px 6px; border-radius: 3px; vertical-align: middle; margin-left: 5px; display: inline-block; }
+        .tag-100 { background: #e74c3c; } .tag-50 { background: #e67e22; } .tag-0 { background: #27ae60; }
+        .pv-preview { background: #e8f4f8; border-left: 4px solid #3498db; padding: 10px; font-size: 0.85rem; margin-top: 10px; border-radius: 4px; line-height: 1.4; }
+        .warning-box { background: #fadbd8; border-left: 4px solid #c0392b; padding: 10px; font-size: 0.85rem; margin-top: 10px; border-radius: 4px; line-height: 1.4; color: #c0392b; display: none; }
+        
+        .multi-col-group { display: flex; gap: 8px; margin-bottom: 10px; width: 100%; }
+        .multi-col-group .col-item { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+        .multi-col-group .col-item label { font-size: 0.75rem; margin-bottom: 4px; color: #555; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; letter-spacing: -0.3px;}
+        .multi-col-group .col-item input, .multi-col-group .col-item select { padding: 8px 6px; border: 1px solid #ccc; border-radius: 6px; text-align: center; font-size: 0.85rem; width: 100%;}
+        
+        .withdraw-box { background: #fdfefe; border: 1px dashed #ccc; padding: 10px; border-radius: 6px; margin-top: 5px; font-size: 0.8rem; }
+        .lump-tag { display: inline-block; background: #e8f4f8; border: 1px solid #b3e0ff; padding: 4px 8px; border-radius: 4px; margin: 2px; font-size: 0.75rem; }
+        .lump-del { color: #e74c3c; cursor: pointer; font-weight: bold; margin-left: 4px; }
+        .btn-sm { background: var(--secondary); color: white; border: none; padding: 8px 10px; border-radius: 4px; cursor: pointer; font-size:0.75rem; font-weight:bold; margin-bottom:0;}
+
+        .table-container { overflow-x: auto; margin-top: 10px; border-radius: 6px; border: 1px solid #ddd; cursor: grab; user-select: none; }
+        .table-container:active { cursor: grabbing; }
+        
+        table.breakdown-table { width: 100%; border-collapse: collapse; font-size: 0.75rem; text-align: right; min-width: 1700px; white-space: nowrap; }
+        table.breakdown-table th, table.breakdown-table td { border: 1px solid #eee; padding: 8px 6px; }
+        table.breakdown-table th { background-color: var(--primary) !important; color: white !important; text-align: center; position: sticky; top: 0; z-index: 10; font-size: 0.75rem; font-weight: bold; }
+        table.breakdown-table td:first-child, table.breakdown-table td:nth-child(2) { text-align: center; font-weight: bold; background: #f9f9f9; pointer-events: none; }
+        
+        .col-net { font-weight: bold; color: var(--secondary); background: #eaf2f8 !important; font-size: 0.85rem; }
+        .col-tax { color: #e74c3c; background: #fadbd8 !important; }
+        .col-gross { background: #fffde7; font-weight: bold; color: #d35400; }
+        .col-asset { color: #34495e; background: #f4f6f7; }
+        .deceased-tag { color: #e74c3c; font-size: 0.7rem; }
+
+        .calc-btn { width: 100%; padding: 16px; background: var(--secondary); color: white; border: none; border-radius: 8px; font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: 0.3s; margin-top: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .calc-btn:hover { background: #1f6391; }
+        .hidden { display: none !important; }
+
+        .couple-grid { display: flex; flex-direction: column; gap: 15px; }
+        .dynamic-grid { display: flex; flex-direction: column; gap: 15px; }
+
+        @media (min-width: 992px) {
+            .brand-header h1 { font-size: 1.875rem; }
+            .container { padding: 20px; flex-direction: column; align-items: center; } 
+            .input-panel { width: 100%; max-width: 1100px; }
+            .output-panel { width: 100%; max-width: 100%; }
+            .couple-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+            .dynamic-grid.is-couple { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="brand-header">
+    <h1>은퇴 재정설계 시뮬레이터</h1>
+</div>
+
+<div class="container">
+    <div class="panel input-panel">
+        <h2 style="text-align:center;">데이터입력 & 목표설정</h2>
+        
+        <fieldset>
+            <legend>1. 가구형태 및 상속 목표금액</legend>
+            <div class="multi-col-group">
+                <div class="col-item">
+                    <label style="text-align:center;">가구 형태</label>
+                    <select id="is_couple" onchange="toggleSpouse(); calculatePV();" style="text-align:center;">
+                        <option value="false">개인 (Single)</option>
+                        <option value="true" selected>부부 (Couple)</option>
+                    </select>
+                </div>
+                <div class="col-item">
+                    <label style="color:#27ae60; text-align:center;">상속 목표금액($)</label>
+                    <input type="number" id="target_estate" value="1000000" step="10000">
+                </div>
+                <div class="col-item">
+                    <label style="text-align:center;">연간 물가상승률(%)</label>
+                    <input type="number" id="rate_inflation" value="2.5" step="0.1" oninput="calculatePV()">
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend>2. 연령 및 정부/기업 연금</legend>
+            <div class="couple-grid">
+                <div class="person-section" style="margin-bottom:0;">
+                    <h3 style="color: var(--secondary); margin-top:0;">👤 본인 (Primary)</h3>
+                    <div class="multi-col-group">
+                        <div class="col-item"><label style="text-align:center;">현재 나이</label><input type="number" id="p1_age" value="55" oninput="syncAges(); calculatePV();"></div>
+                        <div class="col-item"><label style="text-align:center;">은퇴 나이</label><input type="number" id="p1_retire" value="65" oninput="syncAges(); calculatePV();"></div>
+                        <div class="col-item"><label style="text-align:center;">기대 수명</label><input type="number" id="p1_life" value="90" oninput="syncAges(); calculatePV();"></div>
+                    </div>
+                    <div class="multi-col-group">
+                        <div class="col-item"><label style="text-align:center;">CPP 연수</label><input type="number" id="p1_cpp_yr" value="35" oninput="calculatePV()"></div>
+                        <div class="col-item"><label style="text-align:center;">평균페이(%)</label><input type="number" id="p1_cpp_pct" value="70" oninput="calculatePV()"></div>
+                        <div class="col-item"><label style="text-align:center;">시작 나이</label><input type="number" id="p1_cpp_start" value="65" oninput="calculatePV()"></div>
+                    </div>
+                    <div class="multi-col-group">
+                        <div class="col-item"><label style="text-align:center;">OAS 연수</label><input type="number" id="p1_oas_yr" value="30" oninput="calculatePV()"></div>
+                        <div class="col-item"><label style="text-align:center;">OAS 시작</label><input type="number" id="p1_oas_start" value="65" oninput="calculatePV()"></div>
+                        <div class="col-item"><label style="color:#27ae60; text-align:center;">월 기업연금($)</label><input type="number" id="p1_db" value="0"></div>
+                    </div>
+                </div>
+                
+                <div class="person-section spouse" id="spouse_section" style="margin-bottom:0;">
+                    <h3 style="color: #9b59b6; margin-top:0;">👤 배우자 (Spouse)</h3>
+                    <div class="multi-col-group">
+                        <div class="col-item"><label style="text-align:center;">현재 나이</label><input type="number" id="p2_age" value="52" oninput="syncAges(); calculatePV();"></div>
+                        <div class="col-item"><label style="text-align:center;">은퇴 나이</label><input type="number" id="p2_retire" value="62" oninput="syncAges(); calculatePV();"></div>
+                        <div class="col-item"><label style="text-align:center;">기대 수명</label><input type="number" id="p2_life" value="92" oninput="syncAges(); calculatePV();"></div>
+                    </div>
+                    <div class="multi-col-group">
+                        <div class="col-item"><label style="text-align:center;">CPP 연수</label><input type="number" id="p2_cpp_yr" value="20" oninput="calculatePV()"></div>
+                        <div class="col-item"><label style="text-align:center;">평균페이(%)</label><input type="number" id="p2_cpp_pct" value="50" oninput="calculatePV()"></div>
+                        <div class="col-item"><label style="text-align:center;">시작 나이</label><input type="number" id="p2_cpp_start" value="65" oninput="calculatePV()"></div>
+                    </div>
+                    <div class="multi-col-group">
+                        <div class="col-item"><label style="text-align:center;">OAS 연수</label><input type="number" id="p2_oas_yr" value="25" oninput="calculatePV()"></div>
+                        <div class="col-item"><label style="text-align:center;">OAS 시작</label><input type="number" id="p2_oas_start" value="65" oninput="calculatePV()"></div>
+                        <div class="col-item"><label style="color:#27ae60; text-align:center;">월 기업연금($)</label><input type="number" id="p2_db" value="0"></div>
+                    </div>
+                </div>
+            </div> 
+            <div id="pension_preview" class="pv-preview" style="margin-top: 15px;">실시간 예상 연금 계산중...</div>
+            
+            <div style="font-size: 0.75rem; color: #555; background: #e8f4f8; padding: 10px; border-radius: 6px; line-height: 1.4; word-break: keep-all; margin-top: 10px;">
+                💡 <b>정부 연금 입력 가이드</b><br>
+                • <b>CPP 연수 / 페이(%):</b> 18~65세 납부기간(최대 39년) 및 매년 CPP 최고납부 한도액 대비 내 소득비율 (최대한도 납부 시 100%)<br>
+                • <b>OAS 거주연수:</b> 18세 이후 캐나다 거주기간 (40년 거주 시 100% 수령)<br>
+                🔗 <a href="https://www.canada.ca/en/services/benefits/publicpensions/cpp/cpp-benefit/amount.html" target="_blank" style="color:#2980b9; text-decoration:none;">CPP 공식 기준</a> | 🔗 <a href="https://www.canada.ca/en/services/benefits/publicpensions/cpp/old-age-security/benefit-amount.html" target="_blank" style="color:#2980b9; text-decoration:none;">OAS 공식 기준</a>
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend>3. 부동산 및 부채 (가구 통합)</legend>
+            <div class="multi-col-group">
+                <div class="col-item"><label style="text-align:center;">주택 상승률(%)</label><input type="number" id="rate_home" value="3.5" step="0.1" oninput="calculatePV()"></div>
+                <div class="col-item"><label style="text-align:center;">역모기지 이율(%)</label><input type="number" id="rate_rm" value="6.5" step="0.1"></div>
+            </div>
+            
+            <div class="asset-box">
+                <div class="asset-title">🏠 거주용 주택 (Primary)</div>
+                <div class="multi-col-group">
+                    <div class="col-item"><label style="text-align:center;">현재시세($)</label><input type="number" id="home_val" value="1500000" oninput="calculatePV()"></div>
+                    <div class="col-item"><label style="text-align:center;">현재 모기지 잔액($)</label><input type="number" id="home_mtg_curr" value="300000"></div>
+                </div>
+                <div class="multi-col-group">
+                    <div class="col-item"><label style="text-align:center;">월 렌트수익($)</label><input type="number" id="home_rent_inc" value="1500"></div>
+                    <div class="col-item"><label style="color:#2980b9; text-align:center;">은퇴시 모기지 잔액($)</label><input type="number" id="home_mtg_retire" value="100000"></div>
+                </div>
+            </div>
+
+            <div id="inv_props_container"></div>
+            <button class="btn-sm" style="width:100%; margin-top:10px; margin-bottom:5px; padding:10px; background-color:#e67e22;" onclick="addInvProp()">+ 투자용 주택 추가</button>
+        </fieldset>
+
+        <fieldset id="assets_fieldset">
+            <legend>4. 금융 투자자산 및 인출 옵션</legend>
+            <div style="font-size: 0.75rem; margin-bottom: 10px; color:#c0392b;">* 72세부터 CRA 법정 최소 인출액(RRIF Minimum)이 강제 적용됩니다.</div>
+            <div id="dynamic_assets_container" class="dynamic-grid"></div>
+        </fieldset>
+
+        <button class="calc-btn" onclick="runSimulation()">결과보기</button>
+    </div>
+
+    <div class="panel output-panel" id="result-section">
+        <h2 style="text-align:center;">은퇴후 소득 및 자산변화표(현재가치기준)</h2>
+        <div style="text-align:center; font-size:0.8rem; color:#7f8c8d; margin-bottom:10px;">💡 표를 좌우로 드래그(스크롤)하여 더 많은 정보를 확인하세요.</div>
+        <div id="rm_warning" class="warning-box"></div> 
+        
+        <div class="table-container" id="scrollable-table">
+            <table class="breakdown-table">
+                <thead>
+                    <tr>
+                        <th rowspan="2">본인<br>나이</th>
+                        <th rowspan="2">배우자<br>나이</th>
+                        <th colspan="9" style="background:#34495e;">가구 합산 현금 흐름 및 세금 (현재가치)</th>
+                        <th colspan="3" style="background:#8e44ad;">본인 보유 자산 잔액 (현재가치)</th>
+                        <th colspan="3" style="background:#9b59b6;">배우자 보유 자산 잔액 (현재가치)</th>
+                        <th colspan="2" style="background:#16a085;">부동산 순자산(가치-부채)</th>
+                    </tr>
+                    <tr>
+                        <th class="col-gross">연간 세전<br>총수익</th>
+                        <th class="col-tax">[-] 합산<br>세금/환수</th>
+                        <th class="col-net">✨세후월<br>현금흐름</th>
+                        
+                        <th>부동산<br>순 렌트수익</th>
+                        <th>합산<br>CPP+OAS+DB</th>
+                        <th>합산<br>TFSA인출</th>
+                        <th>역모기지<br>수령액</th>
+                        <th>합산<br>RRSP인출</th>
+                        <th>합산<br>NonReg인출</th>
+                        
+                        <th>RRSP</th><th>TFSA</th><th>일반계좌</th>
+                        <th>RRSP</th><th>TFSA</th><th>일반계좌</th>
+                        <th>거주용<br>주택가치</th><th>투자용<br>합산가치</th>
+                    </tr>
+                </thead>
+                <tbody id="spreadsheet_body">
+                    <tr><td colspan="19" style="text-align:center; padding: 40px; font-size:1rem;">시뮬레이션 버튼을 눌러 전체 데이터를 확인하세요.</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 테이블 마우스 드래그 지원
+    window.addEventListener('DOMContentLoaded', () => {
+        const resizeObserver = new ResizeObserver(() => {
+            const height = document.documentElement.scrollHeight || document.body.scrollHeight;
+            window.parent.postMessage({ type: 'resize', height: height + 20 }, '*');
+        });
+        resizeObserver.observe(document.body);
+        const slider = document.getElementById('scrollable-table');
+        let isDown = false; let startX; let scrollLeft;
+        slider.addEventListener('mousedown', (e) => { isDown = true; startX = e.pageX - slider.offsetLeft; scrollLeft = slider.scrollLeft; });
+        slider.addEventListener('mouseleave', () => { isDown = false; });
+        slider.addEventListener('mouseup', () => { isDown = false; });
+        slider.addEventListener('mousemove', (e) => { if (!isDown) return; e.preventDefault(); const x = e.pageX - slider.offsetLeft; const walk = (x - startX) * 1.5; slider.scrollLeft = scrollLeft - walk; });
+    });
+
+    const lumps = { p1_rrsp: [], p1_tfsa: [], p1_non: [], p2_rrsp: [], p2_tfsa: [], p2_non: [] };
+    const assetDefs = [
+        { id: 'p1_rrsp', owner: '본인', name: 'RRSP', tag: 'tag-100', tagText: '100%과세', bal: 50000, contrib: 5000, rate: 4.0 },
+        { id: 'p1_tfsa', owner: '본인', name: 'TFSA', tag: 'tag-0', tagText: '비과세', bal: 100000, contrib: 5000, rate: 5.0 },
+        { id: 'p1_non', owner: '본인', name: '일반계좌', tag: 'tag-50', tagText: '50%과세', bal: 10000, contrib: 0, rate: 3.0 },
+        { id: 'p2_rrsp', owner: '배우자', name: 'RRSP', tag: 'tag-100', tagText: '100%과세', bal: 50000, contrib: 5000, rate: 4.0 },
+        { id: 'p2_tfsa', owner: '배우자', name: 'TFSA', tag: 'tag-0', tagText: '비과세', bal: 100000, contrib: 5000, rate: 5.0 },
+        { id: 'p2_non', owner: '배우자', name: '일반계좌', tag: 'tag-50', tagText: '50%과세', bal: 10000, contrib: 0, rate: 3.0 }
+    ];
+
+    let invProps = []; let invPropIdCounter = 0;
+    function addInvProp() { invProps.push({ id: invPropIdCounter++ }); renderInvProps(); }
+    function removeInvProp(id) { invProps = invProps.filter(p => p.id !== id); renderInvProps(); calculatePV(); }
+    
+    function renderInvProps() {
+        let html = '';
+        invProps.forEach((p, index) => {
+            html += `
+            <div class="asset-box" style="border-left: 3px solid #e67e22; margin-bottom: 0;" id="inv_box_${p.id}">
+                <div class="asset-title">🏢 투자용 주택 ${index + 1} <span style="color:#e74c3c; cursor:pointer; font-size:0.8rem;" onclick="removeInvProp(${p.id})">[삭제]</span></div>
+                <div class="multi-col-group">
+                    <div class="col-item"><label style="text-align:center;">현재시세($)</label><input type="number" id="inv_val_${p.id}" value="500000" oninput="calculatePV()"></div>
+                    <div class="col-item"><label style="text-align:center;">현재 모기지($)</label><input type="number" id="inv_mtg_curr_${p.id}" value="200000"></div>
+                </div>
+                <div class="multi-col-group">
+                    <div class="col-item"><label style="color:#e67e22; text-align:center;">구매가(ACB)</label><input type="number" id="inv_acb_${p.id}" value="300000"></div>
+                    <div class="col-item"><label style="color:#e67e22; text-align:center;">매각 나이</label><input type="number" id="inv_sale_age_${p.id}" value="70" placeholder="본인나이"></div>
+                </div>
+                <div class="multi-col-group">
+                    <div class="col-item"><label style="text-align:center;">월 렌트수익($)</label><input type="number" id="inv_rent_inc_${p.id}" value="800"></div>
+                    <div class="col-item"><label style="color:#2980b9; text-align:center;">은퇴시 모기지($)</label><input type="number" id="inv_mtg_retire_${p.id}" value="150000"></div>
+                </div>
+            </div>`;
+        });
+        document.getElementById('inv_props_container').innerHTML = html;
+        setTimeout(() => { const height = document.documentElement.scrollHeight || document.body.scrollHeight; window.parent.postMessage({ type: 'resize', height: height + 20 }, '*'); }, 50);
+    }
+
+    function renderAssetsUI() {
+        // 본인과 배우자 컬럼을 분리 생성하여 데스크탑/모바일 배열 로직 완벽 제어
+        let p1Html = '<div style="width: 100%;">';
+        let p2Html = '<div style="width: 100%;">';
+        
+        const isCouple = document.getElementById('is_couple').value === 'true';
+        const p1Ret = document.getElementById('p1_retire').value || '65';
+        const p1Life = document.getElementById('p1_life').value || '90';
+        const p2Ret = document.getElementById('p2_retire').value || '62';
+        const p2Life = document.getElementById('p2_life').value || '92';
+
+        assetDefs.forEach((a) => {
+            if(!isCouple && a.owner === '배우자') return;
+            const spouseClass = a.owner === '배우자' ? 'spouse' : '';
+            const borderCol = a.owner === '본인' ? 'var(--secondary)' : '#9b59b6';
+            const retireBg = a.id.includes('rrsp') ? '#fadbd8' : (a.id.includes('tfsa') ? '#d5f5e3' : '#fdebd0');
+            const dStart = a.owner === '본인' ? p1Ret : p2Ret;
+            const dEnd = a.owner === '본인' ? p1Life : p2Life;
+
+            let boxHtml = `
+            <div class="asset-box ${spouseClass}" style="border-left: 3px solid ${borderCol}; margin-bottom: 15px;">
+                <div class="asset-title">👤 ${a.owner} ${a.name} <span class="tax-tag ${a.tag}">${a.tagText}</span></div>
+                
+                <div class="multi-col-group">
+                    <div class="col-item"><label style="text-align:center;">현재잔액($)</label><input type="number" id="${a.id}_curr" value="${a.bal}" oninput="calcAssetFV()"></div>
+                    <div class="col-item"><label style="text-align:center;">연간 컨트리뷰션($)</label><input type="number" id="${a.id}_contrib" value="${a.contrib}" oninput="calcAssetFV()"></div>
+                    <div class="col-item"><label style="text-align:center;">목표연수익률(%)</label><input type="number" id="${a.id}_rate" value="${a.rate}" step="0.1" oninput="calcAssetFV()"></div>
+                </div>
+                <div class="multi-col-group" style="margin-bottom:10px;">
+                    <div class="col-item">
+                        <label style="color:#c0392b; text-align:center;">👉 은퇴시 목표적립액 (미래가치 자동계산)</label>
+                        <input type="number" id="${a.id}_retire" value="0" style="background:${retireBg}; font-weight:bold;" readonly>
+                    </div>
+                </div>
+                
+                <div class="withdraw-box">
+                    <div class="multi-col-group" style="margin-bottom: 8px;">
+                        <div class="col-item">
+                            <label style="text-align:center;">1. 상속 목표금액 (현재가치 입력)</label>
+                            <input type="number" id="${a.id}_inherit" value="0">
+                        </div>
+                    </div>
+                    
+                    <label style="font-size: 0.75rem; color: #555; font-weight: bold; margin-bottom: 4px; display: block; letter-spacing:-0.3px;">2. 일시금(Lumpsum) 출금액</label>
+                    <div class="multi-col-group" style="align-items: flex-end; margin-bottom: 4px;">
+                        <div class="col-item"><label style="font-weight:normal; text-align:center;">출금나이</label><input type="number" id="${a.id}_l_age" placeholder="나이"></div>
+                        <div class="col-item"><label style="font-weight:normal; text-align:center;">금액($)</label><input type="number" id="${a.id}_l_amt" placeholder="금액"></div>
+                        <div class="col-item" style="flex: 0 0 auto;"><button type="button" class="btn-sm" style="padding: 9px 12px; margin-bottom:0;" onclick="addLump('${a.id}')">추가</button></div>
+                    </div>
+                    <div id="${a.id}_lump_list" style="margin-bottom:10px;"></div>
+                    
+                    <label style="font-size: 0.75rem; color: #555; font-weight: bold; margin-bottom: 4px; display: block; letter-spacing:-0.3px;">3. 분산인출 스케줄</label>
+                    <div class="multi-col-group" style="margin-bottom: 8px;">
+                        <div class="col-item"><label style="font-weight:normal; text-align:center;">시작나이</label><input type="number" id="${a.id}_d_start" value="${dStart}"></div>
+                        <div class="col-item"><label style="font-weight:normal; text-align:center;">종료나이</label><input type="number" id="${a.id}_d_end" value="${dEnd}"></div>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 5px;">
+                        <input type="checkbox" id="${a.id}_inf_adj" checked style="width: 14px; height: 14px; cursor: pointer;">
+                        <label for="${a.id}_inf_adj" style="font-size: 0.75rem; cursor: pointer; margin-bottom:0; font-weight:normal; letter-spacing:-0.5px;">인플레이션 반영 (매년 현재가치로 동일금액 수령)</label>
+                    </div>
+                </div>
+            </div>`;
+            
+            if (a.owner === '본인') {
+                p1Html += boxHtml;
+            } else {
+                p2Html += boxHtml;
+            }
+        });
+        
+        p1Html += '</div>';
+        p2Html += '</div>';
+
+        document.getElementById('dynamic_assets_container').innerHTML = p1Html + (isCouple ? p2Html : '');
+        calcAssetFV();
+        setTimeout(() => { const height = document.documentElement.scrollHeight || document.body.scrollHeight; window.parent.postMessage({ type: 'resize', height: height + 20 }, '*'); }, 50);
+    }
+
+    function syncAges() {
+        const p1Ret = document.getElementById('p1_retire').value;
+        const p1Life = document.getElementById('p1_life').value;
+        const p2Ret = document.getElementById('p2_retire').value;
+        const p2Life = document.getElementById('p2_life').value;
+        
+        ['p1_rrsp', 'p1_tfsa', 'p1_non'].forEach(id => {
+            let s = document.getElementById(id+'_d_start'); if(s) s.value = p1Ret;
+            let e = document.getElementById(id+'_d_end'); if(e) e.value = p1Life;
+        });
+        ['p2_rrsp', 'p2_tfsa', 'p2_non'].forEach(id => {
+            let s = document.getElementById(id+'_d_start'); if(s) s.value = p2Ret;
+            let e = document.getElementById(id+'_d_end'); if(e) e.value = p2Life;
+        });
+    }
+
+    function addLump(id) {
+        let age = parseInt(document.getElementById(id+'_l_age').value);
+        let amt = parseFloat(document.getElementById(id+'_l_amt').value);
+        if(age && amt) { lumps[id].push({age, amt}); updateLumpUI(id); }
+    }
+    function removeLump(id, idx) { lumps[id].splice(idx, 1); updateLumpUI(id); }
+    function updateLumpUI(id) {
+        let h = '';
+        lumps[id].forEach((l, i) => { h += `<span class="lump-tag">${l.age}세: $${l.amt.toLocaleString()} <span class="lump-del" onclick="removeLump('${id}',${i})">X</span></span>`; });
+        document.getElementById(id+'_lump_list').innerHTML = h;
+    }
+
+    function toggleSpouse() {
+        const isCouple = document.getElementById('is_couple').value === 'true';
+        document.getElementById('spouse_section').style.display = isCouple ? 'block' : 'none';
+        const dynContainer = document.getElementById('dynamic_assets_container');
+        if(isCouple) dynContainer.classList.add('is-couple'); else dynContainer.classList.remove('is-couple');
+        renderAssetsUI(); calculatePV();
+    }
+
+    function getRrifFactor(age) {
+        if(age < 71) return 0;
+        const f = {71:0.0528, 72:0.0540, 73:0.0553, 74:0.0567, 75:0.0582, 76:0.0598, 77:0.0617, 78:0.0636, 79:0.0658, 80:0.0682, 81:0.0708, 82:0.0738, 83:0.0771, 84:0.0808, 85:0.0851, 86:0.0899, 87:0.0955, 88:0.1021, 89:0.1099, 90:0.1192, 91:0.1306, 92:0.1449, 93:0.1634, 94:0.1879, 95:0.20};
+        return f[age] || 0.20;
+    }
+
+    function calcMonthlyCPP(years, percent, startAge) {
+        let base = 1364.17 * (Math.min(years, 40) / 40) * (percent / 100);
+        let adj = startAge < 65 ? (startAge - 65) * 0.006 : (startAge - 65) * 0.007; 
+        return Math.max(0, base * (1 + (adj * 12))); 
+    }
+    function calcMonthlyOAS(years, startAge) {
+        let base = 713.34 * (Math.min(years, 40) / 40);
+        let adj = startAge > 65 ? (startAge - 65) * 0.006 : 0; 
+        return Math.max(0, base * (1 + (adj * 12)));
+    }
+
+    // 컨트리뷰션 복리 계산 로직 
+    function calcAssetFV() {
+        assetDefs.forEach((a) => {
+            const isP1 = a.id.startsWith('p1');
+            const ageCurr = parseInt(document.getElementById(isP1 ? 'p1_age' : 'p2_age').value) || 0;
+            const ageRetire = parseInt(document.getElementById(isP1 ? 'p1_retire' : 'p2_retire').value) || 0;
+            const years = Math.max(0, ageRetire - ageCurr);
+            
+            const elCurr = document.getElementById(a.id + '_curr');
+            if(!elCurr) return;
+            
+            const curr = parseFloat(elCurr.value) || 0;
+            const contrib = parseFloat(document.getElementById(a.id + '_contrib').value) || 0;
+            const rate = parseFloat(document.getElementById(a.id + '_rate').value) / 100;
+            
+            let fvInitial = curr * Math.pow(1 + rate, years);
+            let fvAnnuity = 0;
+            if (rate > 0 && years > 0) {
+                fvAnnuity = contrib * (Math.pow(1 + rate, years) - 1) / rate;
+            } else {
+                fvAnnuity = contrib * years;
+            }
+            
+            document.getElementById(a.id + '_retire').value = Math.round(fvInitial + fvAnnuity);
+        });
+    }
+
+    function calculatePV() {
+        const isCouple = document.getElementById('is_couple').value === 'true';
+        const p1C = calcMonthlyCPP(document.getElementById('p1_cpp_yr').value, document.getElementById('p1_cpp_pct').value, document.getElementById('p1_cpp_start').value);
+        const p1O = calcMonthlyOAS(document.getElementById('p1_oas_yr').value, document.getElementById('p1_oas_start').value);
+        let penHTML = `<b>[실시간 예상 월 연금]</b> 본인: CPP $${Math.round(p1C).toLocaleString()} | OAS $${Math.round(p1O).toLocaleString()}`;
+        if(isCouple) {
+            const p2C = calcMonthlyCPP(document.getElementById('p2_cpp_yr').value, document.getElementById('p2_cpp_pct').value, document.getElementById('p2_cpp_start').value);
+            const p2O = calcMonthlyOAS(document.getElementById('p2_oas_yr').value, document.getElementById('p2_oas_start').value);
+            penHTML += ` / 배우자: CPP $${Math.round(p2C).toLocaleString()} | OAS $${Math.round(p2O).toLocaleString()}`;
+        }
+        document.getElementById('pension_preview').innerHTML = penHTML;
+        calcAssetFV();
+    }
+
+    window.onload = function() { addInvProp(); renderAssetsUI(); calculatePV(); runSimulation(); toggleSpouse(); };
+
+    function calculateIndividualTax(income) {
+        let fedBPA = 15705, bcBPA = 12580, fedTax = 0, bcTax = 0;
+        let tFed = Math.max(0, income - fedBPA);
+        if(tFed > 0) {
+            fedTax += Math.max(0, Math.min(tFed, 55867 - fedBPA) * 0.15);
+            fedTax += Math.max(0, Math.min(Math.max(0, tFed - (55867-fedBPA)), 111733 - 55867) * 0.205);
+            fedTax += Math.max(0, Math.min(Math.max(0, tFed - (111733-fedBPA)), 173205 - 111733) * 0.26);
+            fedTax += Math.max(0, (tFed - 173205) * 0.29); 
+        }
+        let tBc = Math.max(0, income - bcBPA);
+        if(tBc > 0) {
+            bcTax += Math.max(0, Math.min(tBc, 47937 - bcBPA) * 0.0506);
+            bcTax += Math.max(0, Math.min(Math.max(0, tBc - (47937-bcBPA)), 95875 - 47937) * 0.077);
+            bcTax += Math.max(0, Math.min(Math.max(0, tBc - (95875-bcBPA)), 110076 - 95875) * 0.105);
+            bcTax += Math.max(0, (tBc - 110076) * 0.1229);
+        }
+        return fedTax + bcTax;
+    }
+
+    function calcClawback(oasAmount, income) { return Math.min(oasAmount, income > 90997 ? (income - 90997) * 0.15 : 0); }
+
+    // PMT Solver: 인플레이션 반영(Growing Annuity) 지원
+    function solveDrawdownPMT(initialFV, rate, inheritAmtPV, lumpsList, pmtStartAge, pmtEndAge, retireAge, maxAge, infRate, baseAge, isInfAdj) {
+        if(pmtStartAge > pmtEndAge || initialFV <= 0) return 0;
+        let targetFV = inheritAmtPV * Math.pow(1 + infRate, maxAge - baseAge);
+        let low = 0; let high = initialFV; let bestPmt = 0;
+        
+        for(let i=0; i<60; i++) {
+            let mid = (low + high) / 2;
+            let bal = initialFV; let valid = true;
+            for(let a = retireAge; a <= maxAge; a++) {
+                bal *= (1 + rate);
+                lumpsList.forEach(l => { if(l.age === a) bal -= l.amt * Math.pow(1+infRate, a - baseAge); });
+                
+                if(a >= pmtStartAge && a <= pmtEndAge) {
+                    let w = isInfAdj ? mid * Math.pow(1 + infRate, a - retireAge) : mid;
+                    bal -= w;
+                }
+                if(bal < 0) { valid = false; break; }
+            }
+            if(!valid || bal < targetFV) high = mid; else { low = mid; bestPmt = mid; }
+        }
+        return bestPmt;
+    }
+
+    function runSimulation() {
+        const isCouple = document.getElementById('is_couple').value === 'true';
+        const infRate = parseFloat(document.getElementById('rate_inflation').value) / 100 || 0;
+        const hr = parseFloat(document.getElementById('rate_home').value) / 100 || 0;
+        const rmRate = parseFloat(document.getElementById('rate_rm').value) / 100 || 0;
+
+        const p1Age = parseInt(document.getElementById('p1_age').value) || 0;
+        const p1Ret = parseInt(document.getElementById('p1_retire').value) || 0;
+        const p1Life = parseInt(document.getElementById('p1_life').value) || 0;
+        const p2Age = isCouple ? (parseInt(document.getElementById('p2_age').value) || 0) : 0;
+        const p2Ret = isCouple ? (parseInt(document.getElementById('p2_retire').value) || 0) : 0;
+        const p2Life = isCouple ? (parseInt(document.getElementById('p2_life').value) || 0) : 0;
+
+        const p1CppAmt = calcMonthlyCPP(document.getElementById('p1_cpp_yr').value, document.getElementById('p1_cpp_pct').value, parseInt(document.getElementById('p1_cpp_start').value)) * 12;
+        const p1OasAmt = calcMonthlyOAS(document.getElementById('p1_oas_yr').value, parseInt(document.getElementById('p1_oas_start').value)) * 12;
+        const p1DbAmt = parseFloat(document.getElementById('p1_db').value) * 12 || 0;
+
+        let p2CppAmt=0, p2OasAmt=0, p2DbAmt=0;
+        if(isCouple){
+            p2CppAmt = calcMonthlyCPP(document.getElementById('p2_cpp_yr').value, document.getElementById('p2_cpp_pct').value, parseInt(document.getElementById('p2_cpp_start').value)) * 12;
+            p2OasAmt = calcMonthlyOAS(document.getElementById('p2_oas_yr').value, parseInt(document.getElementById('p2_oas_start').value)) * 12;
+            p2DbAmt = parseFloat(document.getElementById('p2_db').value) * 12 || 0;
+        }
+
+        const hRent = (parseFloat(document.getElementById('home_rent_inc').value) || 0) * 12;
+        let cHomeValFV = (parseFloat(document.getElementById('home_val').value) || 0) * Math.pow(1+hr, Math.max(0, p1Ret-p1Age));
+        let hMtgRetire = parseFloat(document.getElementById('home_mtg_retire').value) || 0;
+
+        let invPropsData = invProps.map(p => ({
+            id: p.id,
+            acb: parseFloat(document.getElementById(`inv_acb_${p.id}`).value) || 0,
+            saleAge: parseInt(document.getElementById(`inv_sale_age_${p.id}`).value) || 999,
+            rent: (parseFloat(document.getElementById(`inv_rent_inc_${p.id}`).value) || 0) * 12,
+            mtg: parseFloat(document.getElementById(`inv_mtg_retire_${p.id}`).value) || 0,
+            valFV: (parseFloat(document.getElementById(`inv_val_${p.id}`).value) || 0) * Math.pow(1+hr, Math.max(0, p1Ret-p1Age)),
+            isSold: false
+        }));
+
+        const targetEstatePV = parseFloat(document.getElementById('target_estate').value) || 0;
+        const maxLifeWait = isCouple ? Math.max(p1Life - p1Age, p2Life - p2Age) : p1Life - p1Age;
+        const p1RetWait = Math.max(0, p1Ret - p1Age);
+        const retirementDuration = Math.max(1, maxLifeWait - p1RetWait);
+        
+        const homeFVAtLife = cHomeValFV * Math.pow(1 + hr, retirementDuration);
+        const targetEstateFV = targetEstatePV * Math.pow(1 + infRate, maxLifeWait);
+        const maxDebtFV = homeFVAtLife - targetEstateFV;
+        const initialDebtAtLife = hMtgRetire * Math.pow(1 + rmRate, retirementDuration);
+
+        let annualRMFV = 0;
+        if (maxDebtFV > initialDebtAtLife) {
+            let availableDebt = maxDebtFV - initialDebtAtLife;
+            let fvFactor = rmRate > 0 ? (Math.pow(1 + rmRate, retirementDuration) - 1) / rmRate : retirementDuration;
+            annualRMFV = availableDebt / (fvFactor * (1 + rmRate));
+        }
+
+        let maxLTVLimit = Math.min(0.55, 0.15 + Math.max(0, (p1Ret - 55)) * 0.015);
+        let maxApprovedDebtFV = cHomeValFV * maxLTVLimit;
+        let requiredInitialRM = hMtgRetire + (annualRMFV * ((1 - Math.pow(1+rmRate, -retirementDuration)) / rmRate));
+        
+        let warnBox = document.getElementById('rm_warning');
+        if (requiredInitialRM > maxApprovedDebtFV) {
+            warnBox.innerHTML = `⚠️ <b>역모기지 한도 초과 경고:</b> 은퇴 초기 대출액(약 $${Math.round(requiredInitialRM).toLocaleString()})이 ${p1Ret}세 기준 최대 승인 한도(약 $${Math.round(maxApprovedDebtFV).toLocaleString()})를 초과합니다.`;
+            warnBox.style.display = 'block';
+        } else { warnBox.style.display = 'none'; }
+
+        let maxLoopAge1 = isCouple ? Math.max(p1Life, p1Age + (p2Life - p2Age)) : p1Life;
+        let maxLoopAge2 = isCouple ? Math.max(p2Life, p2Age + (p1Life - p1Age)) : 0;
+        
+        let assets = {};
+        assetDefs.forEach(a => {
+            if(!isCouple && a.owner==='배우자') return;
+            const initFV = parseFloat(document.getElementById(`${a.id}_retire`).value) || 0;
+            const inherit = parseFloat(document.getElementById(`${a.id}_inherit`).value) || 0;
+            const rate = parseFloat(document.getElementById(`${a.id}_rate`).value) / 100 || 0;
+            const dStart = parseInt(document.getElementById(`${a.id}_d_start`).value) || 0;
+            const dEnd = parseInt(document.getElementById(`${a.id}_d_end`).value) || 0;
+            
+            let isInfAdj = true; 
+            const checkEl = document.getElementById(a.id + '_inf_adj');
+            if(checkEl) isInfAdj = checkEl.checked;
+            
+            const retAge = a.id.startsWith('p1') ? p1Ret : p2Ret;
+            const baseAge = a.id.startsWith('p1') ? p1Age : p2Age;
+            const maxAssetAge = a.id.startsWith('p1') ? maxLoopAge1 : maxLoopAge2;
+            
+            assets[a.id] = { 
+                bal: initFV, rate: rate, 
+                pmt: solveDrawdownPMT(initFV, rate, inherit, lumps[a.id], dStart, dEnd, retAge, maxAssetAge, infRate, baseAge, isInfAdj),
+                start: dStart, end: dEnd, isInfAdj: isInfAdj, retAge: retAge
+            };
+        });
+
+        let p1Alive = true; let p2Alive = isCouple;
+        let tbodyHTML = '';
+        let cRMDebtFV = hMtgRetire;
+
+        for (let age1 = p1Ret; age1 <= maxLoopAge1; age1++) {
+            let yrsPassed = age1 - p1Age;
+            let pvDisc = Math.pow(1 + infRate, yrsPassed);
+            let age2 = isCouple ? (p2Age + yrsPassed) : 0;
+            
+            if (p1Alive && age1 > p1Life) {
+                p1Alive = false;
+                if(isCouple && p2Alive) {
+                    assets.p2_rrsp.bal += assets.p1_rrsp.bal; assets.p1_rrsp.bal = 0;
+                    assets.p2_tfsa.bal += assets.p1_tfsa.bal; assets.p1_tfsa.bal = 0;
+                    assets.p2_non.bal += assets.p1_non.bal; assets.p1_non.bal = 0;
+                }
+            }
+            if (isCouple && p2Alive && age2 > p2Life) {
+                p2Alive = false;
+                if(p1Alive) {
+                    assets.p1_rrsp.bal += assets.p2_rrsp.bal; assets.p2_rrsp.bal = 0;
+                    assets.p1_tfsa.bal += assets.p2_tfsa.bal; assets.p2_tfsa.bal = 0;
+                    assets.p1_non.bal += assets.p2_non.bal; assets.p2_non.bal = 0;
+                }
+            }
+            if (!p1Alive && !p2Alive) break; 
+
+            let yCpp1=0, yOas1=0, yDb1=0, yCpp2=0, yOas2=0, yDb2=0;
+            const MAX_CPP = 1364.17 * 12;
+
+            let p1OwnCpp = (age1 >= (parseInt(document.getElementById('p1_cpp_start').value)||65)) ? p1CppAmt : 0;
+            let p1OwnOas = (age1 >= (parseInt(document.getElementById('p1_oas_start').value)||65)) ? p1OasAmt : 0;
+            let p2OwnCpp = isCouple && (age2 >= (parseInt(document.getElementById('p2_cpp_start').value)||65)) ? p2CppAmt : 0;
+            let p2OwnOas = isCouple && (age2 >= (parseInt(document.getElementById('p2_oas_start').value)||65)) ? p2OasAmt : 0;
+
+            if (p1Alive && p2Alive) {
+                yCpp1 = p1OwnCpp; yOas1 = p1OwnOas; yDb1 = p1DbAmt;
+                yCpp2 = p2OwnCpp; yOas2 = p2OwnOas; yDb2 = p2DbAmt;
+            } else if (p1Alive && !p2Alive) {
+                yCpp1 = Math.min(MAX_CPP, p1OwnCpp + (p2OwnCpp * 0.6));
+                yOas1 = p1OwnOas; yDb1 = p1DbAmt + (p2DbAmt * 0.6);
+            } else if (!p1Alive && p2Alive) {
+                yCpp2 = Math.min(MAX_CPP, p2OwnCpp + (p1OwnCpp * 0.6));
+                yOas2 = p2OwnOas; yDb2 = p2DbAmt + (p1DbAmt * 0.6);
+            }
+
+            let yRent = hRent;
+            let invValTotalFV = 0;
+            let invNetTotalFV = 0;
+
+            let p1Taxable = yCpp1 + yOas1 + yDb1;
+            let p2Taxable = yCpp2 + yOas2 + yDb2;
+
+            invPropsData.forEach(p => {
+                if(age1 === p.saleAge && !p.isSold) {
+                    p.isSold = true;
+                    let capGainFV = p.valFV - (p.acb * pvDisc); 
+                    let taxableCapGainPV = Math.max(0, capGainFV * 0.5) / pvDisc;
+                    
+                    if(p1Alive && p2Alive) { p1Taxable += taxableCapGainPV/2; p2Taxable += taxableCapGainPV/2; }
+                    else if(p1Alive) p1Taxable += taxableCapGainPV;
+                    else p2Taxable += taxableCapGainPV;
+
+                    let netProceedsFV = p.valFV - p.mtg;
+                    if(p1Alive && p2Alive) { assets.p1_non.bal += netProceedsFV/2; assets.p2_non.bal += netProceedsFV/2; }
+                    else if(p1Alive) assets.p1_non.bal += netProceedsFV;
+                    else assets.p2_non.bal += netProceedsFV;
+                    
+                    p.valFV = 0; p.mtg = 0; p.rent = 0;
+                }
+                
+                if(!p.isSold) {
+                    yRent += p.rent; p.valFV *= (1 + hr);
+                    invValTotalFV += p.valFV; invNetTotalFV += Math.max(0, p.valFV - p.mtg); 
+                }
+            });
+
+            if(p1Alive && p2Alive) { p1Taxable += yRent/2; p2Taxable += yRent/2; }
+            else if(p1Alive) p1Taxable += yRent;
+            else p2Taxable += yRent;
+
+            let drawn = { p1_rrsp:0, p1_tfsa:0, p1_non:0, p2_rrsp:0, p2_tfsa:0, p2_non:0 };
+            const doDraw = (id, currentAge, isAlive, baseAge) => {
+                if(!assets[id] || !isAlive) return;
+                assets[id].bal *= (1 + assets[id].rate);
+                let w = 0;
+                lumps[id].forEach(l => { if(l.age === currentAge) w += l.amt * Math.pow(1+infRate, currentAge - baseAge); }); 
+                
+                if(currentAge >= assets[id].start && currentAge <= assets[id].end) {
+                    w += assets[id].isInfAdj ? assets[id].pmt * Math.pow(1 + infRate, currentAge - assets[id].retAge) : assets[id].pmt;
+                }
+                
+                if(id.includes('rrsp') && currentAge >= 72) {
+                    let rrifMin = assets[id].bal * getRrifFactor(currentAge);
+                    if(w < rrifMin) w = rrifMin;
+                }
+
+                if(w > assets[id].bal) { w = assets[id].bal; assets[id].bal = 0; }
+                else { assets[id].bal -= w; }
+                drawn[id] = w;
+            };
+
+            doDraw('p1_rrsp', age1, p1Alive, p1Age); doDraw('p1_tfsa', age1, p1Alive, p1Age); doDraw('p1_non', age1, p1Alive, p1Age);
+            if(isCouple) { doDraw('p2_rrsp', age2, p2Alive, p2Age); doDraw('p2_tfsa', age2, p2Alive, p2Age); doDraw('p2_non', age2, p2Alive, p2Age); }
+
+            p1Taxable += (drawn.p1_rrsp / pvDisc) + ((drawn.p1_non / pvDisc) * 0.5);
+            p2Taxable += (drawn.p2_rrsp / pvDisc) + ((drawn.p2_non / pvDisc) * 0.5);
+
+            let p1Tax = p1Alive ? calculateIndividualTax(p1Taxable) : 0;
+            let p2Tax = p2Alive ? calculateIndividualTax(p2Taxable) : 0;
+            let p1Claw = p1Alive ? calcClawback(yOas1, p1Taxable) : 0;
+            let p2Claw = p2Alive ? calcClawback(yOas2, p2Taxable) : 0;
+            let totTaxPV = p1Tax + p2Tax + p1Claw + p2Claw;
+
+            let grossIncomePV = yCpp1 + yCpp2 + yOas1 + yOas2 + yDb1 + yDb2 + yRent + 
+                                ((drawn.p1_rrsp + drawn.p2_rrsp + drawn.p1_tfsa + drawn.p2_tfsa + drawn.p1_non + drawn.p2_non + annualRMFV) / pvDisc);
+
+            let netCashflowPV = grossIncomePV - totTaxPV;
+
+            cHomeValFV *= (1 + hr);
+            cRMDebtFV = (cRMDebtFV + annualRMFV) * (1 + rmRate);
+
+            const pv = val => val / pvDisc;
+            const str = val => "$" + Math.round(val).toLocaleString();
+
+            let age1Str = p1Alive ? age1 + '세' : '<span class="deceased-tag">사망</span>';
+            let age2Str = !isCouple ? '-' : (p2Alive ? age2 + '세' : '<span class="deceased-tag">사망</span>');
+
+            tbodyHTML += `
+                <tr>
+                    <td>${age1Str}</td>
+                    <td>${age2Str}</td>
+                    
+                    <td class="col-gross">${str(grossIncomePV)}</td>
+                    <td class="col-tax">-${str(totTaxPV)}</td>
+                    <td class="col-net">${str(netCashflowPV/12)}</td>
+                    
+                    <td>${str(yRent)}</td>
+                    <td>${str(yCpp1+yCpp2+yOas1+yOas2+yDb1+yDb2)}</td>
+                    <td>${str(pv(drawn.p1_tfsa+drawn.p2_tfsa))}</td>
+                    <td style="color:#27ae60; font-weight:bold;">${str(pv(annualRMFV))}</td>
+                    <td>${str(pv(drawn.p1_rrsp+drawn.p2_rrsp))}</td>
+                    <td>${str(pv(drawn.p1_non+drawn.p2_non))}</td>
+                    
+                    <td class="col-asset">${p1Alive ? str(pv(assets.p1_rrsp.bal)) : '-'}</td>
+                    <td class="col-asset">${p1Alive ? str(pv(assets.p1_tfsa.bal)) : '-'}</td>
+                    <td class="col-asset">${p1Alive ? str(pv(assets.p1_non.bal)) : '-'}</td>
+                    <td class="col-asset">${isCouple && p2Alive ? str(pv(assets.p2_rrsp.bal)) : '-'}</td>
+                    <td class="col-asset">${isCouple && p2Alive ? str(pv(assets.p2_tfsa.bal)) : '-'}</td>
+                    <td class="col-asset">${isCouple && p2Alive ? str(pv(assets.p2_non.bal)) : '-'}</td>
+                    <td class="col-asset" style="font-weight:bold; color:#27ae60;">${str(pv(cHomeValFV - cRMDebtFV))}</td>
+                    <td class="col-asset" style="font-weight:bold; color:#e67e22;">${str(pv(invNetTotalFV))}</td>
+                </tr>
+            `;
+        }
+
+        document.getElementById('spreadsheet_body').innerHTML = tbodyHTML;
+        document.getElementById('result-section').scrollIntoView({ behavior: 'smooth' });
+    }
+</script>
+</body>
+</html>
