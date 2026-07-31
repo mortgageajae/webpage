@@ -57,16 +57,25 @@
                 </div>
                 
                 <div class="space-y-4 text-sm flex-grow">
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
+                    <!-- Added Amortization selection grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 border-b border-gray-100 pb-4">
+                        <div class="md:col-span-1">
+                            <label class="block font-bold text-gray-700">Amortization</label>
+                            <select id="calc1-amortization" class="mt-1 block w-full border border-gray-300 focus:border-brand focus:ring-brand rounded-md p-2 outline-none font-medium bg-blue-50">
+                                <option value="25" selected>25 Years</option>
+                                <option value="30">30 Years</option>
+                            </select>
+                        </div>
+                        <div class="md:col-span-1">
                             <label class="block font-medium text-gray-700">Annual Income ($)</label>
                             <input type="number" id="calc1-income" class="mt-1 block w-full border border-gray-300 focus:border-brand focus:ring-brand rounded-md p-2 outline-none">
                         </div>
-                        <div>
+                        <div class="md:col-span-1">
                             <label class="block font-medium text-gray-700">Estimated Rate (%)</label>
                             <input type="number" id="calc1-rate" class="mt-1 block w-full border border-gray-300 focus:border-brand focus:ring-brand rounded-md p-2 outline-none" step="0.1">
                         </div>
                     </div>
+
                     <div class="grid grid-cols-2 gap-4">
                         <div>
                             <label class="block font-medium text-gray-700">Annual Property Tax ($)</label>
@@ -93,7 +102,7 @@
                     </div>
                     
                     <div id="calc1-result" class="mt-6 p-6 bg-brand-light rounded-xl text-center hidden border border-brand/20 fade-in">
-                        <p class="text-sm text-gray-600">Limit based on Stress Test & GDS/TDS</p>
+                        <p class="text-sm text-gray-600" id="calc1-result-title">Limit based on Stress Test & GDS/TDS</p>
                         <p class="text-4xl font-bold text-brand mt-2" id="calc1-output">$0</p>
                         <p class="text-xs text-gray-500 mt-2" id="calc1-limiting-factor">Limiting Factor: -</p>
                     </div>
@@ -174,6 +183,8 @@
         }
 
         function calculateMaxLoan() {
+            // Get selected amortization value (25 or 30)
+            const amzYears = parseInt(document.getElementById('calc1-amortization').value) || 25;
             const income = parseFloat(document.getElementById('calc1-income').value) || 0;
             const rate = parseFloat(document.getElementById('calc1-rate').value) || 0;
             const propertyTaxYearly = parseFloat(document.getElementById('calc1-tax').value) || 0;
@@ -201,9 +212,11 @@
             }
 
             const monthlyRate = Math.pow(1 + (stressRate / 2), 2 / 12) - 1;
-            const months = 25 * 12; 
+            // Apply selected amortization period in months
+            const months = amzYears * 12; 
             const maxLoan = actualMaxPi * ((Math.pow(1 + monthlyRate, months) - 1) / (monthlyRate * Math.pow(1 + monthlyRate, months)));
 
+            document.getElementById('calc1-result-title').innerText = `Limit based on Stress Test & GDS/TDS (${amzYears}-Year Amortization)`;
             document.getElementById('calc1-output').innerText = formatCurrency(Math.max(0, maxLoan));
             let limitReason = maxPiGDS < maxPiTDS ? "Limit determined by GDS (39%) criteria." : "Limit determined by TDS (44%) criteria.";
             document.getElementById('calc1-limiting-factor').innerText = limitReason;

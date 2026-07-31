@@ -38,13 +38,17 @@
         .fade-in { animation: fadeIn 0.4s ease-in-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
-        /* 모바일 스크롤바 숨기기 */
+        /* Hide scrollbar (for mobile and desktop tab menus) */
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         
-        /* 활성화 탭 스타일 */
+        /* Active tab styles */
         .tab-active { border-bottom: 3px solid #334da9; color: #334da9; font-weight: 800; }
         .tab-inactive { color: #6b7280; font-weight: 600; }
+
+        /* Prevent text selection during drag scroll */
+        .drag-scroll { cursor: grab; user-select: none; }
+        .drag-scroll:active { cursor: grabbing; }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800 font-sans flex flex-col min-h-screen">
@@ -59,21 +63,25 @@
     </header>
 
     <div id="sub-nav" class="fixed w-full z-20 bg-white border-b border-gray-200 shadow-md top-[auto] fade-in" > 
-        <div class="max-w-6xl mx-auto px-1 md:px-2 flex justify-start lg:justify-center gap-1 md:gap-1.5 lg:gap-2.5 overflow-x-auto no-scrollbar whitespace-nowrap pt-3 text-[13px] md:text-sm tracking-tight">
-            <button onclick="showDashboard()" class="pb-3 px-1 tab-active hover:text-brand transition flex-shrink-0" id="btn-main-dash">Dashboard</button>
-            <button onclick="loadTool('rate-diagnosis.html', this, 1)" class="calc-tab pb-3 px-1 tab-inactive hover:text-brand transition flex-shrink-0">Rate Diagnosis</button>
-            <button onclick="loadTool('budget-calculator.html', this, 2)" class="calc-tab pb-3 px-1 tab-inactive hover:text-brand transition flex-shrink-0">Budget Tool</button>
-            <button onclick="loadTool('benefit-diagnosis.html', this, 3)" class="calc-tab pb-3 px-1 tab-inactive hover:text-brand transition flex-shrink-0">Benefit Eligibility</button>
-            <button onclick="loadTool('debt-consolidation.html', this, 4)" class="calc-tab pb-3 px-1 tab-inactive hover:text-brand transition flex-shrink-0">Debt Consolidation</button>
-            <button onclick="loadTool('switch.html', this, 5)" class="calc-tab pb-3 px-1 tab-inactive hover:text-brand transition flex-shrink-0">Mortgage Switch</button>
-            <button onclick="loadTool('core-tools.html', this, 6)" class="calc-tab pb-3 px-1 tab-inactive hover:text-brand transition flex-shrink-0">Limits & Payments</button>
-            <button onclick="loadTool('insured-analysis.html', this, 7)" class="calc-tab pb-3 px-1 tab-inactive hover:text-brand transition flex-shrink-0">Insured Saving</button>
-            <button onclick="loadTool('retirement.html', this, 8)" class="calc-tab pb-3 px-1 tab-inactive hover:text-brand transition flex-shrink-0">Retirement Planning</button>
-            <button onclick="loadTool('board.html', this, 9)" class="calc-tab pb-3 px-1 tab-inactive hover:text-brand transition flex-shrink-0">Info Board</button>
+        <!-- Adjusted to justify-start and added drag-scroll for horizontal scrolling -->
+        <div id="nav-scroll-container" class="max-w-6xl mx-auto px-4 flex justify-start gap-4 md:gap-6 lg:gap-8 overflow-x-auto no-scrollbar whitespace-nowrap pt-3 pb-1 text-[13px] md:text-sm lg:text-[15px] drag-scroll">
+            <button onclick="showDashboard()" class="pb-3 px-1 md:px-2 tab-active hover:text-brand transition flex-shrink-0" id="btn-main-dash">Dashboard</button>
+            <button onclick="loadTool('rate-diagnosis.html', this, 1)" class="calc-tab pb-3 px-1 md:px-2 tab-inactive hover:text-brand transition flex-shrink-0">Rate Diagnosis</button>
+            <button onclick="loadTool('budget-calculator.html', this, 2)" class="calc-tab pb-3 px-1 md:px-2 tab-inactive hover:text-brand transition flex-shrink-0">Budget Tool</button>
+            <button onclick="loadTool('benefit-diagnosis.html', this, 3)" class="calc-tab pb-3 px-1 md:px-2 tab-inactive hover:text-brand transition flex-shrink-0">Benefit Eligibility</button>
+            <button onclick="loadTool('debt-consolidation.html', this, 4)" class="calc-tab pb-3 px-1 md:px-2 tab-inactive hover:text-brand transition flex-shrink-0">Debt Consolidation</button>
+            <button onclick="loadTool('switch.html', this, 5)" class="calc-tab pb-3 px-1 md:px-2 tab-inactive hover:text-brand transition flex-shrink-0">Mortgage Switch</button>
+            <button onclick="loadTool('core-tools.html', this, 6)" class="calc-tab pb-3 px-1 md:px-2 tab-inactive hover:text-brand transition flex-shrink-0">Limits & Payments</button>
+            <button onclick="loadTool('insured-analysis.html', this, 7)" class="calc-tab pb-3 px-1 md:px-2 tab-inactive hover:text-brand transition flex-shrink-0">Insured Saving</button>
+            <button onclick="loadTool('retirement.html', this, 8)" class="calc-tab pb-3 px-1 md:px-2 tab-inactive hover:text-brand transition flex-shrink-0">Retirement Planning</button>
+            <!-- New Tab for Var vs Fix -->
+            <button onclick="loadTool('varvsfix.html', this, 9)" class="calc-tab pb-3 px-1 md:px-2 tab-inactive hover:text-brand transition flex-shrink-0">Var. vs Fixed Rate Compare</button>
+            <!-- Updated Index to 10 -->
+            <button onclick="loadTool('board.html', this, 10)" class="calc-tab pb-3 px-1 md:px-2 tab-inactive hover:text-brand transition flex-shrink-0">Info Board</button>
         </div>
     </div>
 
-    <main class="flex-grow" id="main-content">
+    <main class="flex-grow pt-[120px] md:pt-[180px]" id="main-content">
         
         <div id="dashboard-view" class="fade-in">
             <section class="pt-4 pb-0 px-4">
@@ -137,7 +145,14 @@
                         <p class="text-gray-500 text-sm md:text-base mb-6 flex-grow leading-relaxed">Develop a comprehensive financial strategy for post-retirement cash flow by integrating mortgage payoff plans, home equity, and personal pensions.</p>
                         <div class="font-bold text-brand flex items-center mt-auto">Start Planning <span>→</span></div>
                     </div>
-                    <div onclick="loadTool('board.html', null, 9)" class="tool-card bg-white p-8 rounded-2xl border border-gray-200 shadow-sm flex flex-col h-full cursor-pointer">
+                    <!-- New Card for Var vs Fix -->
+                    <div onclick="loadTool('varvsfix.html', null, 9)" class="tool-card bg-white p-8 rounded-2xl border border-gray-200 shadow-sm flex flex-col h-full cursor-pointer">
+                        <h3 class="text-xl md:text-2xl font-extrabold text-gray-800 mb-3">Variable vs Fixed Rate Compare</h3>
+                        <p class="text-gray-500 text-sm md:text-base mb-6 flex-grow leading-relaxed">Compare payment changes and apply prime rate variation scenarios to evaluate total interest costs against fixed rates.</p>
+                        <div class="font-bold text-brand flex items-center mt-auto">Start Comparison <span>→</span></div>
+                    </div>
+                    <!-- Updated Index to 10 -->
+                    <div onclick="loadTool('board.html', null, 10)" class="tool-card bg-white p-8 rounded-2xl border border-gray-200 shadow-sm flex flex-col h-full cursor-pointer">
                         <h3 class="text-xl md:text-2xl font-extrabold text-gray-800 mb-3">Info Board</h3>
                         <p class="text-gray-500 text-sm md:text-base mb-6 flex-grow leading-relaxed">Stay updated with the latest BC real estate market trends, mortgage news, and practical home-buying tips curated by a professional broker.</p>
                         <div class="font-bold text-brand flex items-center mt-auto">Read Columns <span>→</span></div>
@@ -183,6 +198,27 @@
 
         window.addEventListener('resize', adjustHeaderPadding);
         window.addEventListener('load', adjustHeaderPadding);
+
+        // Desktop menu mouse drag scroll feature
+        const slider = document.getElementById('nav-scroll-container');
+        let isDown = false;
+        let startX;
+        let scrollLeft;
+
+        slider.addEventListener('mousedown', (e) => {
+            isDown = true;
+            startX = e.pageX - slider.offsetLeft;
+            scrollLeft = slider.scrollLeft;
+        });
+        slider.addEventListener('mouseleave', () => { isDown = false; });
+        slider.addEventListener('mouseup', () => { isDown = false; });
+        slider.addEventListener('mousemove', (e) => {
+            if (!isDown) return;
+            e.preventDefault();
+            const x = e.pageX - slider.offsetLeft;
+            const walk = (x - startX) * 1.5; // Scroll sensitivity
+            slider.scrollLeft = scrollLeft - walk;
+        });
 
         function showDashboard() {
             document.getElementById('dashboard-view').classList.remove('hidden');
