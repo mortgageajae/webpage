@@ -42,16 +42,25 @@
                 </div>
                 
                 <div class="space-y-4 text-sm flex-grow">
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
+                    <!-- 새로 추가된 Amortization 선택 영역 포함 Grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 border-b border-gray-100 pb-4">
+                        <div class="md:col-span-1">
+                            <label class="block font-bold text-gray-700">상환기간</label>
+                            <select id="calc1-amortization" class="mt-1 block w-full border border-gray-300 focus:border-brand focus:ring-brand rounded-md p-2 outline-none font-medium bg-blue-50">
+                                <option value="25" selected>25년</option>
+                                <option value="30">30년</option>
+                            </select>
+                        </div>
+                        <div class="md:col-span-1">
                             <label class="block font-medium text-gray-700">연소득 ($)</label>
                             <input type="number" id="calc1-income" class="mt-1 block w-full border border-gray-300 focus:border-brand focus:ring-brand rounded-md p-2 outline-none">
                         </div>
-                        <div>
+                        <div class="md:col-span-1">
                             <label class="block font-medium text-gray-700">현재 예상금리 (%)</label>
                             <input type="number" id="calc1-rate" class="mt-1 block w-full border border-gray-300 focus:border-brand focus:ring-brand rounded-md p-2 outline-none" step="0.1">
                         </div>
                     </div>
+
                     <div class="grid grid-cols-2 gap-4">
                         <div>
                             <label class="block font-medium text-gray-700">연간 재산세 ($)</label>
@@ -78,7 +87,7 @@
                     </div>
                     
                     <div id="calc1-result" class="mt-6 p-6 bg-brand-light rounded-xl text-center hidden border border-brand/20 fade-in">
-                        <p class="text-sm text-gray-600">스트레스 테스트 및 GDS/TDS 적용 한도</p>
+                        <p class="text-sm text-gray-600" id="calc1-result-title">스트레스 테스트 및 GDS/TDS 적용 한도</p>
                         <p class="text-4xl font-bold text-brand mt-2" id="calc1-output">$0</p>
                         <p class="text-xs text-gray-500 mt-2" id="calc1-limiting-factor">제한 요인: -</p>
                     </div>
@@ -104,7 +113,7 @@
                     <div class="grid grid-cols-2 gap-4">
                         <div>
                             <label class="block font-medium text-gray-700">Amortization (년)</label>
-                            <input type="number" id="calc2-amortization" class="mt-1 block w-full border border-gray-300 focus:border-yellow-500 focus:ring-yellow-500 rounded-md p-2 outline-none bg-white" value="30" placeholder="예: 30">
+                            <input type="number" id="calc2-amortization" class="mt-1 block w-full border border-gray-300 focus:border-yellow-500 focus:ring-yellow-500 rounded-md p-2 outline-none bg-white" value="25" placeholder="예: 25">
                         </div>
                         <div>
                             <label class="block font-medium text-gray-700">계약기간 (Term)</label>
@@ -159,6 +168,8 @@
         }
 
         function calculateMaxLoan() {
+            // 상환기간 값 가져오기 (25 또는 30)
+            const amzYears = parseInt(document.getElementById('calc1-amortization').value) || 25;
             const income = parseFloat(document.getElementById('calc1-income').value) || 0;
             const rate = parseFloat(document.getElementById('calc1-rate').value) || 0;
             const propertyTaxYearly = parseFloat(document.getElementById('calc1-tax').value) || 0;
@@ -181,20 +192,22 @@
                 document.getElementById('calc1-output').innerText = "$0";
                 document.getElementById('calc1-limiting-factor').innerText = "부채 및 유지비가 기준을 초과하여 대출이 어렵습니다.";
                 document.getElementById('calc1-result').classList.remove('hidden');
-                notifyHeightChange(); // 높이 변경 알림
+                notifyHeightChange();
                 return;
             }
 
             const monthlyRate = Math.pow(1 + (stressRate / 2), 2 / 12) - 1;
-            const months = 25 * 12; 
+            // 선택된 상환기간을 월 단위로 변환하여 적용
+            const months = amzYears * 12; 
             const maxLoan = actualMaxPi * ((Math.pow(1 + monthlyRate, months) - 1) / (monthlyRate * Math.pow(1 + monthlyRate, months)));
 
+            document.getElementById('calc1-result-title').innerText = `스트레스 테스트 및 GDS/TDS 한도 (${amzYears}년 상환 기준)`;
             document.getElementById('calc1-output').innerText = formatCurrency(Math.max(0, maxLoan));
             let limitReason = maxPiGDS < maxPiTDS ? "GDS (39%) 기준에 의해 한도가 결정되었습니다." : "TDS (44%) 기준에 의해 한도가 결정되었습니다.";
             document.getElementById('calc1-limiting-factor').innerText = limitReason;
             document.getElementById('calc1-result').classList.remove('hidden');
             
-            notifyHeightChange(); // 높이 변경 알림
+            notifyHeightChange();
         }
 
         function calculatePayment() {
@@ -207,6 +220,7 @@
             if (!principal || !rate || !amzYears) return alert("대출 금액, 금리, 상환기간을 입력해주세요.");
 
             const annualRate = rate / 100;
+            // 캐나다식 모기지 계산 복리 변환
             const monthlyRate = Math.pow(1 + (annualRate / 2), 2 / 12) - 1;
             const biweeklyRate = Math.pow(1 + (annualRate / 2), 2 / 26) - 1;
 
@@ -234,7 +248,7 @@
             document.getElementById('calc2-interest').innerText = formatCurrency(totalInterest);
             document.getElementById('calc2-result').classList.remove('hidden');
             
-            notifyHeightChange(); // 높이 변경 알림
+            notifyHeightChange();
         }
 
         // 페이지 로드 시 초기 높이 계산

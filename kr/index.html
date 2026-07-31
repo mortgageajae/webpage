@@ -16,7 +16,6 @@
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
-
         gtag('config', 'G-LPHD8XR0XD');
     </script>
     
@@ -40,13 +39,17 @@
         .fade-in { animation: fadeIn 0.4s ease-in-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
-        /* 스크롤바 숨기기 (모바일 탭 메뉴용) */
+        /* 스크롤바 숨기기 (모바일 및 데스크탑 탭 메뉴용) */
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         
         /* 활성화된 탭 스타일 */
         .tab-active { border-bottom: 3px solid #334da9; color: #334da9; font-weight: 800; }
         .tab-inactive { color: #6b7280; font-weight: 600; }
+        
+        /* 드래그 스크롤 중 텍스트 선택 방지 */
+        .drag-scroll { cursor: grab; user-select: none; }
+        .drag-scroll:active { cursor: grabbing; }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800 font-sans flex flex-col min-h-screen">
@@ -60,8 +63,9 @@
         </div>
     </header>
 
-    <div id="sub-nav" class="fixed w-full z-20 bg-white border-b border-gray-200 shadow-md top-[auto] fade-in" > 
-        <div class="max-w-6xl mx-auto px-2 flex justify-start lg:justify-center gap-3 md:gap-4 lg:gap-5 overflow-x-auto no-scrollbar whitespace-nowrap pt-3 text-[13px] md:text-sm lg:text-[15px]">
+    <div id="sub-nav" class="fixed w-full z-20 bg-white border-b border-gray-200 shadow-md top-[auto] fade-in"> 
+        <!-- lg:justify-center를 제거하고 justify-start로 통일하여 넘치는 메뉴의 좌우 스크롤 확보 -->
+        <div id="nav-scroll-container" class="max-w-6xl mx-auto px-4 flex justify-start gap-4 md:gap-6 lg:gap-8 overflow-x-auto no-scrollbar whitespace-nowrap pt-3 pb-1 text-[13px] md:text-sm lg:text-[15px] drag-scroll">
             <button onclick="showDashboard()" class="pb-3 px-1 md:px-2 tab-active hover:text-brand transition flex-shrink-0" id="btn-main-dash">메인대시보드</button>
             <button onclick="loadTool('rate-diagnosis.html', this, 1)" class="calc-tab pb-3 px-1 md:px-2 tab-inactive hover:text-brand transition flex-shrink-0">금리진단</button>
             <button onclick="loadTool('budget-calculator.html', this, 2)" class="calc-tab pb-3 px-1 md:px-2 tab-inactive hover:text-brand transition flex-shrink-0">종합예산</button>
@@ -71,7 +75,8 @@
             <button onclick="loadTool('core-tools.html', this, 6)" class="calc-tab pb-3 px-1 md:px-2 tab-inactive hover:text-brand transition flex-shrink-0">한도/페이먼트</button>
             <button onclick="loadTool('insured-analysis.html', this, 7)" class="calc-tab pb-3 px-1 md:px-2 tab-inactive hover:text-brand transition flex-shrink-0">Insured 수익성</button>
             <button onclick="loadTool('retirement.html', this, 8)" class="calc-tab pb-3 px-1 md:px-2 tab-inactive hover:text-brand transition flex-shrink-0">은퇴재정설계</button>
-            <button onclick="loadTool('board.html', this, 9)" class="calc-tab pb-3 px-1 md:px-2 tab-inactive hover:text-brand transition flex-shrink-0">정보보드</button>
+            <button onclick="loadTool('varvsfix.html', this, 9)" class="calc-tab pb-3 px-1 md:px-2 tab-inactive hover:text-brand transition flex-shrink-0">변동고정비교</button>
+            <button onclick="loadTool('board.html', this, 10)" class="calc-tab pb-3 px-1 md:px-2 tab-inactive hover:text-brand transition flex-shrink-0">정보보드</button>
         </div>
     </div>
 
@@ -139,7 +144,13 @@
                         <p class="text-gray-500 text-sm md:text-base mb-6 flex-grow leading-relaxed">모기지 상환 계획, 주택 자산 가치, 개인 연금 등을 종합적으로 고려하여 은퇴 후 안정적인 현금흐름을 위한 재정 전략을 세워 드립니다.</p>
                         <div class="font-bold text-brand flex items-center mt-auto">재정설계 시작하기 <span>→</span></div>
                     </div>
-                    <div onclick="loadTool('board.html', null, 9)" class="tool-card bg-white p-8 rounded-2xl border border-gray-200 shadow-sm flex flex-col h-full cursor-pointer">
+                    <!-- 새로 추가된 다이나믹 시뮬레이터 카드 -->
+                    <div onclick="loadTool('varvsfix.html', null, 9)" class="tool-card bg-white p-8 rounded-2xl border border-gray-200 shadow-sm flex flex-col h-full cursor-pointer">
+                        <h3 class="text-xl md:text-2xl font-extrabold text-gray-800 mb-3">변동 vs 고정 비교</h3>
+                        <p class="text-gray-500 text-sm md:text-base mb-6 flex-grow leading-relaxed">금리변동시 페이먼트 비교와 프라임금리 변화 시나리오를 적용하여 총 이자비용을 고정금리와 비교합니다.</p>
+                        <div class="font-bold text-brand flex items-center mt-auto">비교분석 시작하기 <span>→</span></div>
+                    </div>
+                    <div onclick="loadTool('board.html', null, 10)" class="tool-card bg-white p-8 rounded-2xl border border-gray-200 shadow-sm flex flex-col h-full cursor-pointer">
                         <h3 class="text-xl md:text-2xl font-extrabold text-gray-800 mb-3">모기지 정보보드</h3>
                         <p class="text-gray-500 text-sm md:text-base mb-6 flex-grow leading-relaxed">전문 브로커가 직접 전하는 BC주 부동산 시장 동향, 최신 모기지 뉴스 및 유용한 내집마련 팁을 확인하세요.</p>
                         <div class="font-bold text-brand flex items-center mt-auto">칼럼 읽기 <span>→</span></div>
@@ -170,6 +181,7 @@
     </footer>
 
     <script>
+        // 헤더 여백 조절 함수
         function adjustHeaderPadding() {
             const header = document.querySelector('header');
             const headerHeight = header.offsetHeight;
@@ -182,6 +194,28 @@
         window.addEventListener('resize', adjustHeaderPadding);
         window.addEventListener('load', adjustHeaderPadding);
 
+        // 데스크탑 메뉴 마우스 드래그 스크롤 기능
+        const slider = document.getElementById('nav-scroll-container');
+        let isDown = false;
+        let startX;
+        let scrollLeft;
+
+        slider.addEventListener('mousedown', (e) => {
+            isDown = true;
+            startX = e.pageX - slider.offsetLeft;
+            scrollLeft = slider.scrollLeft;
+        });
+        slider.addEventListener('mouseleave', () => { isDown = false; });
+        slider.addEventListener('mouseup', () => { isDown = false; });
+        slider.addEventListener('mousemove', (e) => {
+            if (!isDown) return;
+            e.preventDefault();
+            const x = e.pageX - slider.offsetLeft;
+            const walk = (x - startX) * 1.5; // 스크롤 민감도
+            slider.scrollLeft = scrollLeft - walk;
+        });
+
+        // 탭 동작 및 iframe 컨트롤
         function showDashboard() {
             document.getElementById('dashboard-view').classList.remove('hidden');
             document.getElementById('calculator-view').classList.add('hidden');
@@ -228,6 +262,7 @@
             window.scrollTo(0, 0);
         }
 
+        // iframe 내부 요소 높이 변경 감지
         window.addEventListener('message', function(event) {
             if (event.data.type === 'resize') {
                 const iframe = document.getElementById('tool-frame');
