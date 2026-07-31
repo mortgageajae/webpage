@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>변동 vs 고정금리 리스크 & 시나리오 분석기 | 모기지아재</title>
+    
+    <!-- 공통 구글 태그 매니저 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-LPHD8XR0XD"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-LPHD8XR0XD');
+    </script>
+
+    <!-- 폰트 및 차트 라이브러리 -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@observablehq/plot@0.6.16"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
+    <!-- Tailwind CSS 세팅 (모기지아재 브랜드 컬러) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { light: '#f0f3fa', DEFAULT: '#334da9', dark: '#253880' }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- 공통 CSS 연결 -->
+    <link rel="stylesheet" href="/css/mortgageajae_theme.css">
+    
+    <style>
+        /* 차트 영역 특화 스타일 */
+        #chart-container { width: 100%; overflow-x: auto; margin-top: 20px; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans p-0 m-0">
+
+<section class="px-2 md:px-0 max-w-6xl mx-auto relative z-10 fade-in pt-4 md:pt-6">
+    
+    <!-- 메인 컨테이너 -->
+    <div class="bg-white p-6 md:p-8 rounded-xl shadow-md border border-gray-200 flex flex-col box-border w-full mb-10">
+        
+        <!-- 헤더 -->
+        <div class="bg-brand rounded-xl py-6 mb-8 text-center">
+            <h1 class="text-2xl md:text-3xl font-extrabold text-white mb-2">변동 vs 고정 비교분석 및<br>금리변동 시나리오 분석기</h1>
+        </div>
+
+        <!-- Section 1. 대출 기본 조건 설정 -->
+        <div class="mb-8">
+            <h2 class="text-lg font-bold text-gray-800 mb-4 border-b-2 border-brand/20 pb-2 flex items-center gap-2">
+                <span class="material-icons text-brand">account_balance</span> 1. 대출 기본 조건 설정
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                <div class="input-group bg-gray-50 border-gray-300">
+                    <label class="label-style">대출 원금 ($)</label>
+                    <input type="number" id="mortgageAmount" class="input-style" value="500000" oninput="runAnalysis()">
+                </div>
+                <div class="input-group bg-gray-50 border-gray-300">
+                    <label class="label-style">총 상환 기간 (Amortization, 년)</label>
+                    <input type="number" id="amortization" class="input-style" value="25" oninput="runAnalysis()">
+                </div>
+                <div class="input-group bg-gray-50 border-gray-300">
+                    <label class="label-style">계약 기간 (Term, 년)</label>
+                    <input type="number" id="term" class="input-style" value="5" oninput="runAnalysis()">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="p-4 bg-gray-50 rounded-xl border border-gray-200">
+                    <h3 class="text-base font-bold text-gray-800 mb-3">고정 금리 (Fixed Rate)</h3>
+                    <div>
+                        <label class="label-style">적용 금리 (%)</label>
+                        <input type="number" id="fixedRate" class="input-style" value="4.39" step="0.01" oninput="runAnalysis()">
+                    </div>
+                </div>
+                
+                <div class="p-4 bg-gray-50 rounded-xl border border-gray-200">
+                    <h3 class="text-base font-bold text-gray-800 mb-3">변동 금리 (Variable Rate)</h3>
+                    <div class="mb-3">
+                        <label class="label-style">적용 금리 (%)</label>
+                        <input type="number" id="varRate" class="input-style" value="3.70" step="0.01" oninput="runAnalysis()">
+                    </div>
+                    <div>
+                        <label class="label-style">변동 방식 (은행별 정책)</label>
+                        <div class="flex gap-4 mt-2">
+                            <label class="flex items-center gap-2 cursor-pointer text-sm font-medium text-gray-700">
+                                <input type="radio" name="varType" value="VRM" class="text-brand focus:ring-brand" checked onchange="runAnalysis()"> 페이먼트 고정형 (VRM)
+                            </label>
+                            <label class="flex items-center gap-2 cursor-pointer text-sm font-medium text-gray-700">
+                                <input type="radio" name="varType" value="ARM" class="text-brand focus:ring-brand" onchange="runAnalysis()"> 페이먼트 변동형 (ARM)
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 2. 초기 페이먼트 비교 -->
+        <div class="mb-8">
+            <h2 class="text-lg font-bold text-gray-800 mb-4 border-b-2 border-brand/20 pb-2 flex items-center gap-2">
+                <span class="material-icons text-brand">compare_arrows</span> 2. 초기 페이먼트 비교 (Base Payment)
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="p-4 bg-brand-light border border-brand/20 rounded-xl flex justify-between items-center shadow-sm">
+                    <span class="font-bold text-gray-600">고정 금리 월 페이먼트:</span>
+                    <span class="text-2xl font-extrabold text-brand" id="resFixedPmt">$0</span>
+                </div>
+                <div class="p-4 bg-white border-2 border-brand rounded-xl flex justify-between items-center shadow-sm">
+                    <span class="font-bold text-gray-600">변동 금리 월 페이먼트:</span>
+                    <span class="text-2xl font-extrabold text-brand" id="resVarPmt">$0</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 3. 변동금리 리스크 분석 -->
+        <div class="mb-8" id="riskAnalysisCard">
+            <h2 class="text-lg font-bold text-gray-800 mb-4 border-b-2 border-brand/20 pb-2 flex items-center gap-2">
+                <span class="material-icons text-red-500">warning</span> 3. 변동금리 리스크 분석 (페이먼트 비교)
+            </h2>
+            <div id="riskContent" class="fade-in">
+                <!-- JS로 동적 렌더링 -->
+            </div>
+        </div>
+
+        <!-- Section 4. 다이나믹 시뮬레이터 -->
+        <div>
+            <h2 class="text-lg font-bold text-gray-800 mb-4 border-b-2 border-brand/20 pb-2 flex items-center gap-2">
+                <span class="material-icons text-brand">trending_up</span> 4. 금리변동 시나리오 분석
+            </h2>
+            <p class="text-sm text-gray-500 font-medium mb-4">
+                중앙은행의 기준금리 변동 예상 시나리오를 입력하세요. 계약 기간(Term) 동안 총 지불하는 '순수 이자 비용'을 고정금리와 비교해 드립니다.
+            </p>
+            
+            <div id="scenarioContainer" class="space-y-3 mb-4">
+                <!-- JS로 시나리오 행 렌더링 -->
+            </div>
+            
+            <button class="w-full bg-white text-brand border-2 border-brand font-bold py-3 rounded-lg shadow-sm hover:bg-brand-light transition flex justify-center items-center gap-2" onclick="addScenarioRow()">
+                <span class="material-icons">add</span> 금리 변동 시점 추가
+            </button>
+
+            <div class="mt-10 pt-6 border-t border-gray-200">
+                <h3 class="text-lg font-extrabold text-brand mb-4">📊 시뮬레이션 결과: 계약 기간(Term) 총 이자 비용</h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <div class="p-4 bg-gray-50 border border-gray-200 rounded-xl text-center shadow-sm">
+                        <div class="text-xs font-bold text-gray-500 mb-1">고정금리 총 이자</div>
+                        <div class="text-xl font-bold text-gray-800" id="resFixedInt">$0</div>
+                    </div>
+                    <div class="p-4 bg-gray-50 border border-gray-200 rounded-xl text-center shadow-sm">
+                        <div class="text-xs font-bold text-gray-500 mb-1">변동금리 총 이자 (금리 유지 시)</div>
+                        <div class="text-xl font-bold text-gray-800" id="resVarBaseInt">$0</div>
+                    </div>
+                    <div class="p-4 bg-green-50 border border-green-300 rounded-xl text-center shadow-sm">
+                        <div class="text-xs font-bold text-green-700 mb-1">변동금리 총 이자 (시나리오 적용 시)</div>
+                        <div class="text-2xl font-extrabold text-green-600" id="resVarScenInt">$0</div>
+                    </div>
+                </div>
+
+                <div id="chart-container" class="bg-white p-4 border border-gray-200 rounded-xl shadow-sm hidden md:block"></div>
+                
+                <div id="scenarioConclusion" class="mt-6 fade-in hidden"></div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<script>
+    // iframe 자동 높이 조절
+    function notifyHeightChange() {
+        setTimeout(() => {
+            const height = document.body.scrollHeight || document.documentElement.scrollHeight;
+            window.parent.postMessage({ type: 'resize', height: height }, '*');
+        }, 150);
+    }
+
+    const fmtCurrency = (v) => new Intl.NumberFormat('en-CA', { style: 'currency', currency: 'CAD', maximumFractionDigits: 0 }).format(v);
+    
+    // 이자율 변환 유틸리티 (캐나다 방식)
+    const getFixedMonthlyRate = (annualRatePct) => Math.pow(1 + (annualRatePct/100) / 2, 2 / 12) - 1;
+    const getVarMonthlyRate = (annualRatePct) => (annualRatePct/100) / 12;
+
+    const calcPMT = (principal, monthlyRate, months) => {
+        if (monthlyRate === 0) return principal / months;
+        return principal * monthlyRate / (1 - Math.pow(1 + monthlyRate, -months));
+    };
+
+    // 초기 디폴트: 6개월 +0.25%, 9개월 +0.25%
+    let scenarioList = [
+        { id: 1, month: 6, change: 0.25 },
+        { id: 2, month: 9, change: 0.25 }
+    ];
+    let nextScenarioId = 3;
+
+    function renderScenarioRows() {
+        const container = document.getElementById('scenarioContainer');
+        const term = Number(document.getElementById('term').value) * 12;
+        
+        container.innerHTML = '';
+        
+        scenarioList.sort((a, b) => a.month - b.month).forEach(scen => {
+            const row = document.createElement('div');
+            row.className = 'scenario-row fade-in grid grid-cols-12 gap-3 items-center bg-gray-50 border border-gray-200 p-4 rounded-xl';
+            
+            row.innerHTML = `
+                <div class="col-span-12 md:col-span-5 flex flex-col">
+                    <label class="text-xs font-bold text-gray-500 mb-1">적용 시점 (Month)</label>
+                    <input type="number" min="1" max="${term}" value="${scen.month}" class="input-style !py-2" oninput="updateScenario(${scen.id}, 'month', this.value)">
+                </div>
+                <div class="col-span-10 md:col-span-5 flex flex-col">
+                    <label class="text-xs font-bold text-gray-500 mb-1">금리 변동폭 (%)</label>
+                    <select class="input-style !py-2" onchange="updateScenario(${scen.id}, 'change', this.value)">
+                        <option value="-1.00" ${scen.change === -1.00 ? 'selected' : ''}>- 1.00% (인하)</option>
+                        <option value="-0.75" ${scen.change === -0.75 ? 'selected' : ''}>- 0.75% (인하)</option>
+                        <option value="-0.50" ${scen.change === -0.50 ? 'selected' : ''}>- 0.50% (인하)</option>
+                        <option value="-0.25" ${scen.change === -0.25 ? 'selected' : ''}>- 0.25% (인하)</option>
+                        <option value="0.25" ${scen.change === 0.25 ? 'selected' : ''}>+ 0.25% (인상)</option>
+                        <option value="0.50" ${scen.change === 0.50 ? 'selected' : ''}>+ 0.50% (인상)</option>
+                        <option value="0.75" ${scen.change === 0.75 ? 'selected' : ''}>+ 0.75% (인상)</option>
+                        <option value="1.00" ${scen.change === 1.00 ? 'selected' : ''}>+ 1.00% (인상)</option>
+                    </select>
+                </div>
+                <div class="col-span-2 md:col-span-2 flex justify-center mt-5 md:mt-0">
+                    <button class="bg-red-100 hover:bg-red-200 text-red-600 border border-red-200 font-bold p-2 rounded-lg transition shadow-sm w-full h-full flex items-center justify-center" onclick="removeScenarioRow(${scen.id})" title="삭제">
+                        <span class="material-icons text-lg">delete</span>
+                    </button>
+                </div>
+            `;
+            container.appendChild(row);
+        });
+        
+        notifyHeightChange();
+    }
+
+    // 행 추가 로직 수정: 가장 마지막 개월수 + 1, 디폴트 +0.25%
+    function addScenarioRow() {
+        const termMonths = Number(document.getElementById('term').value) * 12;
+        let nextMonth = 1;
+
+        if (scenarioList.length > 0) {
+            // 현재 등록된 시나리오 중 가장 큰 개월수 찾기
+            const maxMonth = Math.max(...scenarioList.map(s => Number(s.month)));
+            nextMonth = maxMonth + 1; // 기존 맨 아래 개월수에서 1 더하기
+        }
+
+        // 만약 계산된 다음 달이 전체 텀(Term) 기간을 초과하면 텀 기간으로 고정
+        if (nextMonth > termMonths) {
+            nextMonth = termMonths;
+        }
+
+        scenarioList.push({ id: nextScenarioId++, month: nextMonth, change: 0.25 });
+        renderScenarioRows();
+        runAnalysis();
+    }
+
+    function removeScenarioRow(id) {
+        scenarioList = scenarioList.filter(s => s.id !== id);
+        renderScenarioRows();
+        runAnalysis();
+    }
+
+    function updateScenario(id, field, value) {
+        const scen = scenarioList.find(s => s.id === id);
+        if (scen) {
+            scen[field] = Number(value);
+            runAnalysis();
+        }
+    }
+
+    // 핵심 분석 로직
+    function runAnalysis() {
+        const principal = Number(document.getElementById('mortgageAmount').value);
+        const amortYears = Number(document.getElementById('amortization').value);
+        const termYears = Number(document.getElementById('term').value);
+        const fixedRate = Number(document.getElementById('fixedRate').value);
+        const varRate = Number(document.getElementById('varRate').value);
+        const varType = document.querySelector('input[name="varType"]:checked').value;
+
+        const amortMonths = amortYears * 12;
+        const termMonths = termYears * 12;
+
+        if(!principal || !amortYears || !termYears) return;
+
+        // 1. 기본 페이먼트 산출
+        const fixedPMT = calcPMT(principal, getFixedMonthlyRate(fixedRate), amortMonths);
+        const baseVarPMT = calcPMT(principal, getVarMonthlyRate(varRate), amortMonths);
+
+        document.getElementById('resFixedPmt').textContent = fmtCurrency(fixedPMT);
+        document.getElementById('resVarPmt').textContent = fmtCurrency(baseVarPMT);
+
+        // 2. 리스크 분석 렌더링
+        const riskContent = document.getElementById('riskContent');
+        
+        if (varType === 'VRM') {
+            const triggerRate = (baseVarPMT * 12 / principal) * 100;
+            const diffToTrigger = triggerRate - varRate;
+            const triggerPMT = calcPMT(principal, getVarMonthlyRate(triggerRate), amortMonths);
+
+            riskContent.innerHTML = `
+                <div class="bg-yellow-50 border border-yellow-300 p-4 rounded-xl flex gap-3 mb-4 shadow-sm">
+                    <span class="material-icons text-yellow-600 mt-0.5">info</span>
+                    <div class="text-sm text-yellow-800">
+                        <strong>페이먼트 고정형(VRM)은 금리가 올라도 페이먼트가 변하지 않지만, 이자 비중이 늘어납니다.</strong><br>
+                        이자가 페이먼트를 초과하는 지점을 <b>트리거 금리(Trigger Rate)</b>라고 하며, 이때 은행은 페이먼트 인상을 요구합니다.
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="p-4 bg-gray-50 border border-gray-200 rounded-xl text-center shadow-sm">
+                        <div class="text-xs font-bold text-gray-500 mb-1">계산된 트리거 금리</div>
+                        <div class="text-xl font-extrabold text-red-500">${triggerRate.toFixed(2)}%</div>
+                        <div class="text-xs text-gray-500 mt-1">(현재 대비 +${diffToTrigger.toFixed(2)}% 인상 시)</div>
+                    </div>
+                    <div class="p-4 bg-gray-50 border border-gray-200 rounded-xl text-center shadow-sm">
+                        <div class="text-xs font-bold text-gray-500 mb-1">트리거 도달 시 원상복구 요구 페이먼트</div>
+                        <div class="text-xl font-extrabold text-gray-800">${fmtCurrency(triggerPMT)}</div>
+                        <div class="text-xs text-gray-500 mt-1">(기존 대비 월 +${fmtCurrency(triggerPMT - baseVarPMT)} 증가)</div>
+                    </div>
+                </div>
+            `;
+        } else {
+            let tableHTML = `
+                <p class="text-sm text-gray-500 mb-4 font-medium">페이먼트 변동형(ARM)은 기준 금리 인상 시 페이먼트가 즉각적으로 상승합니다. 차주의 예산 감당 범위를 미리 확인하세요.</p>
+                <div class="overflow-x-auto rounded-xl border border-gray-200 shadow-sm">
+                    <table class="w-full text-sm text-left">
+                        <thead class="bg-gray-100 text-gray-600 font-bold">
+                            <tr>
+                                <th class="p-3 border-b border-gray-200 text-center">금리 변동 시나리오</th>
+                                <th class="p-3 border-b border-gray-200 text-center">적용 금리</th>
+                                <th class="p-3 border-b border-gray-200 text-center">예상 월 페이먼트</th>
+                                <th class="p-3 border-b border-gray-200 text-center">페이먼트 상승폭</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-100">
+            `;
+            
+            const stressIncrements = [0.25, 0.50, 0.75, 1.00, 1.50, 2.00];
+            stressIncrements.forEach(inc => {
+                const testRate = varRate + inc;
+                const testPMT = calcPMT(principal, getVarMonthlyRate(testRate), amortMonths);
+                tableHTML += `
+                    <tr class="hover:bg-gray-50 transition">
+                        <td class="p-3 text-center text-gray-700 font-medium">+ ${inc.toFixed(2)}% 인상</td>
+                        <td class="p-3 text-center text-gray-700 font-medium">${testRate.toFixed(2)}%</td>
+                        <td class="p-3 text-center text-brand font-extrabold">${fmtCurrency(testPMT)}</td>
+                        <td class="p-3 text-center text-red-500 font-bold">+ ${fmtCurrency(testPMT - baseVarPMT)}</td>
+                    </tr>
+                `;
+            });
+            tableHTML += `</tbody></table></div>`;
+            riskContent.innerHTML = tableHTML;
+        }
+
+        // 3. 다이나믹 시뮬레이터 (Month by Month)
+        let balFixed = principal, balVarBase = principal, balVarScen = principal;
+        let intFixed = 0, intVarBase = 0, intVarScen = 0;
+        let currentVarRate = varRate, currentVarScenPMT = baseVarPMT;
+        let plotData = [];
+        
+        let scenMap = {};
+        scenarioList.forEach(s => {
+            if(!scenMap[s.month]) scenMap[s.month] = 0;
+            scenMap[s.month] += s.change;
+        });
+
+        for (let m = 1; m <= termMonths; m++) {
+            let iF = balFixed * getFixedMonthlyRate(fixedRate);
+            balFixed -= (fixedPMT - iF);
+            intFixed += iF;
+
+            let iVb = balVarBase * getVarMonthlyRate(varRate);
+            balVarBase -= (baseVarPMT - iVb);
+            intVarBase += iVb;
+
+            if (scenMap[m]) {
+                currentVarRate += scenMap[m];
+                if (varType === 'ARM') {
+                    currentVarScenPMT = calcPMT(balVarScen, getVarMonthlyRate(currentVarRate), amortMonths - m + 1);
+                }
+            }
+
+            let iVs = balVarScen * getVarMonthlyRate(currentVarRate);
+            let pVs = varType === 'VRM' ? (baseVarPMT - iVs) : (currentVarScenPMT - iVs);
+            balVarScen -= pVs;
+            intVarScen += iVs;
+
+            if (m % 3 === 0 || m === termMonths) {
+                plotData.push({ Month: m, Type: 'Fixed', TotalInterest: intFixed });
+                plotData.push({ Month: m, Type: 'Var (Base)', TotalInterest: intVarBase });
+                plotData.push({ Month: m, Type: 'Var (Scenario)', TotalInterest: intVarScen });
+            }
+        }
+
+        document.getElementById('resFixedInt').textContent = fmtCurrency(intFixed);
+        document.getElementById('resVarBaseInt').textContent = fmtCurrency(intVarBase);
+        document.getElementById('resVarScenInt').textContent = fmtCurrency(intVarScen);
+
+        const conclusionBox = document.getElementById('scenarioConclusion');
+        conclusionBox.classList.remove('hidden');
+        
+        let savings = intFixed - intVarScen;
+        if (savings > 0) {
+            conclusionBox.className = 'mt-6 fade-in bg-green-50 border border-green-300 p-5 rounded-xl flex gap-4 items-center shadow-sm';
+            conclusionBox.innerHTML = `
+                <span class="material-icons text-green-600 text-3xl">thumb_up</span>
+                <div class="text-green-800">
+                    <strong class="text-base block mb-1">입력하신 금리 변동 시나리오에 따르면, 변동금리 선택이 유리합니다.</strong>
+                    <span class="text-sm">계약 기간(${termYears}년) 동안 고정금리 대비 <b class="text-green-700 text-lg">${fmtCurrency(savings)}</b>의 이자 비용을 절감할 수 있습니다.</span>
+                </div>
+            `;
+        } else {
+            conclusionBox.className = 'mt-6 fade-in bg-red-50 border border-red-300 p-5 rounded-xl flex gap-4 items-center shadow-sm';
+            conclusionBox.innerHTML = `
+                <span class="material-icons text-red-600 text-3xl">warning</span>
+                <div class="text-red-800">
+                    <strong class="text-base block mb-1">입력하신 시나리오에서는 고정금리가 더 안전하고 유리합니다.</strong>
+                    <span class="text-sm">변동금리를 선택할 경우 고정금리 대비 <b class="text-red-600 text-lg">${fmtCurrency(Math.abs(savings))}</b>의 이자 비용을 더 지불하게 됩니다.</span>
+                </div>
+            `;
+        }
+
+        renderChart(plotData, termMonths);
+        notifyHeightChange();
+    }
+
+    function renderChart(data, termMonths) {
+        const container = document.getElementById('chart-container');
+        container.innerHTML = '';
+
+        const chart = Plot.plot({
+            width: 900,
+            height: 350,
+            marginLeft: 80,
+            marginTop: 40,
+            marginBottom: 40,
+            style: {
+                fontSize: "13px",
+                fontFamily: "Noto Sans KR, sans-serif"
+            },
+            color: {
+                domain: ["Fixed", "Var (Base)", "Var (Scenario)"],
+                range: ["#94A3B8", "#64748B", "#334da9"],
+                legend: true
+            },
+            x: {
+                label: "경과 기간 (Months)",
+                domain: [0, termMonths]
+            },
+            y: {
+                label: "누적 이자 지출액 ($)",
+                tickFormat: "s",
+                grid: true
+            },
+            marks: [
+                Plot.line(data, {
+                    x: "Month", 
+                    y: "TotalInterest", 
+                    stroke: "Type", 
+                    strokeWidth: 3,
+                    curve: "monotone-x"
+                }),
+                Plot.text(data.filter(d => d.Month === termMonths), {
+                    x: "Month",
+                    y: "TotalInterest",
+                    text: d => fmtCurrency(d.TotalInterest),
+                    fill: "Type",
+                    textAnchor: "end",
+                    dy: -10,
+                    fontWeight: "bold"
+                })
+            ]
+        });
+
+        container.appendChild(chart);
+    }
+
+    // 초기 실행
+    window.onload = function() {
+        renderScenarioRows();
+        runAnalysis();
+    };
+
+</script>
+
+</body>
+</html>
