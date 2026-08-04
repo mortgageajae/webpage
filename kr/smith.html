@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>모기지아재 - Smith Manouver 시뮬레이터</title>
+    
+    <!-- 구글 아날리틱스 (Google Analytics) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-LPHD8XR0XD"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-LPHD8XR0XD');
+    </script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Tailwind CSS 커스텀 색상 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Noto Sans KR', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: { light: '#f0f3fa', DEFAULT: '#334da9', dark: '#253880' }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif; -webkit-font-smoothing: antialiased; }
+        
+        .table-responsive { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        th { position: sticky; top: 0; z-index: 10; backdrop-filter: blur(8px); }
+        
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+        input[type="number"] { -moz-appearance: textfield; appearance: textfield; }
+
+        .fade-in { animation: fadeIn 0.4s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* 컬럼 토글(숨김) 기능을 위한 CSS 클래스 */
+        .table-collapsed-debt .col-debt-detail { display: none !important; }
+        .table-collapsed-cf .col-cf-detail { display: none !important; }
+        .table-collapsed-inv .col-inv-detail { display: none !important; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+<div class="max-w-[90rem] mx-auto p-4 md:p-6 lg:p-8 fade-in">
+
+    <div class="bg-brand rounded-xl py-6 mb-8 text-center">
+        <h1 class="text-2xl md:text-3xl font-extrabold text-white mb-2">모기지아재 - Smith Manouver 시뮬레이터</h1>
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        
+        <!-- 1. 기본입력자료 -->
+        <div class="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm hover:shadow-md transition">
+            <h3 class="text-lg font-bold text-brand mb-4 pb-2 border-b-2 border-brand-light flex items-center">
+                <span class="mr-2">📊</span> 기본 & 소득 정보
+            </h3>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">결혼 여부</label>
+                    <select id="maritalStatus" onchange="toggleSpouseInput()" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand outline-none transition">
+                        <option value="couple" selected>부부 (Couple)</option>
+                        <option value="single">싱글 (Single)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">배우자 1 소득 ($)</label>
+                    <input type="number" id="income1" value="80000" step="1000" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand outline-none transition">
+                </div>
+                <div id="wrapperIncome2">
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">배우자 2 소득 ($)</label>
+                    <input type="number" id="income2" value="40000" step="1000" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand outline-none transition">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">분석(년)</label>
+                        <input type="number" id="simYears" value="25" class="w-full px-2 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand outline-none transition text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">연소득상승률(%)</label>
+                        <input type="number" id="incomeGrowth" value="3.0" step="0.1" class="w-full px-2 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand outline-none transition text-sm text-blue-700 font-bold">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">연물가상승률(%)</label>
+                        <input type="number" id="inflation" value="2.5" step="0.1" class="w-full px-2 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand outline-none transition text-sm text-red-600 font-bold">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">연부동산상승률 (%)</label>
+                        <input type="number" id="propAppr" value="5.0" step="0.1" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand outline-none transition">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. 주택 및 담보대출구조 -->
+        <div class="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm hover:shadow-md transition">
+            <h3 class="text-lg font-bold text-brand mb-4 pb-2 border-b-2 border-brand-light flex items-center">
+                <span class="mr-2">🏠</span> 주택 및 대출 구조
+            </h3>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">현재 집값 ($)</label>
+                    <input type="number" id="propValue" value="1200000" step="10000" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand outline-none transition text-sm ">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">A: 실거주 모기지 ($)</label>
+                        <input type="number" id="mortA_bal" value="500000" step="10000" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand outline-none transition text-sm bg-brand-light/30">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">A/B 금리 (%)</label>
+                        <input type="number" id="mortRate" value="4.1" step="0.01" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand outline-none transition text-sm ">
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">B: 투자 모기지 ($)</label>
+                        <input type="number" id="mortB_bal" value="100000" step="10000" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand outline-none transition  text-sm bg-purple-50">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">C: HELOC 금리 (%)</label>
+                        <input type="number" id="helocRate" value="4.95" step="0.01" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand outline-none transition text-sm ">
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-4 pt-2">
+                    <div>
+                        <label class="block text-sm font-semibold text-red-600 mb-1" title="총 투자자산 25만불 달성 시 적용되는 총부채 한도">HNW 허용 TDS (%)</label>
+                        <input type="number" id="maxTds" value="65" step="1" class="w-full px-2 py-2 border border-red-300 rounded-lg focus:ring-2 focus:ring-red-500 outline-none transition bg-red-50 font-bold text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-orange-600 mb-1" title="당해년도 총소득+배당 대비 실제 나가는 총 원리금 상한선">P&I 캡 (한도, %)</label>
+                        <input type="number" id="maxPaymentRatio" value="45" step="1" class="w-full px-2 py-2 border border-orange-300 rounded-lg focus:ring-2 focus:ring-orange-500 outline-none transition bg-orange-50 font-bold text-sm">
+                    </div>
+                </div>
+                  
+                <div class="space-y-3 p-3 bg-blue-50/50 rounded-xl border border-blue-100">
+                    <label class="block text-sm font-semibold text-brand mb-1">초기 유동자산 ($)</label>
+                    <p class="text-xs text-gray-500 mb-2">HNW 컷오프 반영용. (RRSP는 HNW 계산 시 30% 할인 적용)</p>
+                    <div class="grid grid-cols-3 gap-2">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-1">TFSA</label>
+                            <input type="number" id="existingTFSA" value="50000" step="10000" class="w-full px-2 py-1.5 border border-gray-300 rounded-md focus:ring-2 focus:ring-brand outline-none transition text-sm bg-white">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-1">Non-Reg</label>
+                            <input type="number" id="existingNonReg" value="10000" step="10000" class="w-full px-2 py-1.5 border border-gray-300 rounded-md focus:ring-2 focus:ring-brand outline-none transition text-sm bg-white">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-1">RRSP</label>
+                            <input type="number" id="existingRRSP" value="40000" step="10000" class="w-full px-2 py-1.5 border border-gray-300 rounded-md focus:ring-2 focus:ring-brand outline-none transition text-sm bg-white">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. 투자 & 세금 로직 -->
+        <div class="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm hover:shadow-md transition">
+            <h3 class="text-lg font-bold text-brand mb-4 pb-2 border-b-2 border-brand-light flex items-center">
+                <span class="mr-2">📈</span> 투자 및 세금 로직
+            </h3>
+            <div class="space-y-4">
+                
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">초기 TFSA룸 ($)</label>
+                        <input type="number" id="tfsaRoomTotal" value="30000" step="1000" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand outline-none transition text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">초기 RRSP룸 ($)</label>
+                        <input type="number" id="rrspRoomTotal" value="30000" step="1000" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand outline-none transition text-sm">
+                    </div>
+                </div>
+
+                <div class="bg-gray-50 p-3 rounded-xl border border-gray-200">
+                    <label class="block text-sm font-extrabold text-gray-800 mb-2">계좌종류별 기대수익률 (배당% / 성장%)</label>
+                    <div class="grid grid-cols-1 gap-2">
+                        <div>
+                            <span class="block text-sm text-gray-500 mb-0.5">TFSA 배당/성장</span>
+                            <div class="flex space-x-1">
+                                <input type="number" id="tfsaYield" value="1.5" step="0.1" class="w-1/2 px-1 py-1 border border-gray-300 rounded text-sm font-bold text-center">
+                                <input type="number" id="tfsaGrowth" value="6.0" step="0.1" class="w-1/2 px-1 py-1 border border-gray-300 rounded text-sm font-bold text-center">
+                            </div>
+                        </div>
+                        <div>
+                            <span class="block text-sm text-gray-500 mb-0.5">Non-Reg 배당/성장</span>
+                            <div class="flex space-x-1">
+                                <input type="number" id="nonRegYield" value="1.5" step="0.1" onchange="checkCRA()" class="w-1/2 px-1 py-1 border border-purple-300 bg-purple-50 rounded text-sm font-bold text-center">
+                                <input type="number" id="nonRegGrowth" value="6.0" step="0.1" class="w-1/2 px-1 py-1 border border-purple-300 bg-purple-50 rounded text-sm font-bold text-center">
+                            </div>
+                        </div>
+                        <div>
+                            <span class="block text-sm text-gray-500 mb-0.5">RRSP 배당/성장</span>
+                            <div class="flex space-x-1">
+                                <input type="number" id="rrspYield" value="1.5" step="0.1" class="w-1/2 px-1 py-1 border border-gray-300 rounded text-sm font-bold text-center">
+                                <input type="number" id="rrspGrowth" value="6.0" step="0.1" class="w-1/2 px-1 py-1 border border-gray-300 rounded text-sm font-bold text-center">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">잉여현금 재투자 우선순위</label>
+                    <select id="waterfallOption" class="w-full px-3 py-2 border border-brand text-brand rounded-lg focus:ring-2 focus:ring-brand outline-none transition font-semibold text-sm shadow-sm bg-brand-light/30">
+                        <option value="tfsa_nonreg_rrsp" selected>1. TFSA ➡️ 2. Non-Reg ➡️ 3. RRSP</option>
+                        <option value="tfsa_rrsp_nonreg">1. TFSA ➡️ 2. RRSP ➡️ 3. Non-Reg</option>
+                        <option value="nonreg_tfsa_rrsp">1. Non-Reg ➡️ 2. TFSA ➡️ 3. RRSP</option>
+                        <option value="nonreg_rrsp_tfsa">1. Non-Reg ➡️ 2. RRSP ➡️ 3. TFSA</option>
+                        <option value="rrsp_tfsa_nonreg">1. RRSP ➡️ 2. TFSA ➡️ 3. Non-Reg</option>
+                        <option value="rrsp_nonreg_tfsa">1. RRSP ➡️ 2. Non-Reg ➡️ 3. TFSA</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1">원리금 페이먼트 한도초과시 옵션</label>
+                    <select id="paymentCapAction" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand outline-none transition text-sm">
+                        <option value="stop">홈에퀴티 추출중단</option>
+                        <option value="heloc_only" selected>HELOC으로 추출지속 (원금상환 유예)</option>
+                    </select>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Non-Reg 과세방식</label>
+                        <select id="capGainMode" class="w-full px-2 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand outline-none transition text-sm">
+                            <option value="deferred" selected>과세 장기이연</option>
+                            <option value="annual">매년 과세실현</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1" title="은퇴 후 자산 인출 시의 연평균 예상 세율">미래 예상 한계세율 (%)</label>
+                        <input type="number" id="expectedMarginalTaxRate" value="50" step="1" class="w-full px-2 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand outline-none transition text-sm">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">모기지갱신(Term) 주기</label>
+                        <select id="refiCycle" class="w-full px-2 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand outline-none transition text-sm">
+                            <option value="3" selected>3년 주기</option>
+                            <option value="5">5년 주기</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">HELOC 전환 옵션</label>
+                        <select id="helocConversion" class="w-full px-2 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand outline-none transition text-sm">
+                            <option value="none">금액 유지</option>
+                            <option value="yearly_10k" selected>$10k↑ 매년전환</option>
+                            <option value="on_renewal">갱신시 전환</option>
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <button onclick="runSimulation()" class="w-full bg-brand hover:bg-brand-dark text-white font-semibold text-lg py-4 rounded-xl shadow-lg transition-transform transform hover:-translate-y-1 mb-6 focus:outline-none focus:ring-4 focus:ring-brand-light">
+       Smith Manouver 시뮬레이션 실행
+    </button>
+
+    <!-- 경고 배너 -->
+    <div id="tdsWarning" class="hidden bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-r-lg mb-6 shadow-sm">
+        <div class="flex items-center">
+            <span class="text-2xl mr-3">⚠️</span>
+            <div>
+                <p class="font-bold">모기지 심사 경고: 첫해 스트레스 테스트 TDS <span id="tdsValue"></span>% (일반 한도 44% 초과)</p>
+                <p class="text-sm mt-1" id="tdsWarningText"></p>
+            </div>
+        </div>
+    </div>
+
+    <div id="craWarning" class="hidden bg-purple-100 border-l-4 border-purple-500 text-purple-800 p-4 rounded-r-lg mb-6 shadow-sm">
+        <div class="flex items-center">
+            <span class="text-2xl mr-3">🛑</span>
+            <div>
+                <p class="font-bold">CRA 세무 감사 위험: Non-Reg 배당 수익률 0.5% 미만 설정</p>
+                <p class="text-sm mt-1">자본 이득만을 목적으로 하는 투자는 CRA 규정상 이자 비용 공제가 전면 부인됩니다. 안전하게 최소 0.5% 이상 설정하세요.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 결과 섹션 -->
+    <div id="results" class="hidden fade-in space-y-8">
+        
+        <div>
+            <h2 class="text-xl font-bold text-gray-800 mb-2 border-b-2 border-gray-200 pb-2 flex justify-between items-end">
+                <span>💡 최종 스냅샷 (명목가치 기준)</span>
+                <span class="text-[10px] text-gray-500 font-normal">* 잠재세금(이연부채): 설정된 미래 예상 한계세율 적용 (Non-Reg는 절반, RRSP는 전체 차감)</span>
+            </h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="bg-blue-50 border border-blue-100 p-5 rounded-2xl text-center shadow-sm">
+                    <h4 class="text-sm font-semibold text-blue-800 mb-2">최종 총자산 (부동산+투자)</h4>
+                    <div class="text-2xl font-semibold text-blue-900 tracking-tight" id="resGross">$0</div>
+                </div>
+                <div class="bg-red-50 border border-red-100 p-5 rounded-2xl text-center shadow-sm">
+                    <h4 class="text-sm font-semibold text-red-800 mb-2">순수 대출부채 (A+B+C)</h4>
+                    <div class="text-2xl font-semibold text-red-900 tracking-tight" id="resDebt">$0</div>
+                </div>
+                <div class="bg-orange-50 border border-orange-100 p-5 rounded-2xl text-center shadow-sm">
+                    <h4 class="text-sm font-semibold text-orange-800 mb-2">총 잠재세금 부채 (NonReg+RRSP)</h4>
+                    <div class="text-2xl font-semibold text-orange-900 tracking-tight" id="resTaxDebt">$0</div>
+                </div>
+                <div class="bg-green-50 border border-green-200 p-5 rounded-2xl text-center shadow-md transform hover:scale-105 transition">
+                    <h4 class="text-sm font-semibold text-green-800 mb-2">최종 실질 순자산 (Net Worth)</h4>
+                    <div class="text-2xl font-black text-green-700 tracking-tighter drop-shadow-sm" id="resNet">$0</div>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 mt-4">
+                <div class="bg-white border border-gray-200 p-3 rounded-xl text-center shadow-sm">
+                    <h4 class="text-sm font-semibold text-gray-500 mb-1">초기 투자 원금 합산</h4>
+                    <div class="text-sm font-bold text-gray-800" id="resInitPrinc">$0</div>
+                </div>
+                <div class="bg-white border border-gray-200 p-3 rounded-xl text-center shadow-sm">
+                    <h4 class="text-sm font-semibold text-gray-500 mb-1">A모기지 원금상환 누적</h4>
+                    <div class="text-sm font-bold text-brand" id="resMortPaid">$0</div>
+                </div>
+                <div class="bg-white border border-gray-200 p-3 rounded-xl text-center shadow-sm">
+                    <h4 class="text-sm font-semibold text-gray-500 mb-1">총 자본이득 누적</h4>
+                    <div class="text-sm font-bold text-blue-600" id="resTotalCapGain">$0</div>
+                </div>
+                <div class="bg-white border border-gray-200 p-3 rounded-xl text-center shadow-sm">
+                    <h4 class="text-sm font-semibold text-gray-500 mb-1">총 배당/이자수익 누적</h4>
+                    <div class="text-sm font-bold text-green-600" id="resTotalDivInc">$0</div>
+                </div>
+                <div class="bg-white border border-gray-200 p-3 rounded-xl text-center shadow-sm">
+                    <h4 class="text-sm font-semibold text-gray-500 mb-1">총 대출이자 지출 누적</h4>
+                    <div class="text-sm font-bold text-orange-600" id="resTotalIntExp">$0</div>
+                </div>
+                <div class="bg-white border border-gray-200 p-3 rounded-xl text-center shadow-sm">
+                    <h4 class="text-sm font-semibold text-gray-500 mb-1">총 세금 납부 누적</h4>
+                    <div class="text-sm font-bold text-red-600" id="resTotalTax">$0</div>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <h2 class="text-xl font-bold text-gray-800 mb-4 border-b-2 border-gray-200 pb-2">📊 자산 성장 및 부채 추이 그래프</h2>
+            <div class="bg-white p-4 rounded-2xl border border-gray-200 shadow-sm chart-container h-[400px]">
+                <canvas id="wealthChart"></canvas>
+            </div>
+        </div>
+
+        <!-- 세분화된 캐시플로우테이블 및 토글 컨트롤 버튼 -->
+        <div>
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b-2 border-gray-200 pb-2 mb-4 mt-2">
+                <h2 class="text-xl font-bold text-gray-800 mb-3 sm:mb-0">📅 연도별 캐시플로우 및 자산명세서</h2>
+                <div class="flex space-x-2">
+                    <button onclick="toggleTableCol('debt')" id="btn-toggle-debt" class="px-3 py-1.5 text-[11px] font-bold rounded bg-gray-100 text-gray-600 border border-gray-300 hover:bg-gray-200 transition shadow-sm">대출 상세 ➕</button>
+                    <button onclick="toggleTableCol('cf')" id="btn-toggle-cf" class="px-3 py-1.5 text-[11px] font-bold rounded bg-gray-100 text-gray-600 border border-gray-300 hover:bg-gray-200 transition shadow-sm">현금흐름 상세 ➕</button>
+                    <button onclick="toggleTableCol('inv')" id="btn-toggle-inv" class="px-3 py-1.5 text-[11px] font-bold rounded bg-gray-100 text-gray-600 border border-gray-300 hover:bg-gray-200 transition shadow-sm">투자자산 상세 ➕</button>
+                </div>
+            </div>
+            
+            <div class="bg-white border border-gray-200 rounded-2xl shadow-sm table-responsive">
+                <table id="mainTable" class="w-full text-sm text-right whitespace-nowrap table-collapsed-debt table-collapsed-cf table-collapsed-inv">
+                    <thead class="bg-gray-100 text-gray-700">
+                        <tr>
+                            <th class="p-3 font-semibold text-center border-b border-gray-200 rounded-tl-2xl">연차</th>
+                            <th class="p-3 font-semibold border-b border-gray-200">집값 / 소득<br><span class="text-xs text-gray-500 font-normal">(월 P&I 한도)</span></th>
+                            <th class="p-3 font-semibold border-b border-gray-200 text-brand bg-blue-50/30 col-debt-detail">A: 실거주<br><span class="text-xs text-gray-500 font-normal">(소멸 부채)</span></th>
+                            <th class="p-3 font-semibold border-b border-gray-200 text-purple-700 bg-purple-50/30 col-debt-detail">B: 투자 모기지<br><span class="text-xs text-purple-500 font-normal">(Term 병합)</span></th>
+                            <th class="p-3 font-semibold border-b border-gray-200 text-orange-600 bg-orange-50/30 border-r border-gray-100 col-debt-detail">C: HELOC<br><span class="text-xs text-orange-500 font-normal">(당해인출/잔액)</span></th>
+                            <th class="p-3 font-semibold border-b border-gray-200 text-red-700 bg-red-50 border-r border-gray-200">총 대출<br><span class="text-[10px] text-gray-500 font-normal">(A+B+C)</span></th>
+                            
+                            <th class="p-3 font-semibold border-b border-gray-200 text-left col-cf-detail">당해 발생 현금흐름<br><span class="text-xs text-gray-500 font-normal">(배당/환급/세금)</span></th>
+                            <th class="p-3 font-semibold border-b border-gray-200 text-green-700 bg-green-50 border-r border-gray-200">순 잉여현금<br><span class="text-[10px] text-gray-500 font-normal">(익년 재투자 대기)</span></th>
+                            
+                            <th class="p-3 font-semibold border-b border-gray-200 text-gray-600 border-r border-gray-200 text-center col-inv-detail">비과세 룸 현황<br><span class="text-[10px] text-gray-500 font-normal">당해 추가분 / 잔여</span></th>
+                            
+                            <th id="th-rank1" class="p-3 font-semibold border-b border-gray-200 text-center col-inv-detail">1순위</th>
+                            <th id="th-rank2" class="p-3 font-semibold border-b border-gray-200 text-center col-inv-detail">2순위</th>
+                            <th id="th-rank3" class="p-3 font-semibold border-b border-gray-200 border-r border-gray-200 text-center col-inv-detail">3순위</th>
+                            
+                            <th class="p-3 font-semibold border-b border-gray-200 text-blue-800 bg-blue-50 border-r border-gray-100">순 투자자산<br><span class="text-[10px] text-gray-500 font-normal">자산합계-잠재세금</span></th>
+                            <th class="p-3 font-semibold border-b border-gray-200 text-green-800 rounded-tr-2xl bg-gray-50">최종 순자산<br><span class="text-[10px] text-gray-500 font-normal">홈에퀴티+총투자</span></th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody" class="divide-y divide-gray-100"></tbody>
+                </table>
+            </div>
+            
+            <!-- 핵심 가정사항 Disclaimer 추가 -->
+            <div class="mt-8 bg-white border border-gray-200 rounded-2xl p-5 shadow-sm">
+                <h3 class="text-sm font-bold text-gray-800 mb-3 flex items-center"><span class="mr-2 text-lg">📌</span>시뮬레이터 핵심 가정 및 로직 안내 (Disclaimer)</h3>
+                <ul class="text-xs text-gray-600 space-y-2 list-disc pl-5">
+                    <li><strong class="text-gray-700">다음해 Lump-sum 재투자:</strong> 당해연도에 발생한 Non-Reg 배당수익 및 세금정산에 따른 환급액/납부액은 당해 연말에 잉여현금으로 정산되며, 현실의 세금환급 시점을 반영하여 다음 해 1월 초에 재투자전략에 따라 정해진 계좌순서로 재투자된다고 가정하였습니다.</li>
+                    <li><strong class="text-gray-700">비과세 계좌 DRIP:</strong> 단, TFSA와 RRSP 내에서 발생하는 배당금 및 자본수익은 외부로 인출되지 않고 해당계좌 내에서 당해 월복리로 자동 재투자(DRIP)된다고 가졍하였습니다.</li>
+                    <li><strong class="text-gray-700">월 단위(Monthly) 정산:</strong> 매월 발생하는 모기지 원금 상환액은 익월 초 즉시 HELOC으로 인출되어 Non-Reg 투자금으로 투입되며, 이자가 월 단위 복리로 누적 계산됩니다.</li>
+                    <li><strong class="text-gray-700">원리금 페이먼트 한도:</strong> 실제 매월 지출해야 하는 <strong>총 월 페이먼트(A 원리금 + B 원리금 + C 이자)</strong>가 설정된 한도(예: 당해 총소득의 45%)를 초과할 경우, 설정하신 옵션에 따라 홈에퀴티 추가대출을 중단하거나 이자한도 내에서만 추가대출을 허용합니다.</li>
+                    <li><strong class="text-gray-700">갱신(Renewal) 충격 방어:</strong> 모기지 갱신 주기마다 HELOC을 Term 대출(B)로 병합 시, 페이먼트 쇼크를 방지하기 위해 <strong>P&I 한도 내에서만 병합을 승인</strong>하고 남은 잔액은 HELOC(C)에 이자납부 형태로 안전하게 유지시킵니다.</li>
+                    <li><strong class="text-gray-700">현실적 세무정산 로직:</strong> 투자 우선순위 옵션에 따라 다음해 1월에 Lump-sum으로 RRSP에 불입된 금액은, 당해연도 소득공제에 즉시 반영되어 연말 세금 환급액(다음 해의 잉여현금)으로 계산하는 현실적인 현금흐름방식이 적용되었습니다.</li>
+                    <li><strong class="text-gray-700">미래 예상 한계세율 (잠재세금):</strong> 최종 스냅샷의 이연부채(잠재세금)는 사용자가 입력한 '미래 예상 한계세율'(은퇴 후 자산인출시 예상세율)을 바탕으로, Non-Reg 미실현 수익의 절반(50% Inclusion)과 RRSP 총 잔액(100% 과세)에 각각 곱하여 보수적으로 차감 반영하도록 계산되었습니다.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <div class="h-20"></div>
+</div>
+
+<script>
+    const fmt = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
+    let wealthChartInstance = null;
+    
+    // 테이블 컬럼 토글 UI 관리
+    let stateCols = { debt: false, cf: false, inv: false };
+    const btnLabels = {
+        debt: ['대출 상세 ➕', '대출 상세 ➖'],
+        cf: ['현금흐름 상세 ➕', '현금흐름 상세 ➖'],
+        inv: ['투자자산 상세 ➕', '투자자산 상세 ➖']
+    };
+
+    function toggleTableCol(type) {
+        stateCols[type] = !stateCols[type];
+        const table = document.getElementById('mainTable');
+        const btn = document.getElementById(`btn-toggle-${type}`);
+        
+        if(stateCols[type]) {
+            table.classList.remove(`table-collapsed-${type}`);
+            btn.innerText = btnLabels[type][1];
+            btn.classList.replace('bg-gray-100', 'bg-brand');
+            btn.classList.replace('text-gray-600', 'text-white');
+            btn.classList.replace('border-gray-300', 'border-brand');
+        } else {
+            table.classList.add(`table-collapsed-${type}`);
+            btn.innerText = btnLabels[type][0];
+            btn.classList.replace('bg-brand', 'bg-gray-100');
+            btn.classList.replace('text-white', 'text-gray-600');
+            btn.classList.replace('border-brand', 'border-gray-300');
+        }
+        setTimeout(sendHeight, 50);
+    }
+
+    function toggleSpouseInput() {
+        const isSingle = document.getElementById('maritalStatus').value === 'single';
+        document.getElementById('wrapperIncome2').style.display = isSingle ? 'none' : 'block';
+    }
+
+    function checkCRA() {
+        const nonRegYield = parseFloat(document.getElementById('nonRegYield').value);
+        const warning = document.getElementById('craWarning');
+        if(nonRegYield < 0.5) {
+            warning.classList.remove('hidden');
+        } else {
+            warning.classList.add('hidden');
+        }
+    }
+
+    function calcPmt(rate, balance, years) {
+        if(balance <= 0 || years <= 0) return 0;
+        if(rate === 0) return balance / (years * 12);
+        let r = rate / 100 / 12;
+        let n = years * 12;
+        return balance * (r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+    }
+
+    function calcTax(income) {
+        if(income <= 0) return 0;
+        let brackets = [
+            { limit: 45000, rate: 0.20 }, { limit: 90000, rate: 0.28 },
+            { limit: 120000, rate: 0.38 }, { limit: 170000, rate: 0.44 },
+            { limit: 250000, rate: 0.49 }, { limit: Infinity, rate: 0.535 }
+        ];
+        let tax = 0, prevLimit = 0;
+        for (let b of brackets) {
+            if (income > b.limit) { tax += (b.limit - prevLimit) * b.rate; prevLimit = b.limit; } 
+            else { tax += (income - prevLimit) * b.rate; break; }
+        }
+        return tax;
+    }
+
+    function getPersonTaxes(inc, div, capGain, deduct, rrspDeduct) {
+        let baseTax = calcTax(inc);
+        let deductedIncome = Math.max(0, inc - deduct - rrspDeduct); 
+        let taxAfterDeduct = calcTax(deductedIncome);
+        let refund = baseTax - taxAfterDeduct; 
+
+        let taxWithCap = calcTax(deductedIncome + capGain);
+        let capTax = taxWithCap - taxAfterDeduct;
+
+        let grossedUpDiv = div * 1.38;
+        let taxWithDiv = calcTax(deductedIncome + capGain + grossedUpDiv);
+        let grossDivTax = taxWithDiv - taxWithCap;
+        let dtc = grossedUpDiv * 0.27; 
+        let netDivTax = Math.max(0, grossDivTax - dtc); 
+
+        return { refund, capTax, netDivTax };
+    }
+
+    function calcIndividualTax(inc1, inc2, totalDiv, totalCapGain, totalDeduct, rrspContrib, isCouple) {
+        if(!isCouple) {
+            return getPersonTaxes(inc1, totalDiv, totalCapGain, totalDeduct, rrspContrib);
+        } else {
+            let p1 = getPersonTaxes(inc1, totalDiv / 2, totalCapGain / 2, totalDeduct / 2, rrspContrib / 2);
+            let p2 = getPersonTaxes(inc2, totalDiv / 2, totalCapGain / 2, totalDeduct / 2, rrspContrib / 2);
+            return {
+                divTax: p1.netDivTax + p2.netDivTax,
+                capTax: p1.capTax + p2.capTax,
+                refund: p1.refund + p2.refund
+            };
+        }
+    }
+
+    function sendHeight() {
+        if(window.parent) {
+            const height = document.documentElement.scrollHeight || document.body.scrollHeight;
+            window.parent.postMessage({ type: 'resize', height: height }, '*');
+        }
+    }
+
+    function runSimulation() {
+        checkCRA();
+
+        if(typeof gtag === 'function') {
+            gtag('event', 'run_simulation', { 'event_category': 'Engagement', 'event_label': 'Smith Maneuver Pro' });
+        }
+
+        const simYears = parseInt(document.getElementById('simYears').value) || 25;
+        const infRate = (parseFloat(document.getElementById('inflation').value) || 2.5) / 100;
+        const incomeGrowthRate = (parseFloat(document.getElementById('incomeGrowth').value) || 3.0) / 100;
+        const propAppr = (parseFloat(document.getElementById('propAppr').value) || 5.0) / 100;
+        
+        const isCouple = document.getElementById('maritalStatus').value === 'couple';
+        let income1 = parseFloat(document.getElementById('income1').value) || 0;
+        let income2 = isCouple ? (parseFloat(document.getElementById('income2').value) || 0) : 0;
+        let startTotalIncome = income1 + income2;
+        let previousYearIncome = startTotalIncome;
+        
+        let propVal = parseFloat(document.getElementById('propValue').value) || 0;
+        let mortA_bal = parseFloat(document.getElementById('mortA_bal').value) || 0;
+        const mortB_bal_initial = parseFloat(document.getElementById('mortB_bal').value) || 0;
+        let mortB_bal = mortB_bal_initial;
+        const mortRate = parseFloat(document.getElementById('mortRate').value) || 4.1;
+        const helocRate = parseFloat(document.getElementById('helocRate').value) || 4.95;
+        
+        const maxTdsLimit = (parseFloat(document.getElementById('maxTds').value) || 65) / 100;
+        const maxPaymentRatio = (parseFloat(document.getElementById('maxPaymentRatio').value) || 45) / 100;
+        const paymentCapAction = document.getElementById('paymentCapAction').value;
+        
+        const existingTFSA = parseFloat(document.getElementById('existingTFSA').value) || 0;
+        const existingNonReg = parseFloat(document.getElementById('existingNonReg').value) || 0;
+        const existingRRSP = parseFloat(document.getElementById('existingRRSP').value) || 0;
+        
+        let tfsa_room = parseFloat(document.getElementById('tfsaRoomTotal').value) || 0;
+        let rrsp_room = parseFloat(document.getElementById('rrspRoomTotal').value) || 0;
+        
+        const tfsaYield = (parseFloat(document.getElementById('tfsaYield').value) || 0) / 100;
+        const tfsaGrowth = (parseFloat(document.getElementById('tfsaGrowth').value) || 0) / 100;
+        const nonRegYield = (parseFloat(document.getElementById('nonRegYield').value) || 0) / 100;
+        const nonRegGrowth = (parseFloat(document.getElementById('nonRegGrowth').value) || 0) / 100;
+        const rrspYield = (parseFloat(document.getElementById('rrspYield').value) || 0) / 100;
+        const rrspGrowth = (parseFloat(document.getElementById('rrspGrowth').value) || 0) / 100;
+        
+        const refiCycle = parseInt(document.getElementById('refiCycle').value) || 5;
+        const helocConversion = document.getElementById('helocConversion').value;
+        const capGainMode = document.getElementById('capGainMode').value;
+        
+        const expectedMarginalTaxRate = (parseFloat(document.getElementById('expectedMarginalTaxRate').value) || 50) / 100;
+        const nonRegTaxRate = expectedMarginalTaxRate / 2;
+        const rrspTaxRate = expectedMarginalTaxRate;
+
+        const waterfallOption = document.getElementById('waterfallOption').value;
+        const waterfallOrder = waterfallOption.split('_');
+
+        const nameMap = { tfsa: 'TFSA', nonreg: 'Non-Reg', rrsp: 'RRSP' };
+        document.getElementById('th-rank1').innerHTML = `1순위: <span class="text-brand">${nameMap[waterfallOrder[0]]}</span>`;
+        document.getElementById('th-rank2').innerHTML = `2순위: <span class="text-brand">${nameMap[waterfallOrder[1]]}</span>`;
+        document.getElementById('th-rank3').innerHTML = `3순위: <span class="text-brand">${nameMap[waterfallOrder[2]]}</span>`;
+
+        let heloc_bal = 0;
+        let non_reg_principal = mortB_bal_initial + existingNonReg; 
+        let non_reg_bal = mortB_bal_initial + existingNonReg; 
+        let tfsa_bal = existingTFSA;
+        let rrsp_bal = existingRRSP;
+        
+        let base_annual_tfsa = isCouple ? 14000 : 7000;
+        let deferred_tax_liability_nonreg = 0;
+        let deferred_tax_liability_rrsp = 0;
+
+        let acc_princA = 0;
+        let acc_intExp = 0;
+        let acc_divInc = 0;
+        let acc_capGain = 0;
+        let acc_taxExp = 0;
+        let initial_investment = existingTFSA + existingNonReg + existingRRSP + mortB_bal_initial;
+
+        let carryover_tax_cf = 0;
+
+        let labels = [], dataNetWorth = [], dataPropVal = [], dataTFSA = [], dataNonReg = [], dataTotalDebt = [], dataRRSP = [], dataPendingCash = [];
+        let tableHTML = "";
+
+        let stress_rate = mortRate + 2.0;
+        let stress_pmt_A = calcPmt(stress_rate, mortA_bal, 25) * 12;
+        let stress_pmt_B = calcPmt(stress_rate, mortB_bal, 25) * 12;
+        let firstYearTDS = ((stress_pmt_A + stress_pmt_B) / startTotalIncome) * 100;
+        
+        const warningBox = document.getElementById('tdsWarning');
+        if (firstYearTDS > 44) {
+            document.getElementById('tdsValue').innerText = firstYearTDS.toFixed(1);
+            let discounted_rrsp = existingRRSP * 0.7;
+            let initial_qualifying_assets = discounted_rrsp + tfsa_bal + non_reg_bal;
+            let warnText = `총 유동자산이 $250,000에 도달하기 전까지는 일반 TDS 한도(44%)가 강제 적용되어 에퀴티 추출이 제한됩니다.`;
+            if (initial_qualifying_assets < 250000) {
+                warnText += `<br><span class="text-red-700 font-semibold mt-1 inline-block">[주의] 현재 자산(RRSP 30%할인)이 ${fmt.format(initial_qualifying_assets)}으로 25만불 미만이므로, 초반 에퀴티 추출은 거절됩니다.</span>`;
+            } else {
+                warnText = `현재 자산(${fmt.format(initial_qualifying_assets)})이 25만불을 초과하므로 HNW 심사를 통해 설정된 TDS(${maxTdsLimit*100}%) 한도까지 리파이낸스가 허용됩니다.`;
+            }
+            document.getElementById('tdsWarningText').innerHTML = warnText;
+            warningBox.classList.remove('hidden');
+        } else {
+            warningBox.classList.add('hidden');
+        }
+
+        // 연도별 루프
+        for (let year = 1; year <= simYears; year++) {
+            let current_year_tfsa_room_added = 0;
+            let current_year_rrsp_room_added = 0;
+            
+            if(year > 1) {
+                propVal *= (1 + propAppr);
+                income1 *= (1 + incomeGrowthRate);
+                income2 *= (1 + incomeGrowthRate);
+                base_annual_tfsa *= (1 + infRate);
+                current_year_tfsa_room_added = base_annual_tfsa;
+                tfsa_room += current_year_tfsa_room_added; 
+                
+                let rrsp_addition = previousYearIncome * 0.18;
+                let rrsp_cap = isCouple ? 64000 : 32000;
+                current_year_rrsp_room_added = Math.min(rrsp_addition, rrsp_cap);
+                rrsp_room += current_year_rrsp_room_added;
+            } else {
+                current_year_tfsa_room_added = tfsa_room; 
+                current_year_rrsp_room_added = rrsp_room;
+            }
+            
+            let currentTotalIncome = income1 + income2;
+            previousYearIncome = currentTotalIncome; 
+            
+            let tfsa_room_before_contrib = tfsa_room; 
+            let rrsp_room_before_contrib = rrsp_room; 
+
+            // 1월 1일: 전년도 세금 정산분(대기현금) 폭포수 재투자
+            let contribs = { tfsa: 0, rrsp: 0, nonreg: 0 };
+            if (carryover_tax_cf < 0) {
+                let shortfall = Math.abs(carryover_tax_cf);
+                if (non_reg_bal >= shortfall) {
+                    let ratio = shortfall / non_reg_bal;
+                    non_reg_principal -= (non_reg_principal * ratio); 
+                    non_reg_bal -= shortfall;
+                    contribs.nonreg = -shortfall;
+                } else {
+                    contribs.nonreg = -non_reg_bal;
+                    non_reg_bal = 0;
+                    non_reg_principal = 0;
+                }
+                carryover_tax_cf = 0;
+            } else if (carryover_tax_cf > 0) {
+                let remaining = carryover_tax_cf;
+                for(let target of waterfallOrder) {
+                    if (remaining <= 0) break;
+                    if (target === 'tfsa' && tfsa_room > 0) {
+                        let amt = Math.min(remaining, tfsa_room);
+                        contribs.tfsa = amt;
+                        remaining -= amt;
+                    } else if (target === 'rrsp' && rrsp_room > 0) {
+                        let amt = Math.min(remaining, rrsp_room);
+                        contribs.rrsp = amt;
+                        remaining -= amt;
+                    } else if (target === 'nonreg') {
+                        contribs.nonreg = remaining;
+                        remaining = 0;
+                    }
+                }
+                tfsa_bal += contribs.tfsa;
+                tfsa_room -= contribs.tfsa;
+                rrsp_bal += contribs.rrsp;
+                rrsp_room -= contribs.rrsp;
+                non_reg_bal += contribs.nonreg;
+                non_reg_principal += contribs.nonreg;
+                carryover_tax_cf = 0;
+            }
+
+            let remainYears = Math.max(1, 26 - year); 
+            let pmtA = calcPmt(mortRate, mortA_bal, remainYears);
+            
+            let current_payment_limit = (currentTotalIncome + (non_reg_bal * nonRegYield) + (tfsa_bal * tfsaYield) + (rrsp_bal * rrspYield)) * maxPaymentRatio;
+
+            // 1월 1일 연초 기준 전환 및 추출 알고리즘
+            let is_renewal_year = (year === 1 || (year > 1 && (year - 1) % refiCycle === 0));
+            let attempt_conversion = false;
+            let heloc_to_convert = 0;
+
+            if (helocConversion === 'yearly_10k' && heloc_bal >= 10000) {
+                attempt_conversion = true;
+                heloc_to_convert = heloc_bal;
+            } else if (helocConversion === 'on_renewal' && is_renewal_year) {
+                attempt_conversion = true;
+                heloc_to_convert = heloc_bal;
+            }
+
+            let equity_extracted = 0;
+            let refiStatus = "";
+            let applied_limit_badge = "";
+
+            if (is_renewal_year) {
+                let discounted_rrsp = (year === 1) ? (existingRRSP * 0.7) : (rrsp_bal * 0.7);
+                let current_assets = (year === 1) ? (discounted_rrsp + existingTFSA + existingNonReg) : (discounted_rrsp + tfsa_bal + non_reg_bal);
+                let effective_max_tds = (current_assets >= 250000) ? maxTdsLimit : 0.44;
+
+                let ltv_limit = propVal * 0.8;
+                let max_stress_pmt_allowed = currentTotalIncome * effective_max_tds;
+                let pmt_factor_stress = calcPmt(stress_rate, 1, 25) * 12; 
+                let max_debt_by_tds = max_stress_pmt_allowed / pmt_factor_stress;
+                
+                let actual_max_limit = Math.min(ltv_limit, max_debt_by_tds);
+                let current_debt = mortA_bal + mortB_bal + heloc_bal;
+
+                if (actual_max_limit > current_debt) {
+                    equity_extracted = actual_max_limit - current_debt;
+                } else if (year > 1) {
+                    refiStatus = '<br><span class="inline-block px-2 py-0.5 text-[10px] font-bold bg-gray-200 text-gray-700 rounded mt-1 shadow-sm border border-gray-300">한도초과(추출불가)</span>';
+                }
+                
+                // 총 대출 한도 뱃지 표기 로직 (갱신년도 한정)
+                let badge_text = "";
+                if (ltv_limit < max_debt_by_tds) {
+                    badge_text = "LTV 80% 적용";
+                } else {
+                    badge_text = (effective_max_tds === 0.44) ? "일반 TDS 44% 적용" : `HNW TDS ${(effective_max_tds*100).toFixed(0)}% 적용`;
+                }
+                applied_limit_badge = `<div class="inline-block px-1.5 py-0.5 mt-1 text-[10px] font-bold bg-white text-red-800 rounded border border-red-200 whitespace-nowrap shadow-sm">${badge_text}</div>`;
+            }
+
+            if (equity_extracted > 0 || heloc_to_convert > 0) {
+                let max_pmt_B = current_payment_limit - (pmtA * 12);
+                let pmt_factor_real = calcPmt(mortRate, 1, remainYears) * 12;
+                let max_B_bal_by_pmt = max_pmt_B > 0 ? (max_pmt_B / pmt_factor_real) : 0;
+
+                let desired_B_bal = mortB_bal + heloc_to_convert + equity_extracted;
+                let actual_new_B_bal = Math.min(desired_B_bal, max_B_bal_by_pmt);
+                actual_new_B_bal = Math.max(mortB_bal, actual_new_B_bal);
+
+                let new_total_debt = mortA_bal + mortB_bal + heloc_bal + equity_extracted;
+                mortB_bal = actual_new_B_bal;
+                heloc_bal = new_total_debt - mortA_bal - mortB_bal;
+
+                non_reg_principal += equity_extracted;
+                non_reg_bal += equity_extracted;
+
+                if (year > 1 && is_renewal_year && equity_extracted > 0) {
+                    if (actual_new_B_bal < desired_B_bal) {
+                        refiStatus = '<br><span class="inline-block px-2 py-0.5 text-[10px] font-bold bg-orange-100 text-orange-800 rounded mt-1 shadow-sm">P&I캡(잔액 HELOC유지)</span>';
+                    } else {
+                        refiStatus = '<br><span class="inline-block px-2 py-0.5 text-[10px] font-bold bg-blue-100 text-blue-800 rounded mt-1 shadow-sm">추출 및 병합완료</span>';
+                    }
+                } else if (attempt_conversion && heloc_to_convert > 0) {
+                    if (actual_new_B_bal < desired_B_bal) {
+                        refiStatus = '<br><span class="inline-block px-2 py-0.5 text-[10px] font-bold bg-orange-100 text-orange-800 rounded mt-1 shadow-sm">P&I캡(일부 Term전환)</span>';
+                    } else {
+                        refiStatus = '<br><span class="inline-block px-2 py-0.5 text-[10px] font-bold bg-blue-100 text-blue-800 rounded mt-1 shadow-sm">Term전환완료</span>';
+                    }
+                }
+            }
+
+            let pmtB = calcPmt(mortRate, mortB_bal, remainYears);
+
+            let rA = mortRate / 100 / 12;
+            let rB = mortRate / 100 / 12;
+            let rC = helocRate / 100 / 12;
+
+            let tfsa_y_m = tfsaYield / 12, tfsa_g_m = tfsaGrowth / 12;
+            let rrsp_y_m = rrspYield / 12, rrsp_g_m = rrspGrowth / 12;
+            let nonreg_y_m = nonRegYield / 12, nonreg_g_m = nonRegGrowth / 12;
+
+            let annual_interestA = 0, annual_princA = 0;
+            let annual_interestB = 0, annual_princB = 0;
+            let annual_interestC = 0, annual_heloc_draw = 0;
+
+            let annual_tfsa_div = 0, annual_tfsa_cap = 0;
+            let annual_rrsp_div = 0, annual_rrsp_cap = 0;
+            let annual_nonreg_div = 0, annual_nonreg_cap = 0;
+            let last_month_actual_pmt = 0;
+
+            // 12개월(월별) 이자 발생 및 복리 수익 엔진
+            for (let m = 0; m < 12; m++) {
+                // TFSA & RRSP: DRIP (월복리 즉각 가산)
+                let t_div = tfsa_bal * tfsa_y_m;
+                let t_cap = tfsa_bal * tfsa_g_m;
+                tfsa_bal += (t_div + t_cap);
+                annual_tfsa_div += t_div;
+                annual_tfsa_cap += t_cap;
+
+                let r_div = rrsp_bal * rrsp_y_m;
+                let r_cap = rrsp_bal * rrsp_g_m;
+                rrsp_bal += (r_div + r_cap);
+                annual_rrsp_div += r_div;
+                annual_rrsp_cap += r_cap;
+
+                // NonReg: 자본성장분만 원금가산, 배당은 잉여현금으로 분리(DRIP 아님)
+                let n_div = non_reg_bal * nonreg_y_m;
+                let n_cap = non_reg_bal * nonreg_g_m;
+                annual_nonreg_div += n_div;
+                annual_nonreg_cap += n_cap;
+
+                // 모기지 월 상환
+                let iA = mortA_bal > 0 ? mortA_bal * rA : 0;
+                let pA = mortA_bal > 0 ? Math.min(pmtA - iA, mortA_bal) : 0;
+                mortA_bal -= pA;
+                annual_interestA += iA;
+                annual_princA += pA;
+
+                let iB = mortB_bal > 0 ? mortB_bal * rB : 0;
+                let pB = mortB_bal > 0 ? Math.min(pmtB - iB, mortB_bal) : 0;
+                mortB_bal -= pB;
+                annual_interestB += iB;
+                annual_princB += pB;
+
+                let iC = heloc_bal * rC;
+                annual_interestC += iC;
+
+                let draw_m = pA + pB;
+                let monthly_limit = current_payment_limit / 12;
+                let actual_m_pmt = pmtA + pmtB + iC;
+                last_month_actual_pmt = actual_m_pmt; 
+
+                if (paymentCapAction === 'stop') {
+                    let available_m = monthly_limit - actual_m_pmt;
+                    if (available_m <= 0) {
+                        draw_m = 0;
+                    } else {
+                        let max_safe_draw = available_m / rC; 
+                        draw_m = Math.min(draw_m, max_safe_draw);
+                    }
+                }
+                
+                heloc_bal += draw_m;
+                annual_heloc_draw += draw_m;
+
+                // NonReg 투자 원금가산 (배당 제외)
+                non_reg_bal += (n_cap + draw_m); 
+                non_reg_principal += draw_m; 
+                if(capGainMode === 'annual') {
+                    non_reg_principal += n_cap; 
+                }
+            }
+
+            acc_princA += annual_princA;
+            acc_intExp += (annual_interestB + annual_interestC);
+            acc_divInc += (annual_nonreg_div + annual_tfsa_div + annual_rrsp_div);
+            acc_capGain += (annual_nonreg_cap + annual_tfsa_cap + annual_rrsp_cap);
+
+            let total_unrealized_gain = non_reg_bal - non_reg_principal;
+            let deductible_interest = annual_interestB + annual_interestC; 
+            
+            let realized_cap_gain = 0;
+            if(capGainMode === 'annual') {
+                realized_cap_gain = annual_nonreg_cap * 0.5; 
+                deferred_tax_liability_nonreg = 0;
+            } else {
+                deferred_tax_liability_nonreg = total_unrealized_gain > 0 ? (total_unrealized_gain * nonRegTaxRate) : 0;
+            }
+            deferred_tax_liability_rrsp = rrsp_bal * rrspTaxRate; 
+
+            // 연말 세금 계산 엔진
+            let taxes = calcIndividualTax(income1, income2, annual_nonreg_div, realized_cap_gain, deductible_interest, contribs.rrsp, isCouple);
+            
+            // 배당금을 포함한 당해 세금 정산 결과 (이 값이 다음해 1월의 대기현금이 됨)
+            let net_tax_cf = annual_nonreg_div + taxes.refund - taxes.divTax - taxes.capTax;
+            let pending_cash_for_next_year = net_tax_cf;
+
+            acc_taxExp += (taxes.divTax + taxes.capTax);
+
+            let total_loan = mortA_bal + mortB_bal + heloc_bal;
+            let gross_invest = tfsa_bal + non_reg_bal + rrsp_bal;
+            let total_potential_tax = deferred_tax_liability_nonreg + deferred_tax_liability_rrsp;
+            let net_invest = gross_invest - total_potential_tax;
+            // 순자산 계산에 다음해 대기현금을 포함
+            let net_worth = (propVal - total_loan) + net_invest + pending_cash_for_next_year;
+
+            labels.push(`${year}년`);
+            dataNetWorth.push(net_worth);
+            dataPropVal.push(propVal);
+            dataTFSA.push(tfsa_bal);
+            dataRRSP.push(rrsp_bal);
+            dataNonReg.push(non_reg_bal);
+            dataPendingCash.push(pending_cash_for_next_year);
+            dataTotalDebt.push(total_loan); 
+
+            let colData = {};
+            colData['tfsa'] = `<div class="text-[11px] font-bold text-orange-600">+${fmt.format(contribs.tfsa)}</div><div class="text-[10px] text-gray-500 mt-1">누적: ${fmt.format(tfsa_bal)}</div>`;
+            colData['rrsp'] = `<div class="text-[11px] font-bold text-green-700">+${fmt.format(contribs.rrsp)}</div><div class="text-[10px] text-gray-500 mt-1">누적: ${fmt.format(rrsp_bal)}</div><div class="text-[9px] text-red-400">세금: -${fmt.format(deferred_tax_liability_rrsp)}</div>`;
+            colData['nonreg'] = `<div class="text-[11px] font-bold ${contribs.nonreg >= 0 ? 'text-purple-700' : 'text-red-700'}">${contribs.nonreg >= 0 ? '+' : ''}${fmt.format(contribs.nonreg)}</div><div class="text-[10px] text-gray-500 mt-1">누적: ${fmt.format(non_reg_bal)}</div><div class="text-[9px] text-red-400">세금: -${fmt.format(deferred_tax_liability_nonreg)}</div>`;
+
+            let rank1Html = `<td class="p-3 text-center bg-white border-r border-gray-100 col-inv-detail">${colData[waterfallOrder[0]]}</td>`;
+            let rank2Html = `<td class="p-3 text-center bg-white border-r border-gray-100 col-inv-detail">${colData[waterfallOrder[1]]}</td>`;
+            let rank3Html = `<td class="p-3 text-center bg-white border-r border-gray-200 col-inv-detail">${colData[waterfallOrder[2]]}</td>`;
+
+            tableHTML += `<tr class="hover:bg-gray-50 transition border-b border-gray-100">
+                <td class="p-3 text-center border-r border-gray-100 bg-white">
+                    <div class="font-semibold text-gray-800">${year}년</div>
+                </td>
+                
+                <td class="p-3">
+                    <div class="font-semibold text-gray-700" title="집값">${fmt.format(propVal)}</div>
+                    <div class="text-[10px] text-gray-500 mt-0.5">소득: ${fmt.format(currentTotalIncome)}</div>
+                    <div class="text-[10px] text-gray-500">P&I캡: ${fmt.format(current_payment_limit)}/년</div>
+                </td>
+                
+                <td class="p-3 bg-blue-50/30 col-debt-detail">
+                    <div class="text-brand font-bold">${fmt.format(mortA_bal)}</div>
+                    <div class="text-[10px] text-gray-400 mt-0.5 font-normal">원금상환: -${fmt.format(annual_princA)}</div>
+                    <div class="text-[10px] text-red-400 font-normal">당해이자: -${fmt.format(annual_interestA)}</div>
+                </td>
+                
+                <td class="p-3 bg-purple-50/30 col-debt-detail">
+                    <div class="text-purple-700 font-bold">${fmt.format(mortB_bal)}</div>
+                    <div class="text-[10px] text-red-400 mt-0.5 font-normal">당해이자: -${fmt.format(annual_interestB)}</div>
+                    <div>${refiStatus}</div>
+                </td>
+
+                <td class="p-3 bg-orange-50/30 border-r border-gray-100 col-debt-detail">
+                    <div class="text-orange-500 text-xs mb-0.5">+${fmt.format(annual_heloc_draw)}</div>
+                    <div class="font-bold text-orange-600">${fmt.format(heloc_bal)}</div>
+                    <div class="text-[10px] text-red-400 mt-0.5 font-normal">당해이자: -${fmt.format(annual_interestC)}</div>
+                </td>
+                
+                <td class="p-3 bg-red-50 border-r border-gray-200">
+                    <div class="font-bold text-red-700">${fmt.format(total_loan)}</div>
+                    <div class="text-[10px] text-red-500 mt-1 font-normal" title="A+B P&I + C Interest">월 총 페이먼트: ${fmt.format(last_month_actual_pmt)}</div>
+                    ${applied_limit_badge}
+                </td>
+
+                <td class="p-3 text-left col-cf-detail">
+                    <div class="text-blue-600 text-[10px] font-semibold">+ 배당: ${fmt.format(annual_nonreg_div)}</div>
+                    <div class="text-green-600 text-[10px] font-semibold">+ 환급: ${fmt.format(taxes.refund)}</div>
+                    <div class="text-red-500 text-[10px] font-semibold">- 세금: ${fmt.format(taxes.divTax + taxes.capTax)}</div>
+                </td>
+                
+                <td class="p-3 bg-green-50 text-center border-r border-gray-200">
+                    <div class="font-semibold text-green-700 text-sm">${fmt.format(net_tax_cf)}</div>
+                </td>
+                
+                <td class="p-3 text-center border-r border-gray-200 col-inv-detail">
+                    <div class="text-[10px] text-orange-600 font-bold">TFSA: +${fmt.format(current_year_tfsa_room_added)} / 잔여: ${fmt.format(Math.max(0, tfsa_room_before_contrib))}</div>
+                    <div class="text-[10px] text-green-700 font-bold mt-1">RRSP: +${fmt.format(current_year_rrsp_room_added)} / 잔여: ${fmt.format(Math.max(0, rrsp_room_before_contrib))}</div>
+                </td>
+                
+                ${rank1Html}
+                ${rank2Html}
+                ${rank3Html}
+                
+                <td class="p-3 bg-blue-50 text-center border-r border-gray-100">
+                    <div class="font-semibold text-blue-800 text-sm">${fmt.format(net_invest)}</div>
+                </td>
+                
+                <td class="p-3 bg-gray-50 text-right">
+                    <div class="font-black text-green-700 text-sm tracking-tighter drop-shadow-sm">${fmt.format(net_worth)}</div>
+                </td>
+            </tr>`;
+            
+            carryover_tax_cf = pending_cash_for_next_year; 
+        }
+
+        document.getElementById('tableBody').innerHTML = tableHTML;
+        
+        let lastIdx = simYears - 1;
+        document.getElementById('resGross').innerText = fmt.format(dataPropVal[lastIdx] + dataTFSA[lastIdx] + dataRRSP[lastIdx] + dataNonReg[lastIdx] + dataPendingCash[lastIdx]);
+        document.getElementById('resDebt').innerText = fmt.format(dataTotalDebt[lastIdx]);
+        let final_deferred_tax = (dataRRSP[lastIdx] * rrspTaxRate) + (dataNonReg[lastIdx] > non_reg_principal ? (dataNonReg[lastIdx] - non_reg_principal) * nonRegTaxRate : 0);
+        document.getElementById('resTaxDebt').innerText = fmt.format(final_deferred_tax);
+        document.getElementById('resNet').innerText = fmt.format(dataNetWorth[lastIdx]);
+
+        document.getElementById('resInitPrinc').innerText = fmt.format(initial_investment);
+        document.getElementById('resMortPaid').innerText = fmt.format(acc_princA);
+        document.getElementById('resTotalCapGain').innerText = fmt.format(acc_capGain);
+        document.getElementById('resTotalDivInc').innerText = fmt.format(acc_divInc);
+        document.getElementById('resTotalIntExp').innerText = fmt.format(acc_intExp);
+        document.getElementById('resTotalTax').innerText = fmt.format(acc_taxExp);
+
+        document.getElementById('results').classList.remove('hidden');
+        renderChart(labels, dataNetWorth, dataPropVal, dataTFSA, dataRRSP, dataNonReg, dataTotalDebt);
+
+        setTimeout(sendHeight, 100);
+    }
+
+    function renderChart(labels, netWorth, propVal, tfsa, rrsp, nonReg, totalDebt) {
+        const ctx = document.getElementById('wealthChart').getContext('2d');
+        if(wealthChartInstance) wealthChartInstance.destroy();
+
+        Chart.defaults.font.family = "'Noto Sans KR', sans-serif";
+
+        wealthChartInstance = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [
+                    { label: '실질 순자산 (Net Worth)', data: netWorth, borderColor: '#16a34a', backgroundColor: 'rgba(22, 163, 74, 0.1)', borderWidth: 3, fill: true, tension: 0.3, pointRadius: 3 },
+                    { label: '부동산 가치', data: propVal, borderColor: '#3b82f6', borderDash: [5, 5], borderWidth: 2, fill: false, tension: 0.3, pointRadius: 0 },
+                    { label: 'Non-Reg 투자금', data: nonReg, borderColor: '#7e22ce', borderWidth: 2, fill: false, tension: 0.3, pointRadius: 2 },
+                    { label: 'RRSP 자산', data: rrsp, borderColor: '#10b981', borderWidth: 2, fill: false, tension: 0.3, pointRadius: 2 },
+                    { label: 'TFSA 비과세', data: tfsa, borderColor: '#f59e0b', borderWidth: 2, fill: false, tension: 0.3, pointRadius: 2 },
+                    { label: '총 대출 (A+B+C)', data: totalDebt, borderColor: '#dc2626', borderWidth: 2, fill: false, tension: 0.3, pointRadius: 0 }
+                ]
+            },
+            options: {
+                responsive: true, 
+                maintainAspectRatio: false,
+                interaction: { mode: 'index', intersect: false },
+                plugins: { 
+                    tooltip: { 
+                        callbacks: { label: function(context) { return context.dataset.label + ': ' + fmt.format(context.parsed.y); } },
+                        backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                        titleFont: { size: 14, weight: 'bold' },
+                        bodyFont: { size: 13 },
+                        padding: 12,
+                        cornerRadius: 8
+                    },
+                    legend: {
+                        position: 'top',
+                        labels: { font: { size: 12, weight: '600' }, usePointStyle: true, padding: 20 }
+                    }
+                },
+                scales: { 
+                    x: { grid: { display: false } },
+                    y: { 
+                        grid: { color: '#f3f4f6' },
+                        border: { display: false },
+                        ticks: { callback: function(value) { return '$' + (value/10000).toFixed(0) + '만'; }, font: { size: 11 } } 
+                    } 
+                }
+            }
+        });
+    }
+
+    window.addEventListener('load', sendHeight);
+</script>
+
+</body>
+</html>
