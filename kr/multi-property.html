@@ -1,0 +1,425 @@
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --ajae-navy: #0F2A4A;
+    --ajae-gold: #D4AF37;
+    --ajae-light-bg: #F8FAFC;
+    --ajae-text-dark: #1E293B;
+    --ajae-border-color: #E2E8F0;
+  }
+
+  .ajae-wrapper {
+    max-width: 920px;
+    margin: 30px auto;
+    font-family: 'Noto Sans KR', sans-serif;
+    background: var(--ajae-light-bg);
+    padding: 30px;
+    border-radius: 12px;
+    color: var(--ajae-text-dark);
+    box-shadow: 0 10px 25px rgba(15, 42, 74, 0.08);
+  }
+  .ajae-wrapper h2 {
+    color: var(--ajae-navy);
+    text-align: center;
+    font-weight: 700;
+    margin-bottom: 30px;
+    font-size: 26px;
+    border-bottom: 3px solid var(--ajae-gold);
+    padding-bottom: 15px;
+    display: inline-block;
+    width: 100%;
+  }
+  .ajae-card {
+    background: #FFFFFF;
+    padding: 24px;
+    margin-bottom: 25px;
+    border-radius: 8px;
+    border: 1px solid var(--ajae-border-color);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.01);
+  }
+  .ajae-card h3 {
+    margin-top: 0;
+    color: var(--ajae-navy);
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-bottom: 15px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; }
+  
+  .input-block { margin-bottom: 12px; }
+  .input-block label { display: block; font-weight: 500; margin-bottom: 6px; font-size: 13px; color: #475569; }
+  .input-block input, .input-block select {
+    width: 100%; padding: 11px; border: 1px solid #CBD5E1; border-radius: 6px;
+    font-family: 'Noto Sans KR', sans-serif; font-size: 14px; color: var(--ajae-text-dark);
+    box-sizing: border-box; transition: all 0.2s;
+  }
+  .input-block input:focus, .input-block select:focus { border-color: var(--ajae-navy); outline: none; box-shadow: 0 0 0 3px rgba(15,42,74,0.1); }
+  
+  .prop-box { border-left: 5px solid var(--ajae-navy); background: #FFFFFF; padding: 20px; margin-bottom: 20px; position: relative; border-radius: 0 8px 8px 0; border-top: 1px solid var(--ajae-border-color); border-right: 1px solid var(--ajae-border-color); border-bottom: 1px solid var(--ajae-border-color);}
+  .prop-box.subject-style { border-left-color: var(--ajae-gold); background: #FFFDF6; }
+  .remove-node-btn { position: absolute; top: 15px; right: 15px; background: #EF4444; color: white; border: none; padding: 6px 14px; cursor: pointer; border-radius: 4px; font-size: 12px; font-weight: 500; }
+  
+  .submit-trigger-btn { background: var(--ajae-navy); color: white; border: none; padding: 16px 20px; font-size: 18px; cursor: pointer; border-radius: 6px; width: 100%; font-weight: 700; transition: background 0.2s; margin-top: 10px; letter-spacing: 0.5px; }
+  .submit-trigger-btn:hover { background: #0A1D33; }
+  .append-node-btn { background: #FFFFFF; color: var(--ajae-navy); border: 1px solid var(--ajae-navy); padding: 11px 18px; cursor: pointer; border-radius: 6px; margin-bottom: 20px; font-weight: 500; transition: all 0.2s; display: inline-flex; align-items: center; gap: 6px; }
+  .append-node-btn:hover { background: var(--ajae-navy); color: white; }
+  
+  #calc-output-anchor { margin-top: 30px; display: none; }
+  .lender-result-card { background: white; border-top: 4px solid var(--ajae-navy); padding: 22px; margin-bottom: 18px; border-radius: 6px; box-shadow: 0 4px 15px rgba(0,0,0,0.04); border-left: 1px solid var(--ajae-border-color); border-right: 1px solid var(--ajae-border-color); border-bottom: 1px solid var(--ajae-border-color); }
+  .lender-result-card.rank-1 { border-top-color: var(--ajae-gold); background: #FCFAf2; }
+  .final-amount-display { font-size: 32px; font-weight: 700; color: var(--ajae-navy); margin: 8px 0; letter-spacing: -0.5px; }
+  .lender-result-card.rank-1 .final-amount-display { color: #B38F1D; }
+  
+  .details-summary { cursor: pointer; font-size: 13px; font-weight: 500; color: var(--ajae-navy); margin-top: 12px; outline: none; user-select: none; }
+  .analysis-breakdown { background: #F8FAFC; padding: 15px; border-radius: 6px; margin-top: 10px; border: 1px solid var(--ajae-border-color); }
+  
+  .math-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px dashed #E2E8F0; }
+  .math-row:last-child { border-bottom: none; }
+  .math-label { flex: 1.5; font-size: 13px; color: #475569; font-weight: 500; }
+  .math-formula { flex: 2; font-size: 12px; color: #64748B; font-family: monospace; background: #F1F5F9; padding: 2px 6px; border-radius: 4px; text-align: center; line-height: 1.4; }
+  .math-result { flex: 1; text-align: right; font-size: 14px; font-weight: 700; color: var(--ajae-navy); }
+  .math-section-title { font-size: 14px; font-weight: 700; color: var(--ajae-navy); margin: 15px 0 5px 0; background: #E2E8F0; padding: 8px; border-radius: 4px; border-left: 3px solid var(--ajae-gold); }
+  .sub-detail-box { background: #FFFFFF; border: 1px solid #E2E8F0; padding: 8px 12px; margin: 4px 0 8px 12px; border-radius: 5px; font-size: 12.5px; }
+</style>
+
+<div class="ajae-wrapper">
+  <h2>Maximum Purchasing Power Calculator</h2>
+  
+  <div class="ajae-card">
+    <h3>👤 Client & Mortgage Profile</h3>
+    <div class="grid-3">
+      <div class="input-block">
+        <label>연간 근로 / 사업 총 소득 ($)</label>
+        <input type="number" id="baseIncome" value="120000">
+      </div>
+      <div class="input-block">
+        <label>월 기타 부채 총액 ($)</label>
+        <input type="number" id="otherDebts" value="600">
+      </div>
+      <div class="input-block">
+        <label>모기지 대출 조건 선택</label>
+        <select id="isInsured">
+          <option value="false">Uninsured (다운페이 20% 이상)</option>
+          <option value="true">Insured (다운페이 20% 미만)</option>
+        </select>
+      </div>
+    </div>
+    <div class="grid-3" style="grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));">
+      <div class="input-block">
+        <label>스트레스 테스트 이자율 (Qualifying Rate %)</label>
+        <input type="number" id="qualifyingRate" value="6.79" step="0.01">
+      </div>
+      <div class="input-block">
+        <label>상환 기간 설정 (Amortization)</label>
+        <select id="amortization">
+          <option value="30" selected>30년 상환 (Uninsured 용)</option>
+          <option value="25">25년 상환 (Insured 필수)</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="ajae-card">
+    <h3>🏢 Property Portfolio</h3>
+    <div id="properties-container">
+      
+      <div class="prop-box subject-style" id="subject-node">
+        <h4 style="margin-top:0; color:var(--ajae-navy); font-size:15px; margin-bottom:15px;">🎯 매입 대상 부동산 (Subject Property)</h4>
+        <input type="hidden" class="prop-role" value="Subject">
+        <input type="hidden" class="prop-pi" value="0">
+        
+        <div class="grid-3" style="grid-template-columns: 1fr 1fr;">
+          <div class="input-block">
+            <label>해당 물건 거주 형태 구분</label>
+            <select class="prop-occupied" id="subject-occupancy-trigger">
+              <option value="true">Owner-Occupied (실거주 + 베이스먼트 렌트 등)</option>
+              <option value="false">Rental (100% 순수 투자용 임대 주택)</option>
+            </select>
+          </div>
+          <div class="input-block">
+            <label>예상 총 월 렌트 수익 ($)</label>
+            <input type="number" class="prop-rent" value="1500" placeholder="렌트 없을시 0">
+          </div>
+        </div>
+        
+        <div class="grid-4">
+          <div class="input-block">
+            <label>연간 예상 재산세 ($)</label>
+            <input type="number" class="prop-tax" value="3600">
+          </div>
+          <div class="input-block">
+            <label>월 예상 관리비 ($)</label>
+            <input type="number" class="prop-strata" value="0">
+          </div>
+          <div class="input-block">
+            <label>월 예상 난방비 ($)</label>
+            <input type="number" class="prop-heat" value="100">
+          </div>
+        </div>
+      </div>
+
+    </div>
+    
+    <button type="button" class="append-node-btn" onclick="appendRentalProperty()">+ 기존 보유 주택 추가 (Non-Subject)</button>
+  </div>
+
+  <button type="button" class="submit-trigger-btn" onclick="executePowerCalculation()">최대 매입 가능 모기지 금액 산출 🚀</button>
+
+  <div id="calc-output-anchor"></div>
+</div>
+
+<template id="rental-node-template">
+  <div class="prop-box non-subject-node">
+    <button type="button" class="remove-node-btn" onclick="this.parentElement.remove()">삭제</button>
+    <h4 style="margin-top:0; color:var(--ajae-navy); font-size:15px; margin-bottom:15px;">기존 보유 부동산 (Non-Subject)</h4>
+    <input type="hidden" class="prop-role" value="Non-Subject">
+    
+    <div class="grid-3">
+      <div class="input-block">
+        <label>본인 거주 여부</label>
+        <select class="prop-occupied">
+          <option value="false">Rental (100% 임대용 투자 주택)</option>
+          <option value="true">Owner-Occupied (현재 본인 거주중)</option>
+        </select>
+      </div>
+      <div class="input-block">
+        <label>현재 세금 신고 이력</label>
+        <select class="prop-tax-history">
+          <option value="2">2년 이상 정상 세금 신고 완료</option>
+          <option value="1">1년 세금 신고 완료</option>
+          <option value="0">신고 내역 없음 (임대차 계약서만 존재)</option>
+        </select>
+      </div>
+      <div class="input-block">
+        <label>현재 월 렌트 소득 ($)</label>
+        <input type="number" class="prop-rent" value="2500">
+      </div>
+    </div>
+    
+    <div class="grid-4">
+      <div class="input-block">
+        <label>월 모기지 원리금 ($)</label>
+        <input type="number" class="prop-pi" value="1500">
+      </div>
+      <div class="input-block">
+        <label>연간 재산세 ($)</label>
+        <input type="number" class="prop-tax" value="2400">
+      </div>
+      <div class="input-block">
+        <label>월 관리비 (Strata, $)</label>
+        <input type="number" class="prop-strata" value="300">
+      </div>
+      <div class="input-block">
+        <label>월 난방비 (Heat, $)</label>
+        <input type="number" class="prop-heat" value="75">
+      </div>
+    </div>
+    <input type="hidden" class="prop-has-lease" value="true">
+  </div>
+</template>
+
+<script>
+  const TARGET_GAS_API = "https://script.google.com/macros/s/AKfycbxRsBlhbRlWhTmUelgdIhVdY9nJTDe_zzQgnC17ZOy9A0kzMNcOKmG0o_fe5zzEnSeXaQ/exec";
+
+  function currencyFormatter(val) {
+    const num = Number(val);
+    if (isNaN(num) || num === undefined || num === null) return "$0";
+    return new Intl.NumberFormat('en-CA', { style: 'currency', currency: 'CAD', maximumFractionDigits: 0 }).format(num);
+  }
+
+  function appendRentalProperty() {
+    const targetContainer = document.getElementById('properties-container');
+    const blueprintTemplate = document.getElementById('rental-node-template');
+    const importedClone = blueprintTemplate.content.cloneNode(true);
+    
+    const subjectIsOccupied = document.getElementById('subject-occupancy-trigger').value === "true";
+    const totalExistingExtraNodes = document.querySelectorAll('.non-subject-node');
+    const targetedSelectElement = importedClone.querySelector('.prop-occupied');
+    
+    if (subjectIsOccupied) {
+      targetedSelectElement.value = "false";
+    } else {
+      let isAnyNodeOccupied = false;
+      totalExistingExtraNodes.forEach(node => {
+        if (node.querySelector('.prop-occupied').value === "true") isAnyNodeOccupied = true;
+      });
+      targetedSelectElement.value = (!isAnyNodeOccupied && totalExistingExtraNodes.length === 0) ? "true" : "false";
+    }
+    
+    targetContainer.appendChild(importedClone);
+  }
+
+  async function executePowerCalculation() {
+    const displayBox = document.getElementById('calc-output-anchor');
+    displayBox.style.display = 'block';
+    displayBox.innerHTML = '<div style="text-align:center; padding: 30px; font-weight:500; color:var(--ajae-navy);">금융 데이터 분석 및 최적 한도를 계산하는 중입니다...</div>';
+
+    const compiledPayload = {
+      clientProfile: {
+        annualBaseIncome: document.getElementById('baseIncome').value || 0,
+        monthlyOtherDebts: document.getElementById('otherDebts').value || 0,
+        isInsured: document.getElementById('isInsured').value === "true",
+        qualifyingRate: document.getElementById('qualifyingRate').value || 6.79,
+        amortization: document.getElementById('amortization').value || 30
+      },
+      properties: []
+    };
+
+    document.querySelectorAll('.prop-box').forEach((block, idx) => {
+      compiledPayload.properties.push({
+        id: "property_node_" + idx,
+        propertyRole: block.querySelector('.prop-role').value,
+        isOwnerOccupied: block.querySelector('.prop-occupied').value === "true",
+        grossRent: block.querySelector('.prop-rent').value || 0,
+        mortgagePI: block.querySelector('.prop-pi') ? block.querySelector('.prop-pi').value : 0,
+        annualPropertyTax: block.querySelector('.prop-tax').value || 0,
+        strataFee: block.querySelector('.prop-strata').value || 0,
+        heat: block.querySelector('.prop-heat').value || 0,
+        taxReportYears: block.querySelector('.prop-tax-history') ? block.querySelector('.prop-tax-history').value : 0,
+        hasLeaseAgreement: block.querySelector('.prop-has-lease') ? block.querySelector('.prop-has-lease').value === "true" : true
+      });
+    });
+
+    try {
+      const serverResponse = await fetch(TARGET_GAS_API, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify(compiledPayload)
+      });
+      
+      const convertedText = await serverResponse.text();
+      let parsedJson = JSON.parse(convertedText);
+      
+      if(parsedJson.status === "success" && parsedJson.bestLenders.length > 0) {
+        let UI_HTML_Buffer = `<h3 style="color:var(--ajae-navy); font-size:20px; font-weight:700; margin-bottom:20px; text-align:center;">📊 금융기관별 최대 승인 가능 한도</h3>`;
+        
+        parsedJson.bestLenders.forEach((lender, seq) => {
+          if(lender.maxLoanAmount <= 0) return;
+          
+          let cardThemeStyle = seq === 0 ? "lender-result-card rank-1" : "lender-result-card";
+          let premiumBadge = seq === 0 ? "🏆 Mortgage Ajae 최적 매칭 옵션" : `안전 대출 옵션 ${seq+1}`;
+          
+          // 📌 기존 부동산들의 상세 연산식을 HTML 블록으로 동적 빌드
+          let nonSubjectHTMLBreakdown = "";
+          if (lender.nonSubjectDetails && lender.nonSubjectDetails.length > 0) {
+            lender.nonSubjectDetails.forEach((ns, nsIdx) => {
+              if (ns.isOffset) {
+                let limitNotice = (!ns.allowsSurplus && ns.netValue > 0) ? " <span style='color:#7f8c8d; font-size:11px;'>(렌더 규정상 Surplus 불허로 $0 처리됨)</span>" : "";
+                nonSubjectHTMLBreakdown += `
+                  <div class="sub-detail-box">
+                    <strong>기존 보유 주택 #${nsIdx + 1} (Offset 적용):</strong><br>
+                    • 인정 렌트비: ${currencyFormatter(ns.grossRent)} × ${ns.rentRatio}% = <strong>${currencyFormatter(ns.grossRent * (ns.rentRatio/100))}</strong><br>
+                    • 총 유지 비용: <strong>${currencyFormatter(ns.expenses)}</strong><br>
+                    • 상계 결과(Net): ${currencyFormatter(ns.grossRent * (ns.rentRatio/100))} - ${currencyFormatter(ns.expenses)} = <strong>${currencyFormatter(ns.netValue)}</strong><br>
+                    ${ns.netValue > 0 ? `➡️ <span style='color:#27ae60; font-weight:bold;'>소득 합산(Surplus): +${currencyFormatter(ns.finalSurplus)}</span>${limitNotice}` : `➡️ <span style='color:#c0392b; font-weight:bold;'>부채 가산(Shortfall): +${currencyFormatter(ns.finalShortfall)}</span>`}
+                  </div>`;
+              } else {
+                nonSubjectHTMLBreakdown += `
+                  <div class="sub-detail-box">
+                    <strong>기존 보유 주택 #${nsIdx + 1} (Addback 또는 자가거주 적용):</strong><br>
+                    • 소득 가산: ${currencyFormatter(ns.grossRent)} × ${ns.rentRatio}% = <span style='color:#27ae60; font-weight:bold;'>+${currencyFormatter(ns.finalSurplus)}</span><br>
+                    • 부채 가산: <span style='color:#c0392b; font-weight:bold;'>+${currencyFormatter(ns.finalShortfall)}</span>
+                  </div>`;
+              }
+            });
+          } else {
+            nonSubjectHTMLBreakdown = "<div style='padding-left:12px; color:#aaa;'>- 보유 중인 기존 부동산 없음</div>";
+          }
+
+          UI_HTML_Buffer += `
+            <div class="${cardThemeStyle}">
+              <div style="font-size:12px; font-weight:700; color:#64748B; margin-bottom:4px;">${premiumBadge}</div>
+              <strong style="font-size:20px; color:var(--ajae-navy); font-weight:700;">${lender.lenderName}</strong> 
+              <span style="font-size:12px; background:#F1F5F9; padding:4px 10px; border-radius:12px; font-weight:500; margin-left:8px; color:#475569;">${lender.method} 가이드라인</span>
+              
+              <div class="final-amount-display">${currencyFormatter(lender.maxLoanAmount)}</div>
+              <div style="font-size:13px; color:#64748B; font-weight:500; margin-bottom:14px;">(스트레스 테스트 통과용 가용 원리금 여유분: <span style="color:#10B981; font-weight:700;">${currencyFormatter(lender.maxPiAvailable)} / 월</span>)</div>
+              
+              <details>
+                <summary class="details-summary">🔍 상세 언더라이팅 수식 보기 (Breakdown)</summary>
+                <div class="analysis-breakdown">
+                  
+                  <div class="math-section-title">[1] 월 총소득 산출 (Gross Monthly Income)</div>
+                  <div class="math-row">
+                    <span class="math-label">기본 근로/사업 소득</span>
+                    <span class="math-formula">${currencyFormatter(lender.annualBaseIncome)} ÷ 12</span>
+                    <span class="math-result">${currencyFormatter(lender.baseMonthlyIncome)}</span>
+                  </div>
+                  <div class="math-row">
+                    <span class="math-label">대상물건(Subject) 렌트 인정액</span>
+                    <span class="math-formula">${currencyFormatter(lender.subjectGrossRent)} × ${lender.subjectRentRatio}%</span>
+                    <span class="math-result">${currencyFormatter(lender.subjectRentAdded)}</span>
+                  </div>
+                  <div class="math-row" style="border-bottom:none;">
+                    <span class="math-label">기존물건(Non-Subject) 소득 임팩트 상세</span>
+                    <span class="math-formula">아래 자산별 산출 내역 참조</span>
+                    <span class="math-result">${currencyFormatter(lender.nonSubjectRentAdded)}</span>
+                  </div>
+                  
+                  ${nonSubjectHTMLBreakdown}
+
+                  <div class="math-row" style="background:#E2E8F0; padding:6px; border-radius:4px; margin-top:4px;">
+                    <span class="math-label" style="color:var(--ajae-navy); font-weight:700;">인정된 총 월 소득 합계 </span>
+                    <span class="math-formula"></span>
+                    <span class="math-result" style="color:var(--ajae-navy); font-size:16px;">${currencyFormatter(lender.totalMonthlyIncome)}</span>
+                  </div>
+
+                  <div class="math-section-title">[2] 월 고정 부채 산출 (Total Monthly Debts)</div>
+                  <div class="math-row">
+                    <span class="math-label">개인 기타 부채</span>
+                    <span class="math-formula">월 고정 지출액</span>
+                    <span class="math-result" style="color:#EF4444;">${currencyFormatter(lender.baseMonthlyDebt)}</span>
+                  </div>
+                  <div class="math-row">
+                    <span class="math-label">대상물건(Subject) 유지비</span>
+                    <span class="math-formula">(${currencyFormatter(lender.subjectTax)}÷12) + ${currencyFormatter(lender.subjectHeat)} + (${currencyFormatter(lender.subjectStrata)}×${lender.condoRatio}%)</span>
+                    <span class="math-result" style="color:#EF4444;">${currencyFormatter(lender.subjectFixedExpenses)}</span>
+                  </div>
+                  <div class="math-row">
+                    <span class="math-label">기존물건(Non-Subject) 부채 누적액</span>
+                    <span class="math-formula">상단 자산별 Shortfall / Expenses 총합</span>
+                    <span class="math-result" style="color:#EF4444;">${currencyFormatter(lender.nonSubjectDebtAdded)}</span>
+                  </div>
+                  <div class="math-row" style="background:#FEE2E2; padding:6px; border-radius:4px; margin-top:4px;">
+                    <span class="math-label" style="color:#DC2626; font-weight:700;">확정된 월 부채 합계 </span>
+                    <span class="math-formula"></span>
+                    <span class="math-result" style="color:#DC2626; font-size:16px;">${currencyFormatter(lender.totalMonthlyDebt)}</span>
+                  </div>
+
+                  <div class="math-section-title">[3] 신규 모기지 가용액 (Max PI Available)</div>
+                  <div class="math-row">
+                    <span class="math-label">적용 TDS 한도액</span>
+                    <span class="math-formula">총 소득 × ${lender.maxTdsLimit}%</span>
+                    <span class="math-result">${currencyFormatter(lender.maxTotalDebtAllowed)}</span>
+                  </div>
+                  <div class="math-row" style="background:#D1FAE5; padding:8px; border-radius:4px; margin-top:6px; border:1px solid #10B981;">
+                    <span class="math-label" style="color:#059669; font-weight:700; font-size:14px;">최종 원리금(PI) 여유분</span>
+                    <span class="math-formula">TDS 한도액 - 월 부채 합계</span>
+                    <span class="math-result" style="color:#059669; font-size:18px;">${currencyFormatter(lender.maxPiAvailable)}</span>
+                  </div>
+
+                </div>
+              </details>
+            </div>
+          `;
+        });
+        
+        if(UI_HTML_Buffer === `<h3 style="color:var(--ajae-navy); font-size:20px; font-weight:700; margin-bottom:20px; text-align:center;">📊 금융기관별 최대 승인 가능 한도</h3>`) {
+          displayBox.innerHTML = '<div style="text-align:center; padding: 25px; color:#EF4444; font-weight:500;">현재 설정된 소득과 부채 포트폴리오 대비 기존 빚의 비중이 너무 커서 대출 한도가 도출되지 않습니다. 기존 부채를 줄이거나 소득 조건을 재조정해 주세요.</div>';
+        } else {
+          displayBox.innerHTML = UI_HTML_Buffer;
+        }
+        
+      } else {
+        displayBox.innerHTML = `<div style="text-align:center; color:#EF4444; padding:20px;">연산 가동 실패: ${parsedJson.message || '매칭 가능한 규정이 데이터베이스에 부재합니다.'}</div>`;
+      }
+    } catch (err) {
+      displayBox.innerHTML = `<div style="text-align:center; color:#EF4444; padding:20px;">시스템 내부 통신 에러 발생: ${err.message}</div>`;
+    }
+  }
+</script>
