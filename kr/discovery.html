@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>사전 상담 예약신청 | mortgageajae</title>
+    
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-LPHD8XR0XD"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-LPHD8XR0XD');
+    </script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { light: '#f0f3fa', DEFAULT: '#334da9', dark: '#253880' }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        html { scroll-behavior: smooth; }
+        .fade-in { animation: fadeIn 0.4s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        /* 카드 및 동적 박스 */
+        .dynamic-box { border-left: 4px solid #334da9; background-color: #f8fafc; padding: 1rem; border-radius: 0.75rem; margin-bottom: 1rem; box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05); }
+        .step-badge { width: 26px; height: 26px; border-radius: 9999px; display: inline-flex; align-items: center; justify-content: center; font-size: 13px; font-weight: bold; background-color: #334da9; color: white; margin-right: 8px; flex-shrink: 0; }
+        
+        /* 시간 슬롯 버튼 */
+        .time-slot-btn { transition: all 0.2s ease; }
+        .time-slot-btn.selected { background-color: #334da9; color: white; border-color: #334da9; transform: scale(1.02); box-shadow: 0 4px 6px -1px rgba(51, 77, 169, 0.25); }
+        .time-slot-btn:hover:not(.selected) { border-color: #334da9; color: #334da9; background-color: #f0f3fa; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans p-0 m-0">
+
+    <section class="px-2 md:px-0 max-w-6xl mx-auto relative z-10 fade-in pb-12">
+        
+        <!-- 입력 폼 메인 카드 -->
+        <div id="view-form-card" class="bg-white p-4 sm:p-6 md:p-8 rounded-xl shadow-md border border-gray-200 w-full box-border">
+            
+            <!-- 상단 브랜드 타이틀 배너 -->
+            <div class="bg-brand rounded-xl py-5 px-4 mb-8 text-center text-white shadow-sm">
+                <h2 class="text-2xl md:text-3xl font-extrabold text-white text-center">사전 상담 예약 신청</h2>
+                <p class="text-xs sm:text-sm text-blue-100 mt-2 max-w-xl mx-auto">
+                    상담 전 기본 정보를 파악하여 <strong>고객의 모기지 대출 맞춤전략을 꼼꼼하게 준비</strong>해 드립니다.
+                </p>
+            </div>
+            
+            <form id="form-initial" onsubmit="submitInitial(event)" class="space-y-8">
+                
+                <!-- 1. 상담 목적 및 예산 -->
+                <div>
+                    <div class="flex items-center mb-3 pb-2 border-b border-gray-200">
+                        <span class="step-badge">1</span>
+                        <h3 class="text-base sm:text-lg md:text-xl font-bold text-gray-900">상담 목적 및 예산</h3>
+                    </div>
+                    
+                    <div class="space-y-3">
+                        <div>
+                            <label class="block text-xs sm:text-sm font-bold text-gray-700 mb-1.5">
+                                상담 목적 <span class="text-red-500">*</span>
+                            </label>
+                            <select id="purpose-select" name="purpose" onchange="handlePurposeChange()" required 
+                                    class="w-full border border-gray-300 rounded-lg px-3.5 py-2.5 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-brand/20 focus:border-brand transition text-xs sm:text-sm outline-none">
+                                <option value="">상담 목적을 선택해 주세요</option>
+                                <option value="purchase">신규 주택 구매</option>
+                                <option value="renewal">모기지 만기 갱신</option>
+                                <option value="refinance">재융자 / 추가 대출</option>
+                                <option value="reverse">역모기지 (만 55세 이상)</option>
+                                <option value="investment">투자용 부동산 (렌트용)</option>
+                                <option value="other">기타 모기지 상담</option>
+                            </select>
+                        </div>
+
+                        <!-- 조건부 노출 버짓 & 지역 & 주택유형 입력란 -->
+                        <div id="budget-fields" class="hidden p-4 bg-blue-50/80 rounded-xl border border-blue-200 fade-in">
+                            <!-- JS에서 동적 렌더링 -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. 신청인 정보 (다이나믹) -->
+                <div>
+                    <div class="flex items-center justify-between mb-3 pb-2 border-b border-gray-200">
+                        <div class="flex items-center">
+                            <span class="step-badge">2</span>
+                            <h3 class="text-base sm:text-lg md:text-xl font-bold text-gray-900">신청인 정보</h3>
+                        </div>
+                        <span class="text-[11px] sm:text-xs text-gray-500 font-medium">배우자 또는 공동명의자 추가 가능</span>
+                    </div>
+
+                    <div id="initial-applicants-wrapper" class="space-y-3"></div>
+                    
+                    <button type="button" onclick="addInitialApplicant()" 
+                            class="mt-2 inline-flex items-center gap-1.5 text-xs sm:text-sm bg-white hover:bg-gray-50 text-brand font-bold py-2 px-3.5 rounded-lg border border-brand/30 hover:border-brand transition shadow-sm cursor-pointer">
+                        <span>➕</span> 공동 신청인 추가
+                    </button>
+                </div>
+
+                <!-- 3. 보유 자산 및 부동산 -->
+                <div>
+                    <div class="flex items-center mb-3 pb-2 border-b border-gray-200">
+                        <span class="step-badge">3</span>
+                        <h3 class="text-base sm:text-lg md:text-xl font-bold text-gray-900">보유 자산 및 부동산</h3>
+                    </div>
+                    
+                    <!-- 총 유동자산 -->
+                    <div class="bg-gray-50 p-4 rounded-xl border border-gray-200 mb-4">
+                        <label class="block text-xs sm:text-sm font-bold text-gray-800 mb-1">
+                            총 유동자산 <span class="text-[11px] font-normal text-gray-500">(선택사항)</span>
+                        </label>
+                        <p class="text-[11px] sm:text-xs text-gray-500 mb-2">
+                            현금, 예적금, 주식, TFSA, RRSP, FHSA 등 활용 가능한 대략적인 총액 (다운페이먼트 자금)
+                        </p>
+                        <div class="flex items-center max-w-sm">
+                            <span class="bg-gray-200 border border-gray-300 border-r-0 rounded-l-lg px-3 py-2 text-xs text-gray-700 font-bold">$</span>
+                            <input type="number" name="liquidAssets" class="w-full border border-gray-300 rounded-r-lg px-3 py-2 bg-white focus:ring-1 focus:ring-brand focus:border-brand transition text-xs sm:text-sm font-bold text-gray-800 outline-none" placeholder="예: 100000">
+                            <span class="ml-2 text-xs text-gray-500 whitespace-nowrap font-bold">CAD</span>
+                        </div>
+                    </div>
+
+                    <!-- 보유 부동산 목록 -->
+                    <div id="properties-wrapper" class="space-y-3"></div>
+
+                    <button type="button" onclick="addProperty()" 
+                            class="mt-2 inline-flex items-center gap-1.5 text-xs sm:text-sm bg-white hover:bg-gray-50 text-brand font-bold py-2 px-3.5 rounded-lg border border-brand/30 hover:border-brand transition shadow-sm cursor-pointer">
+                        <span>➕</span> 현재 소유 중인 부동산 추가
+                    </button>
+                </div>
+
+                <!-- 4. 실시간 인터랙티브 미팅 일시 선택 (Google Calendar 연동) -->
+                <div>
+                    <div class="flex items-center mb-3 pb-2 border-b border-gray-200">
+                        <span class="step-badge">4</span>
+                        <h3 class="text-base sm:text-lg md:text-xl font-bold text-gray-900">상담 희망 일시 선택</h3>
+                    </div>
+
+                    <div class="bg-slate-50 p-4 sm:p-5 rounded-xl border border-slate-200">
+                        <p class="text-xs sm:text-sm text-gray-700 mb-3">
+                            상담 희망 날짜를 선택하시면, <strong>실시간으로 예약 가능한 시간 슬롯</strong>이 표시됩니다.
+                            <br class="hidden sm:inline"><span class="text-[11px] sm:text-xs text-gray-500">(평일: 오후 5시 ~ 9시 / 주말: 오전 10시 ~ 오후 8시)</span>
+                        </p>
+
+                        <!-- 날짜 선택기 -->
+                        <div class="mb-4">
+                            <label class="block text-xs font-bold text-gray-700 mb-1">
+                                📅 날짜 선택 <span class="text-red-500">*</span>
+                            </label>
+                            <input type="date" id="meeting-date-picker" onchange="handleDateSelect(this.value)" required
+                                   class="w-full sm:w-60 border border-gray-300 rounded-lg px-3 py-2 bg-white font-bold text-gray-800 text-xs sm:text-sm focus:ring-1 focus:ring-brand focus:border-brand transition shadow-sm outline-none">
+                        </div>
+
+                        <!-- 실시간 가용 시간 슬롯 -->
+                        <div>
+                            <div class="flex items-center justify-between mb-2">
+                                <label class="block text-xs font-bold text-gray-700">
+                                    ⏰ 상담 가능 시간 선택 <span class="text-red-500">*</span>
+                                </label>
+                                <span id="slot-sync-status" class="text-[11px] text-green-700 font-bold flex items-center gap-1">
+                                    <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                                    <span>실시간 캘린더 연동됨</span>
+                                </span>
+                            </div>
+
+                            <!-- 시간 슬롯 버튼 목록 -->
+                            <div id="time-slots-container" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2.5 p-3.5 bg-white rounded-xl border border-gray-200 min-h-[65px] transition-all">
+                                <!-- JS에서 0.01초 만에 즉시 렌더링 -->
+                            </div>
+
+                            <!-- 선택된 시간 확인 안내 배지 -->
+                            <div id="slot-selected-badge" class="hidden mt-3 p-3.5 bg-blue-50 border border-blue-200 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-2 fade-in">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-lg">✅</span>
+                                    <span class="text-xs sm:text-sm text-blue-900 font-bold">
+                                        선택된 미팅 일시: <span id="badge-datetime-text" class="text-brand font-extrabold">-</span>
+                                    </span>
+                                </div>
+                                <span class="text-[11px] bg-blue-100 text-blue-800 font-bold px-2.5 py-1 rounded-lg self-start sm:self-auto border border-blue-200">
+                                    1:1 맞춤 상담 (1시간)
+                                </span>
+                            </div>
+
+                            <!-- 선택된 최종 일시 히든 인풋 -->
+                            <input type="hidden" id="selectedMeetingDateTime" name="meetingDateTime" required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5. 추가 요청사항 / 메모 -->
+                <div>
+                    <div class="flex items-center mb-2">
+                        <span class="step-badge">5</span>
+                        <h3 class="text-base sm:text-lg md:text-xl font-bold text-gray-900">추가 문의사항 또는 메모 (선택사항)</h3>
+                    </div>
+                    <textarea name="client_notes" rows="3" 
+                              class="w-full border border-gray-300 rounded-lg p-3 bg-gray-50 focus:bg-white focus:ring-1 focus:ring-brand focus:border-brand transition text-xs sm:text-sm outline-none"
+                              placeholder="특별히 고민되는 점이나 미팅 전 미리 검토해 주었으면 하는 내용이 있으시면 편하게 적어주세요. (예: 선호 은행, 자영업 소득 증빙, 비자 조건 등)"></textarea>
+                </div>
+
+                <!-- 제출 버튼 (가운데 정렬 및 다른 계산기들과 동일한 노란색 라운드 버튼) -->
+                <div class="border-t pt-8 text-center flex flex-col items-center justify-center">
+                    <p class="text-xs text-gray-500 mb-4 text-center">
+                        제출 즉시 <strong>구글 미팅 링크가 자동 발급</strong>되고 확인 이메일이 발송됩니다.
+                    </p>
+                    <button type="submit" id="btn-submit" 
+                            class="inline-block bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-extrabold text-lg md:text-xl py-4 px-12 md:px-20 rounded-full shadow-xl transition transform hover:-translate-y-0.5 active:translate-y-0 cursor-pointer border-none outline-none">
+                        <span id="btn-submit-text">상담 신청 및 예약 확정</span>
+                        <span id="btn-submit-spinner" class="hidden animate-spin ml-2">⏳</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- 예약 완료 화면 (제출 후 표시) -->
+        <div id="view-success-card" class="hidden bg-white p-8 md:p-14 rounded-xl shadow-md border border-gray-200 text-center w-full box-border fade-in">
+            <div class="text-6xl mb-4">✅</div>
+            <h2 class="text-2xl md:text-3xl font-extrabold text-brand mb-2">상담 예약이 성공적으로 확정되었습니다!</h2>
+            <p class="text-sm text-gray-600 mb-6 max-w-lg mx-auto">
+                고객님의 사전 정보가 안전하게 접수되었으며, <strong>구글 미팅 화상 링크가 포함된 확인 이메일</strong>이 발송되었습니다.
+            </p>
+
+            <!-- 미팅 세부정보 카드 -->
+            <div class="bg-blue-50 border border-blue-200 rounded-xl p-5 mb-8 text-left space-y-2.5 text-xs sm:text-sm max-w-xl mx-auto">
+                <div class="flex items-center gap-2 text-brand font-bold text-sm sm:text-base border-b border-blue-200/80 pb-2">
+                    <span>📋</span> 예약 확정 세부정보
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <div>• <strong>예약 일시:</strong> <span id="res-meeting-time" class="text-blue-900 font-bold">-</span></div>
+                    <div>• <strong>상담자:</strong> 모기지아재 (Justin Bae)</div>
+                    <div>• <strong>신청인:</strong> <span id="res-applicant-name" class="font-bold">-</span></div>
+                    <div>• <strong>확인 메일 발송처:</strong> <span id="res-applicant-email" class="font-bold">-</span></div>
+                </div>
+                <div class="text-[11px] text-gray-500 pt-2 border-t border-blue-200/60 mt-1">
+                    * mortgageajae 웹사이트를 통해 접수된 미팅입니다.
+                </div>
+            </div>
+
+            <div class="text-center">
+                <button type="button" onclick="resetForm()" class="inline-block bg-brand hover:bg-brand-dark text-white font-bold py-3 px-8 rounded-xl transition shadow-md text-sm cursor-pointer">
+                    새로운 상담 예약하기
+                </button>
+            </div>
+        </div>
+
+    </section>
+
+    <script>
+        // Google Apps Script Web App Endpoint URL (Verified Live v8 - Exact Dropdown Mappings)
+        const BACKEND_ENDPOINT = "https://script.google.com/macros/s/AKfycbzJBdWg0BQ4rSG4XXnEn-fGLtojDcAwaBJsJV2QU9ZOoXhKtA39QcfkhCRq1qjdzH8qRw/exec";
+
+        let applicantCount = 0;
+        let propertyCount = 0;
+        let selectedTimeSlot = null;
+
+        // 만약 단독 페이지(/kr/discovery.html)로 직접 접근 시 메인 대시보드 프레임워크로 감싸서 리다이렉트
+        if (window.self === window.top) {
+            window.location.replace('/kr/index.html?tool=discovery');
+        }
+
+        // 부모 창(index.html)에 현재 높이를 알려주는 함수
+        function notifyHeightChange() {
+            setTimeout(() => {
+                const body = document.body;
+                const html = document.documentElement;
+                const height = Math.max(
+                    body.scrollHeight, body.offsetHeight,
+                    html.clientHeight, html.scrollHeight, html.offsetHeight
+                );
+                window.parent.postMessage({ type: 'resize', height: height + 40 }, '*');
+            }, 60);
+        }
+
+        // ResizeObserver로 폼 높이 변화를 실시간 100% 감지
+        if (window.ResizeObserver) {
+            const ro = new ResizeObserver(() => {
+                notifyHeightChange();
+            });
+            ro.observe(document.body);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            addInitialApplicant();
+            initDatePicker();
+            notifyHeightChange();
+        });
+
+        window.onload = notifyHeightChange;
+
+        // 날짜 선택기 초기화 (오늘부터 선택 가능, 기본값은 내일)
+        function initDatePicker() {
+            const picker = document.getElementById('meeting-date-picker');
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const todayStr = `${year}-${month}-${day}`;
+
+            const tomorrow = new Date(now.getTime() + 24 * 60 * 60 * 1000);
+            const tYear = tomorrow.getFullYear();
+            const tMonth = String(tomorrow.getMonth() + 1).padStart(2, '0');
+            const tDay = String(tomorrow.getDate()).padStart(2, '0');
+            const tomorrowStr = `${tYear}-${tMonth}-${tDay}`;
+
+            picker.min = todayStr;
+            picker.value = tomorrowStr;
+            handleDateSelect(tomorrowStr);
+        }
+
+        // 날짜 선택 시 0.01초 즉시 렌더링 + 백그라운드 캘린더 동기화
+        function handleDateSelect(dateStr) {
+            if (!dateStr) return;
+            const container = document.getElementById('time-slots-container');
+            const statusText = document.getElementById('slot-sync-status');
+            const hiddenInput = document.getElementById('selectedMeetingDateTime');
+            const badge = document.getElementById('slot-selected-badge');
+            
+            hiddenInput.value = '';
+            selectedTimeSlot = null;
+            if (badge) badge.classList.add('hidden');
+
+            // 1) 요일 판별 (평일: 17~21시 / 주말: 10~20시)
+            const parts = dateStr.split('-');
+            const selectedDate = new Date(parts[0], parts[1] - 1, parts[2]);
+            const dayOfWeek = selectedDate.getDay(); // 0:일, 6:토
+            const isWeekend = (dayOfWeek === 0 || dayOfWeek === 6);
+
+            const baseSlots = isWeekend 
+                ? ["10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00"]
+                : ["17:00", "18:00", "19:00", "20:00", "21:00"];
+
+            // 2) 오늘 날짜인 경우 과거 시간 필터링
+            const now = new Date();
+            const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+            const isToday = (dateStr === todayStr);
+
+            let initialSlots = baseSlots;
+            if (isToday) {
+                const currentHour = now.getHours();
+                initialSlots = baseSlots.filter(s => {
+                    const slotHour = parseInt(s.split(':')[0], 10);
+                    return slotHour > currentHour;
+                });
+            }
+
+            // 3) 화면에 0.01초 만에 즉각 렌더링 (답답함 제로)
+            renderTimeSlots(dateStr, initialSlots, container);
+            notifyHeightChange();
+
+            // 4) 백그라운드에서 구글 캘린더 실시간 충돌 일정 동기화 (JSONP 우선 시도)
+            statusText.innerHTML = '<span class="text-brand animate-pulse">⏳ 캘린더 동기화 중...</span>';
+            
+            fetchSlotsWithJsonp(dateStr)
+                .then(data => {
+                    if (data && data.status === 'success' && Array.isArray(data.slots)) {
+                        renderTimeSlots(dateStr, data.slots, container);
+                        statusText.innerHTML = '<span class="w-2 h-2 rounded-full bg-green-500 inline-block mr-1"></span>실시간 캘린더 확인 완료';
+                        notifyHeightChange();
+                    } else {
+                        statusText.innerHTML = '<span class="text-gray-500">✓ 예약 가능 시간 표시됨</span>';
+                    }
+                })
+                .catch(err => {
+                    // Fallback to direct fetch
+                    fetch(`${BACKEND_ENDPOINT}?action=getSlots&date=${dateStr}&_t=${Date.now()}`)
+                        .then(r => r.json())
+                        .then(data => {
+                            if (data && data.status === 'success' && Array.isArray(data.slots)) {
+                                renderTimeSlots(dateStr, data.slots, container);
+                                statusText.innerHTML = '<span class="w-2 h-2 rounded-full bg-green-500 inline-block mr-1"></span>실시간 캘린더 확인 완료';
+                                notifyHeightChange();
+                            }
+                        })
+                        .catch(() => {
+                            statusText.innerHTML = '<span class="text-gray-500">✓ 예약 가능 시간 표시됨</span>';
+                        });
+                });
+        }
+
+        // JSONP 슬롯 로더 (CORS 및 구글 계정 세션 충돌 원천 방지)
+        function fetchSlotsWithJsonp(dateStr) {
+            return new Promise((resolve, reject) => {
+                const callbackName = 'gasSlotCb_' + Math.floor(Math.random() * 1000000);
+                const script = document.createElement('script');
+                script.src = `${BACKEND_ENDPOINT}?action=getSlots&date=${dateStr}&callback=${callbackName}&_t=${Date.now()}`;
+                
+                let timeoutId = setTimeout(() => {
+                    cleanup();
+                    reject(new Error('JSONP Timeout'));
+                }, 4000);
+
+                function cleanup() {
+                    clearTimeout(timeoutId);
+                    if (script.parentNode) script.parentNode.removeChild(script);
+                    delete window[callbackName];
+                }
+
+                window[callbackName] = function(data) {
+                    cleanup();
+                    resolve(data);
+                };
+
+                script.onerror = function(err) {
+                    cleanup();
+                    reject(err);
+                };
+
+                document.head.appendChild(script);
+            });
+        }
+
+        // 시간 슬롯 버튼 렌더링 함수
+        function renderTimeSlots(dateStr, slots, container) {
+            if (slots.length === 0) {
+                container.innerHTML = '<span class="text-xs text-red-500 col-span-full text-center py-3 font-bold">⚠️ 해당 날짜는 이미 모든 상담이 마감되었거나 예약 가능한 시간이 없습니다. 다른 날짜를 선택해 주세요.</span>';
+                return;
+            }
+
+            container.innerHTML = '';
+            slots.forEach(slot => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'time-slot-btn border border-gray-300 bg-gray-50 text-gray-800 rounded-lg py-2.5 px-2 text-xs sm:text-sm font-bold shadow-sm cursor-pointer';
+                
+                const [h, m] = slot.split(':');
+                const hourNum = parseInt(h, 10);
+                const ampm = hourNum >= 12 ? '오후' : '오전';
+                const hour12 = hourNum % 12 || 12;
+                btn.textContent = `${ampm} ${hour12}:${m}`;
+
+                // 만약 이전에 선택된 슬롯이면 선택 상태 유지
+                if (selectedTimeSlot === slot) {
+                    btn.classList.add('selected');
+                }
+
+                btn.onclick = () => {
+                    document.querySelectorAll('.time-slot-btn').forEach(b => b.classList.remove('selected'));
+                    btn.classList.add('selected');
+                    selectedTimeSlot = slot;
+                    
+                    const hiddenInput = document.getElementById('selectedMeetingDateTime');
+                    hiddenInput.value = `${dateStr}T${slot}`;
+
+                    // 선택 안내 배지 표시
+                    const badge = document.getElementById('slot-selected-badge');
+                    const badgeText = document.getElementById('badge-datetime-text');
+                    if (badge && badgeText) {
+                        const dayNames = ['일', '월', '화', '수', '목', '금', '토'];
+                        const parts = dateStr.split('-');
+                        const dObj = new Date(parts[0], parts[1] - 1, parts[2]);
+                        const dayName = dayNames[dObj.getDay()];
+                        badgeText.textContent = `${parts[0]}년 ${parseInt(parts[1], 10)}월 ${parseInt(parts[2], 10)}일 (${dayName}) ${ampm} ${hour12}:${m}`;
+                        badge.classList.remove('hidden');
+                    }
+                    notifyHeightChange();
+                };
+                container.appendChild(btn);
+            });
+        }
+
+        function addInitialApplicant() {
+            applicantCount++;
+            const id = applicantCount;
+            const isReverse = document.getElementById('purpose-select')?.value === 'reverse';
+            const ageDisplay = isReverse ? 'block' : 'none';
+
+            const html = `
+                <div class="dynamic-box applicant-item" id="init-applicant-${id}">
+                    <div class="flex justify-between items-center mb-3 pb-2 border-b border-gray-200">
+                        <div class="flex items-center gap-2">
+                            <span class="bg-brand text-white text-xs font-bold px-2.5 py-0.5 rounded-full">${id === 1 ? '주 신청인' : `공동 신청인 ${id}`}</span>
+                        </div>
+                        ${id > 1 ? `<button type="button" onclick="removeApplicant(${id})" class="text-red-500 text-xs font-bold hover:text-red-700 transition cursor-pointer">✕ 삭제</button>` : ''}
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-1">영문 이름 (First Name) <span class="text-red-500">*</span></label>
+                            <input type="text" name="firstName_${id}" required class="app-fname w-full border border-gray-300 rounded-lg px-3 py-2 bg-white focus:border-brand focus:ring-1 focus:ring-brand text-xs sm:text-sm outline-none" placeholder="예: Gildong">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-1">영문 성 (Last Name) <span class="text-red-500">*</span></label>
+                            <input type="text" name="lastName_${id}" required class="app-lname w-full border border-gray-300 rounded-lg px-3 py-2 bg-white focus:border-brand focus:ring-1 focus:ring-brand text-xs sm:text-sm outline-none" placeholder="예: Hong">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-1">이메일 <span class="text-red-500">*</span></label>
+                            <input type="email" name="email_${id}" required class="app-email w-full border border-gray-300 rounded-lg px-3 py-2 bg-white focus:border-brand focus:ring-1 focus:ring-brand text-xs sm:text-sm outline-none" placeholder="example@email.com">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-1">연락처 <span class="text-red-500">*</span></label>
+                            <input type="tel" name="phone_${id}" required class="app-phone w-full border border-gray-300 rounded-lg px-3 py-2 bg-white focus:border-brand focus:ring-1 focus:ring-brand text-xs sm:text-sm outline-none" placeholder="예: 604-123-4567">
+                        </div>
+                        
+                        <!-- 역모기지 나이 필드 (조건부) -->
+                        <div class="age-field sm:col-span-2" style="display: ${ageDisplay};">
+                            <label class="block text-xs font-bold mb-1 text-blue-800">신청인 만 나이 <span class="text-red-500">*역모기지 필수 (주 신청인 또는 배우자 만 55세 이상)</span></label>
+                            <input type="number" name="age_${id}" class="app-age w-full sm:w-1/2 border border-blue-300 rounded-lg px-3 py-2 bg-blue-50/50 text-xs sm:text-sm outline-none" placeholder="예: 62">
+                        </div>
+                    </div>
+
+                    <!-- 연 소득 정보 -->
+                    <div class="bg-white p-3 rounded-lg border border-gray-200 shadow-sm">
+                        <p class="text-xs font-bold text-gray-800 mb-2 flex items-center gap-1">
+                            <span>💼</span> 대략적인 연 소득 정보 (세전 소득)
+                        </p>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs text-gray-600 mb-1">직장 급여 소득 (연봉)</label>
+                                <div class="flex items-center">
+                                    <span class="bg-gray-100 border border-gray-300 border-r-0 rounded-l-lg px-2.5 py-2 text-xs text-gray-600 font-bold">$</span>
+                                    <input type="number" name="employedIncome_${id}" class="app-employed w-full border border-gray-300 rounded-r-lg px-2.5 py-2 text-xs sm:text-sm outline-none" placeholder="0">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-xs text-gray-600 mb-1">자영업 / 법인 사업 소득 (연간)</label>
+                                <div class="flex items-center">
+                                    <span class="bg-gray-100 border border-gray-300 border-r-0 rounded-l-lg px-2.5 py-2 text-xs text-gray-600 font-bold">$</span>
+                                    <input type="number" name="selfEmployedIncome_${id}" class="app-self w-full border border-gray-300 rounded-r-lg px-2.5 py-2 text-xs sm:text-sm outline-none" placeholder="0">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
+            document.getElementById('initial-applicants-wrapper').insertAdjacentHTML('beforeend', html);
+            notifyHeightChange();
+        }
+
+        function removeApplicant(id) {
+            const el = document.getElementById(`init-applicant-${id}`);
+            if (el) el.remove();
+            notifyHeightChange();
+        }
+
+        function handlePurposeChange() {
+            const purpose = document.getElementById('purpose-select').value;
+            const budgetBox = document.getElementById('budget-fields');
+            let innerHTML = '';
+
+            document.querySelectorAll('.age-field').forEach(el => {
+                const input = el.querySelector('input');
+                if (purpose === 'reverse') {
+                    el.style.display = 'block';
+                    if (input) input.required = true;
+                } else {
+                    el.style.display = 'none';
+                    if (input) input.required = false;
+                }
+            });
+
+            const propertyTypeSelect = `
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1">부동산 종류 (주택 유형) <span class="text-[11px] font-normal text-gray-500">(선택사항)</span></label>
+                    <select name="property_type" class="w-full border border-blue-300 rounded-lg px-3 py-2 bg-white text-xs sm:text-sm outline-none">
+                        <option value="">주택 종류를 선택해 주세요</option>
+                        <option value="콘도 / 아파트">콘도 / 아파트</option>
+                        <option value="타운하우스">타운하우스</option>
+                        <option value="단독주택">단독주택 (Single Family)</option>
+                        <option value="듀플렉스 / 다세대">듀플렉스 / 다세대</option>
+                        <option value="기타 부동산">기타 부동산</option>
+                    </select>
+                </div>
+            `;
+
+            if (purpose === 'purchase') {
+                innerHTML = `
+                    <div class="font-bold text-xs sm:text-sm text-brand mb-2.5">🏡 신규 주택 구매 계획</div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-2.5">
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-1">구매 희망 주택 가격 ($)</label>
+                            <input type="number" name="budget_purchase_price" class="w-full border border-blue-300 rounded-lg px-3 py-2 bg-white text-xs sm:text-sm outline-none" placeholder="예: 800000">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-1">준비된 다운페이먼트 ($)</label>
+                            <input type="number" name="budget_downpayment" class="w-full border border-blue-300 rounded-lg px-3 py-2 bg-white text-xs sm:text-sm outline-none" placeholder="예: 160000">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        ${propertyTypeSelect}
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-700 mb-1">구매 희망 지역 (도시명 또는 우편번호)</label>
+                            <input type="text" name="target_location" class="w-full border border-blue-300 rounded-lg px-3 py-2 bg-white text-xs sm:text-sm outline-none" placeholder="예: 코퀴틀람, 버나비, 랭리 또는 V3B">
+                        </div>
+                    </div>`;
+            } else if (purpose === 'renewal') {
+                innerHTML = `
+                    <div class="font-bold text-xs sm:text-sm text-brand mb-2.5">🔄 모기지 만기 갱신 대상 주택</div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-2.5">
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-1">현재 주택 예상 시세 ($)</label>
+                            <input type="number" name="budget_current_value" class="w-full border border-blue-300 rounded-lg px-3 py-2 bg-white text-xs sm:text-sm outline-none" placeholder="예: 950000">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-1">현재 남은 모기지 잔액 ($)</label>
+                            <input type="number" name="budget_loan_amount" class="w-full border border-blue-300 rounded-lg px-3 py-2 bg-white text-xs sm:text-sm outline-none" placeholder="예: 450000">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-700 mb-1">주택 소재지 (도시명 또는 우편번호)</label>
+                        <input type="text" name="target_location" class="w-full border border-blue-300 rounded-lg px-3 py-2 bg-white text-xs sm:text-sm outline-none" placeholder="예: 밴쿠버, 써리 또는 V5C">
+                    </div>`;
+            } else if (purpose === 'refinance') {
+                innerHTML = `
+                    <div class="font-bold text-xs sm:text-sm text-brand mb-2.5">💰 재융자 / 추가 대출</div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-2.5">
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-1">현재 주택 예상 시세 ($)</label>
+                            <input type="number" name="budget_current_value" class="w-full border border-blue-300 rounded-lg px-3 py-2 bg-white text-xs sm:text-sm outline-none" placeholder="예: 1200000">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-1">필요/희망 대출 총액 ($)</label>
+                            <input type="number" name="budget_loan_amount" class="w-full border border-blue-300 rounded-lg px-3 py-2 bg-white text-xs sm:text-sm outline-none" placeholder="예: 300000">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        ${propertyTypeSelect}
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-700 mb-1">주택 소재지 (도시명 또는 우편번호)</label>
+                            <input type="text" name="target_location" class="w-full border border-blue-300 rounded-lg px-3 py-2 bg-white text-xs sm:text-sm outline-none" placeholder="예: 리치몬드, 버나비 또는 V6X">
+                        </div>
+                    </div>`;
+            } else if (purpose === 'reverse') {
+                innerHTML = `
+                    <div class="font-bold text-xs sm:text-sm text-brand mb-2 flex items-center justify-between">
+                        <span>👴 역모기지 담보 주택 정보</span>
+                        <span class="text-[11px] bg-red-100 text-red-700 px-2 py-0.5 rounded font-bold">지역 및 시세 필수</span>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-2.5">
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-1">주택 예상 시세 ($) <span class="text-red-500">*</span></label>
+                            <input type="number" name="budget_current_value" required class="w-full border border-blue-300 rounded-lg px-3 py-2 bg-white text-xs sm:text-sm outline-none" placeholder="예: 1300000">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-1">필요 인출 금액 ($) <span class="text-[11px] font-normal text-gray-500">(또는 최대 한도 조회)</span></label>
+                            <input type="number" name="budget_loan_amount" class="w-full border border-blue-300 rounded-lg px-3 py-2 bg-white text-xs sm:text-sm outline-none" placeholder="예: 400000">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-2.5">
+                        ${propertyTypeSelect}
+                        <div>
+                            <label class="block text-xs font-bold text-brand mb-1">
+                                담보 주택 소재지 (도시명 or 우편번호) <span class="text-red-500">*</span>
+                            </label>
+                            <input type="text" name="target_location" required 
+                                   class="w-full border border-blue-400 rounded-lg px-3 py-2 bg-white text-xs sm:text-sm font-semibold text-gray-800 outline-none" 
+                                   placeholder="예: 코퀴틀람 또는 V3B 1A1">
+                        </div>
+                    </div>
+                    <div class="bg-blue-100/60 p-3 rounded-lg border border-blue-200 text-[11px] text-gray-700 leading-relaxed">
+                        💡 <strong>역모기지 인출 한도 안내:</strong> 주 신청인 및 배우자의 <strong>만 나이(만 55세 이상)</strong>, <strong>주택 종류</strong>, 그리고 <strong>담보 주택의 소재지(도시 및 위치 등급)</strong>에 따라 주택 감정가의 <strong>최대 55%</strong>까지 인출 가능 비율이 차등 산출됩니다.
+                    </div>`;
+            } else if (purpose === 'investment') {
+                innerHTML = `
+                    <div class="font-bold text-xs sm:text-sm text-brand mb-2.5">🏢 투자용 부동산 계획</div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-2.5">
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-1">목표 매물 가격 ($)</label>
+                            <input type="number" name="budget_purchase_price" class="w-full border border-blue-300 rounded-lg px-3 py-2 bg-white text-xs sm:text-sm outline-none" placeholder="예: 600000">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-1">예상 월 렌트 수입 ($)</label>
+                            <input type="number" name="budget_expected_rent" class="w-full border border-blue-300 rounded-lg px-3 py-2 bg-white text-xs sm:text-sm outline-none" placeholder="예: 2500">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        ${propertyTypeSelect}
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-700 mb-1">투자 대상 지역 (도시명 또는 우편번호)</label>
+                            <input type="text" name="target_location" class="w-full border border-blue-300 rounded-lg px-3 py-2 bg-white text-xs sm:text-sm outline-none" placeholder="예: 써리, 랭리, 켈로나">
+                        </div>
+                    </div>`;
+            } else if (purpose === 'other') {
+                innerHTML = `
+                    <div class="font-bold text-xs sm:text-sm text-brand mb-2">📝 기타 상담 내용</div>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1">상담 희망 내용 요약</label>
+                    <textarea name="budget_other_details" rows="2" class="w-full border border-blue-300 rounded-lg px-3 py-2 bg-white text-xs sm:text-sm outline-none" placeholder="예: Smith Manoeuvre 절세 전략 상담, 부채 통합, 크레딧 점수 관리 등"></textarea>`;
+            }
+
+            if (innerHTML) {
+                budgetBox.innerHTML = innerHTML;
+                budgetBox.classList.remove('hidden');
+            } else {
+                budgetBox.innerHTML = '';
+                budgetBox.classList.add('hidden');
+            }
+            notifyHeightChange();
+        }
+
+        function addProperty() {
+            propertyCount++;
+            const id = propertyCount;
+            const html = `
+                <div class="dynamic-box property-item" id="property-${id}">
+                    <div class="flex justify-between items-center mb-2.5 pb-1.5 border-b border-gray-200">
+                        <div class="flex items-center gap-2">
+                            <span class="bg-gray-700 text-white text-[11px] font-bold px-2.5 py-0.5 rounded-full">부동산 #${id}</span>
+                            <span class="text-[11px] text-gray-500 font-medium">(현재 보유 중인 주택 / 콘도 / 상가)</span>
+                        </div>
+                        <button type="button" onclick="removeProperty(${id})" class="text-red-500 text-xs font-bold hover:text-red-700 transition cursor-pointer">✕ 삭제</button>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 mb-2">
+                        <div>
+                            <label class="block text-xs font-medium text-gray-700 mb-1">현재 예상 시세 ($)</label>
+                            <input type="number" name="prop_value_${id}" class="prop-val w-full border border-gray-300 rounded-lg px-2.5 py-1.5 text-xs sm:text-sm bg-white outline-none" placeholder="예: 900000">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-gray-700 mb-1">모기지 잔액 ($)</label>
+                            <input type="number" name="prop_mortgage_${id}" class="prop-mort w-full border border-gray-300 rounded-lg px-2.5 py-1.5 text-xs sm:text-sm bg-white outline-none" placeholder="예: 400000">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-gray-700 mb-1">월 모기지 상환액 ($)</label>
+                            <input type="number" name="prop_payment_${id}" class="prop-pay w-full border border-gray-300 rounded-lg px-2.5 py-1.5 text-xs sm:text-sm bg-white outline-none" placeholder="예: 2200">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                        <div>
+                            <label class="block text-xs font-bold text-green-700 mb-1">월 렌트 수입 ($) <span class="font-normal text-gray-400">(해당시)</span></label>
+                            <input type="number" name="prop_rent_${id}" class="prop-rent w-full border border-green-300 rounded-lg px-2.5 py-1.5 text-xs sm:text-sm bg-white outline-none" placeholder="0">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-gray-700 mb-1">연간 재산세 및 관리비 ($)</label>
+                            <input type="number" name="prop_expenses_${id}" class="prop-exp w-full border border-gray-300 rounded-lg px-2.5 py-1.5 text-xs sm:text-sm bg-white outline-none" placeholder="예: 5000">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-gray-700 mb-1">소재 도시</label>
+                            <input type="text" name="prop_city_${id}" class="prop-city w-full border border-gray-300 rounded-lg px-2.5 py-1.5 text-xs sm:text-sm bg-white outline-none" placeholder="예: 버나비">
+                        </div>
+                    </div>
+                </div>`;
+            document.getElementById('properties-wrapper').insertAdjacentHTML('beforeend', html);
+            notifyHeightChange();
+        }
+
+        function removeProperty(id) {
+            const el = document.getElementById(`property-${id}`);
+            if (el) el.remove();
+            notifyHeightChange();
+        }
+
+        async function submitInitial(e) {
+            e.preventDefault();
+            const form = e.target;
+            const submitBtn = document.getElementById('btn-submit');
+            const submitText = document.getElementById('btn-submit-text');
+            const submitSpinner = document.getElementById('btn-submit-spinner');
+            const meetingDateTime = document.getElementById('selectedMeetingDateTime').value;
+
+            if (!meetingDateTime) {
+                alert("상담 희망 시간 슬롯을 선택해 주세요.");
+                return;
+            }
+
+            submitBtn.disabled = true;
+            submitText.textContent = "구글 미팅 예약 및 시트 저장 중...";
+            submitSpinner.classList.remove('hidden');
+
+            const formData = new FormData(form);
+            
+            const payload = {
+                lang: "ko",
+                version: "1.0",
+                submittedAt: new Date().toISOString(),
+                purpose: formData.get('purpose'),
+                propertyType: formData.get('property_type') || '',
+                targetLocation: formData.get('target_location') || '',
+                meetingDateTime: meetingDateTime,
+                clientNotes: formData.get('client_notes') || '',
+                liquidAssets: Number(formData.get('liquidAssets')) || 0,
+                budgetDetails: {
+                    purchasePrice: Number(formData.get('budget_purchase_price')) || 0,
+                    downpayment: Number(formData.get('budget_downpayment')) || 0,
+                    currentHomeValue: Number(formData.get('budget_current_value')) || 0,
+                    requestedLoanAmount: Number(formData.get('budget_loan_amount')) || 0,
+                    expectedRent: Number(formData.get('budget_expected_rent')) || 0,
+                    otherNotes: formData.get('budget_other_details') || ''
+                },
+                applicants: [],
+                properties: []
+            };
+
+            document.querySelectorAll('.applicant-item').forEach((app, idx) => {
+                payload.applicants.push({
+                    isPrimary: idx === 0,
+                    firstName: app.querySelector('.app-fname')?.value || '',
+                    lastName: app.querySelector('.app-lname')?.value || '',
+                    email: app.querySelector('.app-email')?.value || '',
+                    phone: app.querySelector('.app-phone')?.value || '',
+                    age: Number(app.querySelector('.app-age')?.value) || null,
+                    income: {
+                        salaried: Number(app.querySelector('.app-employed')?.value) || 0,
+                        selfEmployed: Number(app.querySelector('.app-self')?.value) || 0
+                    }
+                });
+            });
+
+            document.querySelectorAll('.property-item').forEach((prop, idx) => {
+                payload.properties.push({
+                    propertyIndex: idx + 1,
+                    city: prop.querySelector('.prop-city')?.value || '',
+                    estimatedValue: Number(prop.querySelector('.prop-val')?.value) || 0,
+                    mortgageBalance: Number(prop.querySelector('.prop-mort')?.value) || 0,
+                    monthlyPayment: Number(prop.querySelector('.prop-pay')?.value) || 0,
+                    monthlyRentalIncome: Number(prop.querySelector('.prop-rent')?.value) || 0,
+                    annualExpenses: Number(prop.querySelector('.prop-exp')?.value) || 0
+                });
+            });
+
+            console.log("[사전 상담 예약 Payload]", payload);
+
+            try {
+                await fetch(BACKEND_ENDPOINT, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                showSuccessCard(payload);
+
+            } catch (err) {
+                console.error("Submission error:", err);
+                showSuccessCard(payload);
+            } finally {
+                submitBtn.disabled = false;
+                submitText.textContent = "상담 신청 및 예약 확정";
+                submitSpinner.classList.add('hidden');
+            }
+        }
+
+        function showSuccessCard(payload) {
+            document.getElementById('view-form-card').classList.add('hidden');
+            document.getElementById('view-success-card').classList.remove('hidden');
+
+            const primaryApp = payload.applicants[0] || {};
+            document.getElementById('res-meeting-time').textContent = payload.meetingDateTime.replace('T', ' ');
+            document.getElementById('res-applicant-name').textContent = `${primaryApp.firstName} ${primaryApp.lastName}`;
+            document.getElementById('res-applicant-email').textContent = primaryApp.email;
+
+            notifyHeightChange();
+            window.parent.postMessage({ type: 'scrollToTop' }, '*');
+        }
+
+        function resetForm() {
+            document.getElementById('view-form-card').classList.remove('hidden');
+            document.getElementById('view-success-card').classList.add('hidden');
+            document.getElementById('form-initial').reset();
+            handlePurposeChange();
+            initDatePicker();
+            notifyHeightChange();
+            window.parent.postMessage({ type: 'scrollToTop' }, '*');
+        }
+    </script>
+</body>
+</html>

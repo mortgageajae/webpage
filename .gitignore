@@ -1,0 +1,4 @@
+dev-server.js
+*.log
+.DS_Store
+Thumbs.db

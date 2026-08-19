@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book 1:1 Consultation | mortgageajae</title>
+    
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-LPHD8XR0XD"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-LPHD8XR0XD');
+    </script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { light: '#f0f3fa', DEFAULT: '#334da9', dark: '#253880' }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        html { scroll-behavior: smooth; }
+        .fade-in { animation: fadeIn 0.4s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        /* Dynamic Cards */
+        .dynamic-box { border-left: 4px solid #334da9; background-color: #f8fafc; padding: 1rem; border-radius: 0.75rem; margin-bottom: 1rem; box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05); }
+        .step-badge { width: 26px; height: 26px; border-radius: 9999px; display: inline-flex; align-items: center; justify-content: center; font-size: 13px; font-weight: bold; background-color: #334da9; color: white; margin-right: 8px; flex-shrink: 0; }
+        
+        /* Time slot buttons */
+        .time-slot-btn { transition: all 0.2s ease; }
+        .time-slot-btn.selected { background-color: #334da9; color: white; border-color: #334da9; transform: scale(1.02); box-shadow: 0 4px 6px -1px rgba(51, 77, 169, 0.25); }
+        .time-slot-btn:hover:not(.selected) { border-color: #334da9; color: #334da9; background-color: #f0f3fa; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans p-0 m-0">
+
+    <section class="px-2 md:px-0 max-w-6xl mx-auto relative z-10 fade-in pb-12">
+        
+        <!-- Main Form Card -->
+        <div id="view-form-card" class="bg-white p-4 sm:p-6 md:p-8 rounded-xl shadow-md border border-gray-200 w-full box-border">
+            
+            <!-- Top Banner -->
+            <div class="bg-brand rounded-xl py-5 px-4 mb-8 text-center text-white shadow-sm">
+                <h2 class="text-2xl md:text-3xl font-extrabold text-white text-center">Book a 1:1 Consultation</h2>
+                <p class="text-xs sm:text-sm text-blue-100 mt-2 max-w-xl mx-auto">
+                    Share your initial mortgage goals so we can <strong>engineer a tailored approval strategy</strong> ahead of our meeting.
+                </p>
+            </div>
+            
+            <form id="form-initial" onsubmit="submitInitial(event)" class="space-y-8">
+                
+                <!-- 1. Purpose & Budget -->
+                <div>
+                    <div class="flex items-center mb-3 pb-2 border-b border-gray-200">
+                        <span class="step-badge">1</span>
+                        <h3 class="text-base sm:text-lg md:text-xl font-bold text-gray-900">Consultation Purpose & Goals</h3>
+                    </div>
+                    
+                    <div class="space-y-3">
+                        <div>
+                            <label class="block text-xs sm:text-sm font-bold text-gray-700 mb-1.5">
+                                Primary Purpose <span class="text-red-500">*</span>
+                            </label>
+                            <select id="purpose-select" name="purpose" onchange="handlePurposeChange()" required 
+                                    class="w-full border border-gray-300 rounded-lg px-3.5 py-2.5 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-brand/20 focus:border-brand transition text-xs sm:text-sm outline-none">
+                                <option value="">Select your mortgage goal</option>
+                                <option value="purchase">New Home Purchase</option>
+                                <option value="renewal">Mortgage Renewal / Switch</option>
+                                <option value="refinance">Refinance / Equity Takeout</option>
+                                <option value="reverse">CHIP Reverse Mortgage (Age 55+)</option>
+                                <option value="investment">Investment / Rental Property</option>
+                                <option value="other">Other Mortgage Inquiry</option>
+                            </select>
+                        </div>
+
+                        <!-- Conditional Budget & Location Fields -->
+                        <div id="budget-fields" class="hidden p-4 bg-blue-50/80 rounded-xl border border-blue-200 fade-in">
+                            <!-- Rendered dynamically by JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. Applicant Info -->
+                <div>
+                    <div class="flex items-center justify-between mb-3 pb-2 border-b border-gray-200">
+                        <div class="flex items-center">
+                            <span class="step-badge">2</span>
+                            <h3 class="text-base sm:text-lg md:text-xl font-bold text-gray-900">Applicant Information</h3>
+                        </div>
+                        <span class="text-[11px] sm:text-xs text-gray-500 font-medium">Co-applicant or spouse can be added</span>
+                    </div>
+
+                    <div id="initial-applicants-wrapper" class="space-y-3"></div>
+                    
+                    <button type="button" onclick="addInitialApplicant()" 
+                            class="mt-2 inline-flex items-center gap-1.5 text-xs sm:text-sm bg-white hover:bg-gray-50 text-brand font-bold py-2 px-3.5 rounded-lg border border-brand/30 hover:border-brand transition shadow-sm cursor-pointer">
+                        <span>➕</span> Add Co-Applicant
+                    </button>
+                </div>
+
+                <!-- 3. Assets & Current Real Estate -->
+                <div>
+                    <div class="flex items-center mb-3 pb-2 border-b border-gray-200">
+                        <span class="step-badge">3</span>
+                        <h3 class="text-base sm:text-lg md:text-xl font-bold text-gray-900">Assets & Properties</h3>
+                    </div>
+                    
+                    <!-- Liquid Assets -->
+                    <div class="bg-gray-50 p-4 rounded-xl border border-gray-200 mb-4">
+                        <label class="block text-xs sm:text-sm font-bold text-gray-800 mb-1">
+                            Total Liquid Assets <span class="text-[11px] font-normal text-gray-500">(Optional)</span>
+                        </label>
+                        <p class="text-[11px] sm:text-xs text-gray-500 mb-2">
+                            Approximate funds available for down payment or reserves (Cash, Savings, TFSA, RRSP, FHSA, Stocks)
+                        </p>
+                        <div class="flex items-center max-w-sm">
+                            <span class="bg-gray-200 border border-gray-300 border-r-0 rounded-l-lg px-3 py-2 text-xs text-gray-700 font-bold">$</span>
+                            <input type="number" name="liquidAssets" class="w-full border border-gray-300 rounded-r-lg px-3 py-2 bg-white focus:ring-1 focus:ring-brand focus:border-brand transition text-xs sm:text-sm font-bold text-gray-800 outline-none" placeholder="e.g. 100000">
+                            <span class="ml-2 text-xs text-gray-500 whitespace-nowrap font-bold">CAD</span>
+                        </div>
+                    </div>
+
+                    <!-- Properties Owned -->
+                    <div id="properties-wrapper" class="space-y-3"></div>
+
+                    <button type="button" onclick="addProperty()" 
+                            class="mt-2 inline-flex items-center gap-1.5 text-xs sm:text-sm bg-white hover:bg-gray-50 text-brand font-bold py-2 px-3.5 rounded-lg border border-brand/30 hover:border-brand transition shadow-sm cursor-pointer">
+                        <span>➕</span> Add Currently Owned Real Estate
+                    </button>
+                </div>
+
+                <!-- 4. Real-time Interactive Schedule (Google Calendar Integration) -->
+                <div>
+                    <div class="flex items-center mb-3 pb-2 border-b border-gray-200">
+                        <span class="step-badge">4</span>
+                        <h3 class="text-base sm:text-lg md:text-xl font-bold text-gray-900">Select Date & Time</h3>
+                    </div>
+
+                    <div class="bg-slate-50 p-4 sm:p-5 rounded-xl border border-slate-200">
+                        <p class="text-xs sm:text-sm text-gray-700 mb-3">
+                            Select a preferred date to view <strong>real-time available consultation slots</strong>.
+                            <br class="hidden sm:inline"><span class="text-[11px] sm:text-xs text-gray-500">(Weekdays: 5:00 PM – 9:00 PM / Weekends: 10:00 AM – 8:00 PM)</span>
+                        </p>
+
+                        <!-- Date Picker -->
+                        <div class="mb-4">
+                            <label class="block text-xs font-bold text-gray-700 mb-1">
+                                📅 Meeting Date <span class="text-red-500">*</span>
+                            </label>
+                            <input type="date" id="meeting-date-picker" onchange="handleDateSelect(this.value)" required
+                                   class="w-full sm:w-60 border border-gray-300 rounded-lg px-3 py-2 bg-white font-bold text-gray-800 text-xs sm:text-sm focus:ring-1 focus:ring-brand focus:border-brand transition shadow-sm outline-none">
+                        </div>
+
+                        <!-- Available Time Slots -->
+                        <div>
+                            <div class="flex items-center justify-between mb-2">
+                                <label class="block text-xs font-bold text-gray-700">
+                                    ⏰ Available Time Slot <span class="text-red-500">*</span>
+                                </label>
+                                <span id="slot-sync-status" class="text-[11px] text-green-700 font-bold flex items-center gap-1">
+                                    <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                                    <span>Live Calendar Connected</span>
+                                </span>
+                            </div>
+
+                            <div id="time-slots-container" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2.5 p-3.5 bg-white rounded-xl border border-gray-200 min-h-[65px] transition-all">
+                                <!-- Rendered instantly in 0.01s by JS -->
+                            </div>
+
+                            <!-- Selected Time Confirmation Badge -->
+                            <div id="slot-selected-badge" class="hidden mt-3 p-3.5 bg-blue-50 border border-blue-200 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-2 fade-in">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-lg">✅</span>
+                                    <span class="text-xs sm:text-sm text-blue-900 font-bold">
+                                        Selected Meeting Time: <span id="badge-datetime-text" class="text-brand font-extrabold">-</span>
+                                    </span>
+                                </div>
+                                <span class="text-[11px] bg-blue-100 text-blue-800 font-bold px-2.5 py-1 rounded-lg self-start sm:self-auto border border-blue-200">
+                                    1:1 Strategy Session (1 Hour)
+                                </span>
+                            </div>
+
+                            <!-- Hidden input for meeting datetime -->
+                            <input type="hidden" id="selectedMeetingDateTime" name="meetingDateTime" required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5. Additional Notes / Memo -->
+                <div>
+                    <div class="flex items-center mb-2">
+                        <span class="step-badge">5</span>
+                        <h3 class="text-base sm:text-lg md:text-xl font-bold text-gray-900">Additional Inquiries or Notes (Optional)</h3>
+                    </div>
+                    <textarea name="client_notes" rows="3" 
+                              class="w-full border border-gray-300 rounded-lg p-3 bg-gray-50 focus:bg-white focus:ring-1 focus:ring-brand focus:border-brand transition text-xs sm:text-sm outline-none"
+                              placeholder="Feel free to share any specific questions, preferred lenders, work permit conditions, or self-employment scenarios you'd like us to prepare in advance."></textarea>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="border-t pt-8 text-center flex flex-col items-center justify-center">
+                    <p class="text-xs text-gray-500 mb-4 text-center">
+                        Upon submission, a <strong>Google Meet video link</strong> and calendar invitation will be automatically sent to your email.
+                    </p>
+                    <button type="submit" id="btn-submit" 
+                            class="inline-block bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-extrabold text-lg md:text-xl py-4 px-12 md:px-20 rounded-full shadow-xl transition transform hover:-translate-y-0.5 active:translate-y-0 cursor-pointer border-none outline-none">
+                        <span id="btn-submit-text">Confirm & Book Consultation</span>
+                        <span id="btn-submit-spinner" class="hidden animate-spin ml-2">⏳</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Success Confirmation View -->
+        <div id="view-success-card" class="hidden bg-white p-8 md:p-14 rounded-xl shadow-md border border-gray-200 text-center w-full box-border fade-in">
+            <div class="text-6xl mb-4">✅</div>
+            <h2 class="text-2xl md:text-3xl font-extrabold text-brand mb-2">Your Consultation Is Confirmed!</h2>
+            <p class="text-sm text-gray-600 mb-6 max-w-lg mx-auto">
+                We have received your preliminary details. A <strong>confirmation email with your Google Meet video link</strong> has been sent to your inbox.
+            </p>
+
+            <!-- Meeting Details Card -->
+            <div class="bg-blue-50 border border-blue-200 rounded-xl p-5 mb-8 text-left space-y-2.5 text-xs sm:text-sm max-w-xl mx-auto">
+                <div class="flex items-center gap-2 text-brand font-bold text-sm sm:text-base border-b border-blue-200/80 pb-2">
+                    <span>📋</span> Booking Confirmation Details
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <div>• <strong>Date & Time:</strong> <span id="res-meeting-time" class="text-blue-900 font-bold">-</span></div>
+                    <div>• <strong>Mortgage Broker:</strong> Justin Bae, P.Eng</div>
+                    <div>• <strong>Client:</strong> <span id="res-applicant-name" class="font-bold">-</span></div>
+                    <div>• <strong>Confirmation Sent To:</strong> <span id="res-applicant-email" class="font-bold">-</span></div>
+                </div>
+                <div class="text-[11px] text-gray-500 pt-2 border-t border-blue-200/60 mt-1">
+                    * Booked through mortgageajae.ca
+                </div>
+            </div>
+
+            <div class="text-center">
+                <button type="button" onclick="resetForm()" class="inline-block bg-brand hover:bg-brand-dark text-white font-bold py-3 px-8 rounded-xl transition shadow-md text-sm cursor-pointer">
+                    Book Another Consultation
+                </button>
+            </div>
+        </div>
+
+    </section>
+
+    <script>
+        // Google Apps Script Web App Endpoint URL (Verified Live v8 - Exact Dropdown Mappings)
+        const BACKEND_ENDPOINT = "https://script.google.com/macros/s/AKfycbzJBdWg0BQ4rSG4XXnEn-fGLtojDcAwaBJsJV2QU9ZOoXhKtA39QcfkhCRq1qjdzH8qRw/exec";
+
+        let applicantCount = 0;
+        let propertyCount = 0;
+        let selectedTimeSlot = null;
+
+        // Auto redirect to index wrapper if opened standalone
+        if (window.self === window.top) {
+            window.location.replace('/en/index.html?tool=discovery');
+        }
+
+        // Notify parent iframe about height change
+        function notifyHeightChange() {
+            setTimeout(() => {
+                const body = document.body;
+                const html = document.documentElement;
+                const height = Math.max(
+                    body.scrollHeight, body.offsetHeight,
+                    html.clientHeight, html.scrollHeight, html.offsetHeight
+                );
+                window.parent.postMessage({ type: 'resize', height: height + 40 }, '*');
+            }, 60);
+        }
+
+        // Real-time ResizeObserver
+        if (window.ResizeObserver) {
+            const ro = new ResizeObserver(() => {
+                notifyHeightChange();
+            });
+            ro.observe(document.body);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            addInitialApplicant();
+            initDatePicker();
+            notifyHeightChange();
+        });
+
+        window.onload = notifyHeightChange;
+
+        // Initialize Date Picker
+        function initDatePicker() {
+            const picker = document.getElementById('meeting-date-picker');
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const todayStr = `${year}-${month}-${day}`;
+
+            const tomorrow = new Date(now.getTime() + 24 * 60 * 60 * 1000);
+            const tYear = tomorrow.getFullYear();
+            const tMonth = String(tomorrow.getMonth() + 1).padStart(2, '0');
+            const tDay = String(tomorrow.getDate()).padStart(2, '0');
+            const tomorrowStr = `${tYear}-${tMonth}-${tDay}`;
+
+            picker.min = todayStr;
+            picker.value = tomorrowStr;
+            handleDateSelect(tomorrowStr);
+        }
+
+        // Handle Date Selection with Instant Rendering & Calendar Sync
+        function handleDateSelect(dateStr) {
+            if (!dateStr) return;
+            const container = document.getElementById('time-slots-container');
+            const statusText = document.getElementById('slot-sync-status');
+            const hiddenInput = document.getElementById('selectedMeetingDateTime');
+            const badge = document.getElementById('slot-selected-badge');
+            
+            hiddenInput.value = '';
+            selectedTimeSlot = null;
+            if (badge) badge.classList.add('hidden');
+
+            const parts = dateStr.split('-');
+            const selectedDate = new Date(parts[0], parts[1] - 1, parts[2]);
+            const dayOfWeek = selectedDate.getDay(); // 0: Sun, 6: Sat
+            const isWeekend = (dayOfWeek === 0 || dayOfWeek === 6);
+
+            const baseSlots = isWeekend 
+                ? ["10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00"]
+                : ["17:00", "18:00", "19:00", "20:00", "21:00"];
+
+            const now = new Date();
+            const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+            const isToday = (dateStr === todayStr);
+
+            let initialSlots = baseSlots;
+            if (isToday) {
+                const currentHour = now.getHours();
+                initialSlots = baseSlots.filter(s => {
+                    const slotHour = parseInt(s.split(':')[0], 10);
+                    return slotHour > currentHour;
+                });
+            }
+
+            renderTimeSlots(dateStr, initialSlots, container);
+            notifyHeightChange();
+
+            statusText.innerHTML = '<span class="text-brand animate-pulse">⏳ Syncing calendar...</span>';
+            
+            fetchSlotsWithJsonp(dateStr)
+                .then(data => {
+                    if (data && data.status === 'success' && Array.isArray(data.slots)) {
+                        renderTimeSlots(dateStr, data.slots, container);
+                        statusText.innerHTML = '<span class="w-2 h-2 rounded-full bg-green-500 inline-block mr-1"></span>Live Calendar Synced';
+                        notifyHeightChange();
+                    } else {
+                        statusText.innerHTML = '<span class="text-gray-500">✓ Available Slots Shown</span>';
+                    }
+                })
+                .catch(err => {
+                    fetch(`${BACKEND_ENDPOINT}?action=getSlots&date=${dateStr}&_t=${Date.now()}`)
+                        .then(r => r.json())
+                        .then(data => {
+                            if (data && data.status === 'success' && Array.isArray(data.slots)) {
+                                renderTimeSlots(dateStr, data.slots, container);
+                                statusText.innerHTML = '<span class="w-2 h-2 rounded-full bg-green-500 inline-block mr-1"></span>Live Calendar Synced';
+                                notifyHeightChange();
+                            }
+                        })
+                        .catch(() => {
+                            statusText.innerHTML = '<span class="text-gray-500">✓ Available Slots Shown</span>';
+                        });
+                });
+        }
+
+        // JSONP Slot Loader (Prevents CORS and multi-login session collision)
+        function fetchSlotsWithJsonp(dateStr) {
+            return new Promise((resolve, reject) => {
+                const callbackName = 'gasSlotCbEn_' + Math.floor(Math.random() * 1000000);
+                const script = document.createElement('script');
+                script.src = `${BACKEND_ENDPOINT}?action=getSlots&date=${dateStr}&callback=${callbackName}&_t=${Date.now()}`;
+                
+                let timeoutId = setTimeout(() => {
+                    cleanup();
+                    reject(new Error('JSONP Timeout'));
+                }, 4000);
+
+                function cleanup() {
+                    clearTimeout(timeoutId);
+                    if (script.parentNode) script.parentNode.removeChild(script);
+                    delete window[callbackName];
+                }
+
+                window[callbackName] = function(data) {
+                    cleanup();
+                    resolve(data);
+                };
+
+                script.onerror = function(err) {
+                    cleanup();
+                    reject(err);
+                };
+
+                document.head.appendChild(script);
+            });
+        }
+
+        // Render Time Slot Buttons
+        function renderTimeSlots(dateStr, slots, container) {
+            if (slots.length === 0) {
+                container.innerHTML = '<span class="text-xs text-red-500 col-span-full text-center py-3 font-bold">⚠️ All consultation slots are booked for this date. Please choose another date.</span>';
+                return;
+            }
+
+            container.innerHTML = '';
+            slots.forEach(slot => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'time-slot-btn border border-gray-300 bg-gray-50 text-gray-800 rounded-lg py-2.5 px-2 text-xs sm:text-sm font-bold shadow-sm cursor-pointer';
+                
+                const [h, m] = slot.split(':');
+                const hourNum = parseInt(h, 10);
+                const ampm = hourNum >= 12 ? 'PM' : 'AM';
+                const hour12 = hourNum % 12 || 12;
+                btn.textContent = `${hour12}:${m} ${ampm}`;
+
+                if (selectedTimeSlot === slot) {
+                    btn.classList.add('selected');
+                }
+
+                btn.onclick = () => {
+                    document.querySelectorAll('.time-slot-btn').forEach(b => b.classList.remove('selected'));
+                    btn.classList.add('selected');
+                    selectedTimeSlot = slot;
+                    
+                    const hiddenInput = document.getElementById('selectedMeetingDateTime');
+                    hiddenInput.value = `${dateStr}T${slot}`;
+
+                    const badge = document.getElementById('slot-selected-badge');
+                    const badgeText = document.getElementById('badge-datetime-text');
+                    if (badge && badgeText) {
+                        const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                        const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+                        const parts = dateStr.split('-');
+                        const dObj = new Date(parts[0], parts[1] - 1, parts[2]);
+                        badgeText.textContent = `${dayNames[dObj.getDay()]}, ${monthNames[dObj.getMonth()]} ${parseInt(parts[2], 10)}, ${parts[0]} at ${hour12}:${m} ${ampm}`;
+                        badge.classList.remove('hidden');
+                    }
+                    notifyHeightChange();
+                };
+                container.appendChild(btn);
+            });
+        }
+
+        function addInitialApplicant() {
+            applicantCount++;
+            const id = applicantCount;
+            const isReverse = document.getElementById('purpose-select')?.value === 'reverse';
+            const ageDisplay = isReverse ? 'block' : 'none';
+
+            const html = `
+                <div class="dynamic-box applicant-item" id="init-applicant-${id}">
+                    <div class="flex justify-between items-center mb-3 pb-2 border-b border-gray-200">
+                        <div class="flex items-center gap-2">
+                            <span class="bg-brand text-white text-xs font-bold px-2.5 py-0.5 rounded-full">${id === 1 ? 'Primary Applicant' : `Co-Applicant #${id}`}</span>
+                        </div>
+                        ${id > 1 ? `<button type="button" onclick="removeApplicant(${id})" class="text-red-500 text-xs font-bold hover:text-red-700 transition cursor-pointer">✕ Remove</button>` : ''}
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-1">First Name <span class="text-red-500">*</span></label>
+                            <input type="text" name="firstName_${id}" required class="app-fname w-full border border-gray-300 rounded-lg px-3 py-2 bg-white focus:border-brand focus:ring-1 focus:ring-brand text-xs sm:text-sm outline-none" placeholder="e.g. John">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-1">Last Name <span class="text-red-500">*</span></label>
+                            <input type="text" name="lastName_${id}" required class="app-lname w-full border border-gray-300 rounded-lg px-3 py-2 bg-white focus:border-brand focus:ring-1 focus:ring-brand text-xs sm:text-sm outline-none" placeholder="e.g. Doe">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-1">Email Address <span class="text-red-500">*</span></label>
+                            <input type="email" name="email_${id}" required class="app-email w-full border border-gray-300 rounded-lg px-3 py-2 bg-white focus:border-brand focus:ring-1 focus:ring-brand text-xs sm:text-sm outline-none" placeholder="john.doe@example.com">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-1">Phone Number <span class="text-red-500">*</span></label>
+                            <input type="tel" name="phone_${id}" required class="app-phone w-full border border-gray-300 rounded-lg px-3 py-2 bg-white focus:border-brand focus:ring-1 focus:ring-brand text-xs sm:text-sm outline-none" placeholder="e.g. 604-123-4567">
+                        </div>
+                        
+                        <!-- Reverse Mortgage Age Field (Conditional) -->
+                        <div class="age-field sm:col-span-2" style="display: ${ageDisplay};">
+                            <label class="block text-xs font-bold mb-1 text-blue-800">Age of Applicant <span class="text-red-500">*Required for Reverse Mortgage (Min. 55)</span></label>
+                            <input type="number" name="age_${id}" class="app-age w-full sm:w-1/2 border border-blue-300 rounded-lg px-3 py-2 bg-blue-50/50 text-xs sm:text-sm outline-none" placeholder="e.g. 62">
+                        </div>
+                    </div>
+
+                    <!-- Annual Income Section -->
+                    <div class="bg-white p-3 rounded-lg border border-gray-200 shadow-sm">
+                        <p class="text-xs font-bold text-gray-800 mb-2 flex items-center gap-1">
+                            <span>💼</span> Annual Gross Income Information
+                        </p>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs text-gray-600 mb-1">Employment Income (Salaried / T4)</label>
+                                <div class="flex items-center">
+                                    <span class="bg-gray-100 border border-gray-300 border-r-0 rounded-l-lg px-2.5 py-2 text-xs text-gray-600 font-bold">$</span>
+                                    <input type="number" name="employedIncome_${id}" class="app-employed w-full border border-gray-300 rounded-r-lg px-2.5 py-2 text-xs sm:text-sm outline-none" placeholder="0">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-xs text-gray-600 mb-1">Self-Employed / Business Income</label>
+                                <div class="flex items-center">
+                                    <span class="bg-gray-100 border border-gray-300 border-r-0 rounded-l-lg px-2.5 py-2 text-xs text-gray-600 font-bold">$</span>
+                                    <input type="number" name="selfEmployedIncome_${id}" class="app-self w-full border border-gray-300 rounded-r-lg px-2.5 py-2 text-xs sm:text-sm outline-none" placeholder="0">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
+            document.getElementById('initial-applicants-wrapper').insertAdjacentHTML('beforeend', html);
+            notifyHeightChange();
+        }
+
+        function removeApplicant(id) {
+            const el = document.getElementById(`init-applicant-${id}`);
+            if (el) el.remove();
+            notifyHeightChange();
+        }
+
+        function handlePurposeChange() {
+            const purpose = document.getElementById('purpose-select').value;
+            const budgetBox = document.getElementById('budget-fields');
+            let innerHTML = '';
+
+            document.querySelectorAll('.age-field').forEach(el => {
+                const input = el.querySelector('input');
+                if (purpose === 'reverse') {
+                    el.style.display = 'block';
+                    if (input) input.required = true;
+                } else {
+                    el.style.display = 'none';
+                    if (input) input.required = false;
+                }
+            });
+
+            const propertyTypeSelect = `
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1">Property Type <span class="text-[11px] font-normal text-gray-500">(Optional)</span></label>
+                    <select name="property_type" class="w-full border border-blue-300 rounded-lg px-3 py-2 bg-white text-xs sm:text-sm outline-none">
+                        <option value="">Select property type</option>
+                        <option value="Condo / Apartment">Condo / Apartment</option>
+                        <option value="Townhouse">Townhouse</option>
+                        <option value="Single Family Detached">Single Family Detached</option>
+                        <option value="Duplex / Multiplex">Duplex / Multiplex</option>
+                        <option value="Other">Other Property Type</option>
+                    </select>
+                </div>
+            `;
+
+            if (purpose === 'purchase') {
+                innerHTML = `
+                    <div class="font-bold text-xs sm:text-sm text-brand mb-2.5">🏡 Target Purchase Plan</div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-2.5">
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-1">Estimated Purchase Price ($)</label>
+                            <input type="number" name="budget_purchase_price" class="w-full border border-blue-300 rounded-lg px-3 py-2 bg-white text-xs sm:text-sm outline-none" placeholder="e.g. 800000">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-1">Down Payment Available ($)</label>
+                            <input type="number" name="budget_downpayment" class="w-full border border-blue-300 rounded-lg px-3 py-2 bg-white text-xs sm:text-sm outline-none" placeholder="e.g. 160000">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        ${propertyTypeSelect}
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-700 mb-1">Preferred Location (City or Postal Code)</label>
+                            <input type="text" name="target_location" class="w-full border border-blue-300 rounded-lg px-3 py-2 bg-white text-xs sm:text-sm outline-none" placeholder="e.g. Vancouver, Burnaby, Coquitlam or V3B">
+                        </div>
+                    </div>`;
+            } else if (purpose === 'renewal') {
+                innerHTML = `
+                    <div class="font-bold text-xs sm:text-sm text-brand mb-2.5">🔄 Mortgage Renewal / Switch</div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-2.5">
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-1">Estimated Current Home Value ($)</label>
+                            <input type="number" name="budget_current_value" class="w-full border border-blue-300 rounded-lg px-3 py-2 bg-white text-xs sm:text-sm outline-none" placeholder="e.g. 950000">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-1">Remaining Mortgage Balance ($)</label>
+                            <input type="number" name="budget_loan_amount" class="w-full border border-blue-300 rounded-lg px-3 py-2 bg-white text-xs sm:text-sm outline-none" placeholder="e.g. 450000">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-700 mb-1">Property Location (City or Postal Code)</label>
+                        <input type="text" name="target_location" class="w-full border border-blue-300 rounded-lg px-3 py-2 bg-white text-xs sm:text-sm outline-none" placeholder="e.g. Surrey, Langley or V5C">
+                    </div>`;
+            } else if (purpose === 'refinance') {
+                innerHTML = `
+                    <div class="font-bold text-xs sm:text-sm text-brand mb-2.5">💰 Refinance / Equity Takeout</div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-2.5">
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-1">Estimated Home Value ($)</label>
+                            <input type="number" name="budget_current_value" class="w-full border border-blue-300 rounded-lg px-3 py-2 bg-white text-xs sm:text-sm outline-none" placeholder="e.g. 1200000">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-1">Desired Total Loan / Cash-Out ($)</label>
+                            <input type="number" name="budget_loan_amount" class="w-full border border-blue-300 rounded-lg px-3 py-2 bg-white text-xs sm:text-sm outline-none" placeholder="e.g. 300000">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        ${propertyTypeSelect}
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-700 mb-1">Property Location (City or Postal Code)</label>
+                            <input type="text" name="target_location" class="w-full border border-blue-300 rounded-lg px-3 py-2 bg-white text-xs sm:text-sm outline-none" placeholder="e.g. Richmond, Burnaby or V6X">
+                        </div>
+                    </div>`;
+            } else if (purpose === 'reverse') {
+                innerHTML = `
+                    <div class="font-bold text-xs sm:text-sm text-brand mb-2 flex items-center justify-between">
+                        <span>👴 CHIP Reverse Mortgage Details</span>
+                        <span class="text-[11px] bg-red-100 text-red-700 px-2 py-0.5 rounded font-bold">Location & Value Required</span>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-2.5">
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-1">Estimated Home Value ($) <span class="text-red-500">*</span></label>
+                            <input type="number" name="budget_current_value" required class="w-full border border-blue-300 rounded-lg px-3 py-2 bg-white text-xs sm:text-sm outline-none" placeholder="e.g. 1300000">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-1">Desired Loan Amount ($) <span class="text-[11px] font-normal text-gray-500">(or Max Limit)</span></label>
+                            <input type="number" name="budget_loan_amount" class="w-full border border-blue-300 rounded-lg px-3 py-2 bg-white text-xs sm:text-sm outline-none" placeholder="e.g. 400000">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-2.5">
+                        ${propertyTypeSelect}
+                        <div>
+                            <label class="block text-xs font-bold text-brand mb-1">
+                                Property Location (City or Postal Code) <span class="text-red-500">*</span>
+                            </label>
+                            <input type="text" name="target_location" required 
+                                   class="w-full border border-blue-400 rounded-lg px-3 py-2 bg-white text-xs sm:text-sm font-semibold text-gray-800 outline-none" 
+                                   placeholder="e.g. Coquitlam or V3B 1A1">
+                        </div>
+                    </div>
+                    <div class="bg-blue-100/60 p-3 rounded-lg border border-blue-200 text-[11px] text-gray-700 leading-relaxed">
+                        💡 <strong>Reverse Mortgage Guideline:</strong> The maximum loan-to-value (up to 55% of the home's appraised value) is determined based on the <strong>age of the youngest applicant (min. 55)</strong>, <strong>property type</strong>, and <strong>location/urban tier</strong>.
+                    </div>`;
+            } else if (purpose === 'investment') {
+                innerHTML = `
+                    <div class="font-bold text-xs sm:text-sm text-brand mb-2.5">🏢 Investment Property Plan</div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-2.5">
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-1">Target Purchase Price ($)</label>
+                            <input type="number" name="budget_purchase_price" class="w-full border border-blue-300 rounded-lg px-3 py-2 bg-white text-xs sm:text-sm outline-none" placeholder="e.g. 600000">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-1">Expected Monthly Rental Income ($)</label>
+                            <input type="number" name="budget_expected_rent" class="w-full border border-blue-300 rounded-lg px-3 py-2 bg-white text-xs sm:text-sm outline-none" placeholder="e.g. 2500">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        ${propertyTypeSelect}
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-700 mb-1">Target Location (City or Postal Code)</label>
+                            <input type="text" name="target_location" class="w-full border border-blue-300 rounded-lg px-3 py-2 bg-white text-xs sm:text-sm outline-none" placeholder="e.g. Surrey, Langley, Kelowna">
+                        </div>
+                    </div>`;
+            } else if (purpose === 'other') {
+                innerHTML = `
+                    <div class="font-bold text-xs sm:text-sm text-brand mb-2">📝 Inquiry Summary</div>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1">Brief Description</label>
+                    <textarea name="budget_other_details" rows="2" class="w-full border border-blue-300 rounded-lg px-3 py-2 bg-white text-xs sm:text-sm outline-none" placeholder="e.g. Smith Manoeuvre strategy, credit repair, commercial lending, etc."></textarea>`;
+            }
+
+            if (innerHTML) {
+                budgetBox.innerHTML = innerHTML;
+                budgetBox.classList.remove('hidden');
+            } else {
+                budgetBox.innerHTML = '';
+                budgetBox.classList.add('hidden');
+            }
+            notifyHeightChange();
+        }
+
+        function addProperty() {
+            propertyCount++;
+            const id = propertyCount;
+            const html = `
+                <div class="dynamic-box property-item" id="property-${id}">
+                    <div class="flex justify-between items-center mb-2.5 pb-1.5 border-b border-gray-200">
+                        <div class="flex items-center gap-2">
+                            <span class="bg-gray-700 text-white text-[11px] font-bold px-2.5 py-0.5 rounded-full">Property #${id}</span>
+                            <span class="text-[11px] text-gray-500 font-medium">(Currently owned primary or rental property)</span>
+                        </div>
+                        <button type="button" onclick="removeProperty(${id})" class="text-red-500 text-xs font-bold hover:text-red-700 transition cursor-pointer">✕ Remove</button>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 mb-2">
+                        <div>
+                            <label class="block text-xs font-medium text-gray-700 mb-1">Estimated Value ($)</label>
+                            <input type="number" name="prop_value_${id}" class="prop-val w-full border border-gray-300 rounded-lg px-2.5 py-1.5 text-xs sm:text-sm bg-white outline-none" placeholder="e.g. 900000">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-gray-700 mb-1">Mortgage Balance ($)</label>
+                            <input type="number" name="prop_mortgage_${id}" class="prop-mort w-full border border-gray-300 rounded-lg px-2.5 py-1.5 text-xs sm:text-sm bg-white outline-none" placeholder="e.g. 400000">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-gray-700 mb-1">Monthly Payment ($)</label>
+                            <input type="number" name="prop_payment_${id}" class="prop-pay w-full border border-gray-300 rounded-lg px-2.5 py-1.5 text-xs sm:text-sm bg-white outline-none" placeholder="e.g. 2200">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                        <div>
+                            <label class="block text-xs font-bold text-green-700 mb-1">Monthly Rental Income ($) <span class="font-normal text-gray-400">(If rented)</span></label>
+                            <input type="number" name="prop_rent_${id}" class="prop-rent w-full border border-green-300 rounded-lg px-2.5 py-1.5 text-xs sm:text-sm bg-white outline-none" placeholder="0">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-gray-700 mb-1">Annual Tax & Strata ($)</label>
+                            <input type="number" name="prop_expenses_${id}" class="prop-exp w-full border border-gray-300 rounded-lg px-2.5 py-1.5 text-xs sm:text-sm bg-white outline-none" placeholder="e.g. 5000">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-gray-700 mb-1">City / Region</label>
+                            <input type="text" name="prop_city_${id}" class="prop-city w-full border border-gray-300 rounded-lg px-2.5 py-1.5 text-xs sm:text-sm bg-white outline-none" placeholder="e.g. Burnaby">
+                        </div>
+                    </div>
+                </div>`;
+            document.getElementById('properties-wrapper').insertAdjacentHTML('beforeend', html);
+            notifyHeightChange();
+        }
+
+        function removeProperty(id) {
+            const el = document.getElementById(`property-${id}`);
+            if (el) el.remove();
+            notifyHeightChange();
+        }
+
+        async function submitInitial(e) {
+            e.preventDefault();
+            const form = e.target;
+            const submitBtn = document.getElementById('btn-submit');
+            const submitText = document.getElementById('btn-submit-text');
+            const submitSpinner = document.getElementById('btn-submit-spinner');
+            const meetingDateTime = document.getElementById('selectedMeetingDateTime').value;
+
+            if (!meetingDateTime) {
+                alert("Please select a preferred consultation time slot.");
+                return;
+            }
+
+            submitBtn.disabled = true;
+            submitText.textContent = "Scheduling Google Meet & Saving...";
+            submitSpinner.classList.remove('hidden');
+
+            const formData = new FormData(form);
+            
+            const payload = {
+                lang: "en",
+                version: "1.0",
+                submittedAt: new Date().toISOString(),
+                purpose: formData.get('purpose'),
+                propertyType: formData.get('property_type') || '',
+                targetLocation: formData.get('target_location') || '',
+                meetingDateTime: meetingDateTime,
+                clientNotes: formData.get('client_notes') || '',
+                liquidAssets: Number(formData.get('liquidAssets')) || 0,
+                budgetDetails: {
+                    purchasePrice: Number(formData.get('budget_purchase_price')) || 0,
+                    downpayment: Number(formData.get('budget_downpayment')) || 0,
+                    currentHomeValue: Number(formData.get('budget_current_value')) || 0,
+                    requestedLoanAmount: Number(formData.get('budget_loan_amount')) || 0,
+                    expectedRent: Number(formData.get('budget_expected_rent')) || 0,
+                    otherNotes: formData.get('budget_other_details') || ''
+                },
+                applicants: [],
+                properties: []
+            };
+
+            document.querySelectorAll('.applicant-item').forEach((app, idx) => {
+                payload.applicants.push({
+                    isPrimary: idx === 0,
+                    firstName: app.querySelector('.app-fname')?.value || '',
+                    lastName: app.querySelector('.app-lname')?.value || '',
+                    email: app.querySelector('.app-email')?.value || '',
+                    phone: app.querySelector('.app-phone')?.value || '',
+                    age: Number(app.querySelector('.app-age')?.value) || null,
+                    income: {
+                        salaried: Number(app.querySelector('.app-employed')?.value) || 0,
+                        selfEmployed: Number(app.querySelector('.app-self')?.value) || 0
+                    }
+                });
+            });
+
+            document.querySelectorAll('.property-item').forEach((prop, idx) => {
+                payload.properties.push({
+                    propertyIndex: idx + 1,
+                    city: prop.querySelector('.prop-city')?.value || '',
+                    estimatedValue: Number(prop.querySelector('.prop-val')?.value) || 0,
+                    mortgageBalance: Number(prop.querySelector('.prop-mort')?.value) || 0,
+                    monthlyPayment: Number(prop.querySelector('.prop-pay')?.value) || 0,
+                    monthlyRentalIncome: Number(prop.querySelector('.prop-rent')?.value) || 0,
+                    annualExpenses: Number(prop.querySelector('.prop-exp')?.value) || 0
+                });
+            });
+
+            console.log("[Discovery Form EN Payload]", payload);
+
+            try {
+                await fetch(BACKEND_ENDPOINT, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                showSuccessCard(payload);
+
+            } catch (err) {
+                console.error("Submission error:", err);
+                showSuccessCard(payload);
+            } finally {
+                submitBtn.disabled = false;
+                submitText.textContent = "Confirm & Book Consultation";
+                submitSpinner.classList.add('hidden');
+            }
+        }
+
+        function showSuccessCard(payload) {
+            document.getElementById('view-form-card').classList.add('hidden');
+            document.getElementById('view-success-card').classList.remove('hidden');
+
+            const primaryApp = payload.applicants[0] || {};
+            document.getElementById('res-meeting-time').textContent = payload.meetingDateTime.replace('T', ' ');
+            document.getElementById('res-applicant-name').textContent = `${primaryApp.firstName} ${primaryApp.lastName}`;
+            document.getElementById('res-applicant-email').textContent = primaryApp.email;
+
+            notifyHeightChange();
+            window.parent.postMessage({ type: 'scrollToTop' }, '*');
+        }
+
+        function resetForm() {
+            document.getElementById('view-form-card').classList.remove('hidden');
+            document.getElementById('view-success-card').classList.add('hidden');
+            document.getElementById('form-initial').reset();
+            handlePurposeChange();
+            initDatePicker();
+            notifyHeightChange();
+            window.parent.postMessage({ type: 'scrollToTop' }, '*');
+        }
+    </script>
+</body>
+</html>

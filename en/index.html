@@ -50,6 +50,19 @@
         .drag-scroll { cursor: grab; user-select: none; }
         .drag-scroll:active { cursor: grabbing; }
     </style>
+    <script>
+        function adjustHeaderPadding() {
+            const header = document.querySelector('header');
+            if (!header) return;
+            const headerHeight = header.offsetHeight;
+            const subNav = document.getElementById('sub-nav');
+            const mainContent = document.getElementById('main-content');
+            if (subNav) subNav.style.top = headerHeight + 'px';
+            if (mainContent && subNav) mainContent.style.paddingTop = (headerHeight + subNav.offsetHeight) + 'px';
+        }
+        window.addEventListener('resize', adjustHeaderPadding);
+        window.addEventListener('load', adjustHeaderPadding);
+    </script>
 </head>
 <body class="bg-gray-50 text-gray-800 font-sans flex flex-col min-h-screen">
 
@@ -78,6 +91,7 @@
             <button onclick="loadTool('varvsfix.html', this, 9)" class="calc-tab pb-3 px-1 md:px-2 tab-inactive hover:text-brand transition flex-shrink-0">Var. vs Fixed Rate Compare</button>
             <!-- Updated Index to 10 -->
             <button onclick="loadTool('board.html', this, 10)" class="calc-tab pb-3 px-1 md:px-2 tab-inactive hover:text-brand transition flex-shrink-0">Info Board</button>
+            <button onclick="loadTool('discovery.html', this, 11)" class="calc-tab pb-3 px-1 md:px-2 tab-inactive hover:text-brand transition flex-shrink-0 font-bold">📅 Book Consultation</button>
         </div>
     </div>
 
@@ -172,18 +186,18 @@
             <p class="text-blue-100 mb-8 text-sm md:text-base leading-relaxed max-w-2xl mx-auto">
                 My goal is to dive deep into your unique situation and build a strategy that optimizes <br class="hidden md:block">
                 every possible benefit for you. If the math ever feels a bit overwhelming, <br class="hidden md:block">
-                please don't hesitate to set up a quick one-on-one video chat.
+                please don't hesitate to set up a quick one-on-one video consultation.
             </p>
-            <a href="https://calendar.app.google/zWG82EqskeBtwyeU7" target="_blank" class="inline-block bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-extrabold text-base md:text-lg py-4 px-10 rounded-full transition shadow-xl">
-                🎥 Book a 1:1 Video Consultation
-            </a>
+            <button onclick="loadTool('discovery.html', null, 11)" class="inline-block bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-extrabold text-base md:text-lg py-4 px-10 rounded-full transition shadow-xl cursor-pointer border-none outline-none transform hover:-translate-y-0.5">
+                🎥 Book a 1:1 Consultation
+            </button>
         </div>
     </section>
 
     <footer class="bg-gray-900 text-gray-400 py-8 text-center text-sm w-full mt-auto">
         <p>Justin Bae | M.Sc. P.Eng Registered Mortgage Broker (BCFSA)</p>
-        <p class="mt-2">Email: jb@mortgageajae.ca | Phone: 250-581-6862 | KakaoTalk: mortgageajae</p>
-        <p class="mt-2 text-xs text-gray-600">&copy; 2026 Mortgageajae. All rights reserved.</p>
+        <p class="mt-2">Email: mortgageajae@gmail.com | Phone: 250-581-6862 | KakaoTalk: mortgageajae</p>
+        <p class="mt-2 text-xs text-gray-600">&copy; 2026 mortgageajae. All rights reserved.</p>
     </footer>
 
     <script>
@@ -269,9 +283,20 @@
         window.addEventListener('message', function(event) {
             if (event.data.type === 'resize') {
                 const iframe = document.getElementById('tool-frame');
-                iframe.style.height = (event.data.height + 20) + 'px';
+                if (iframe) {
+                    iframe.style.height = (event.data.height + 30) + 'px';
+                }
             } else if (event.data.type === 'scrollToTop') {
                 window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        });
+
+        // URL query param support (e.g. ?tool=discovery)
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const tool = params.get('tool');
+            if (tool === 'discovery' || window.location.hash === '#discovery') {
+                loadTool('discovery.html', null, 11);
             }
         });
     </script>
