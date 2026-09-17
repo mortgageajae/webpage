@@ -96,6 +96,16 @@
                             <input type="number" id="calc1-debt" class="mt-1 block w-full border border-gray-300 focus:border-brand focus:ring-brand rounded-md p-2 outline-none" placeholder="Auto loans, etc.">
                         </div>
                     </div>
+                    <div class="grid grid-cols-2 gap-4 bg-gray-50/80 p-3 rounded-lg border border-gray-200/60">
+                        <div>
+                            <label class="block font-medium text-gray-700">Max GDS Ratio (%)</label>
+                            <input type="number" id="calc1-gds" class="mt-1 block w-full border border-gray-300 focus:border-brand focus:ring-brand rounded-md p-2 outline-none bg-white font-medium" placeholder="Default: 39" value="39" step="0.1">
+                        </div>
+                        <div>
+                            <label class="block font-medium text-gray-700">Max TDS Ratio (%)</label>
+                            <input type="number" id="calc1-tds" class="mt-1 block w-full border border-gray-300 focus:border-brand focus:ring-brand rounded-md p-2 outline-none bg-white font-medium" placeholder="Default: 44" value="44" step="0.1">
+                        </div>
+                    </div>
                     
                     <div class="text-center mt-8">
                         <button onclick="calculateMaxLoan()" class="inline-block bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-extrabold text-lg md:text-xl py-4 px-12 md:px-20 rounded-full shadow-xl transition cursor-pointer border-none outline-none">Calculate Maximum Limit</button>
@@ -191,6 +201,10 @@
             const strataMonthly = parseFloat(document.getElementById('calc1-strata').value) || 0;
             const heatingMonthly = parseFloat(document.getElementById('calc1-heat').value) || 0;
             const otherDebtMonthly = parseFloat(document.getElementById('calc1-debt').value) || 0;
+            const gdsInput = parseFloat(document.getElementById('calc1-gds').value);
+            const tdsInput = parseFloat(document.getElementById('calc1-tds').value);
+            const gdsPercent = isNaN(gdsInput) ? 39 : gdsInput;
+            const tdsPercent = isNaN(tdsInput) ? 44 : tdsInput;
 
             if (!income || !rate) return alert("Please enter your annual income and estimated interest rate.");
 
@@ -199,8 +213,8 @@
             const propertyTaxMonthly = propertyTaxYearly / 12;
             const housingCosts = propertyTaxMonthly + heatingMonthly + (strataMonthly * 0.5);
 
-            const maxPiGDS = (monthlyIncome * 0.39) - housingCosts;
-            const maxPiTDS = (monthlyIncome * 0.44) - housingCosts - otherDebtMonthly;
+            const maxPiGDS = (monthlyIncome * (gdsPercent / 100)) - housingCosts;
+            const maxPiTDS = (monthlyIncome * (tdsPercent / 100)) - housingCosts - otherDebtMonthly;
             const actualMaxPi = Math.min(maxPiGDS, maxPiTDS);
             
             if (actualMaxPi <= 0) {
@@ -218,7 +232,7 @@
 
             document.getElementById('calc1-result-title').innerText = `Limit based on Stress Test & GDS/TDS (${amzYears}-Year Amortization)`;
             document.getElementById('calc1-output').innerText = formatCurrency(Math.max(0, maxLoan));
-            let limitReason = maxPiGDS < maxPiTDS ? "Limit determined by GDS (39%) criteria." : "Limit determined by TDS (44%) criteria.";
+            let limitReason = maxPiGDS < maxPiTDS ? `Limit determined by GDS (${gdsPercent}%) criteria.` : `Limit determined by TDS (${tdsPercent}%) criteria.`;
             document.getElementById('calc1-limiting-factor').innerText = limitReason;
             document.getElementById('calc1-result').classList.remove('hidden');
             
