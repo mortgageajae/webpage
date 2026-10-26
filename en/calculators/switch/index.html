@@ -363,7 +363,11 @@
                 }
 
                 if (!isGrandfathered) {
-                    if (origPrice >= 1000000 && curValue >= 1000000) {
+                    if (origPrice === 0 && curValue >= 1000000) {
+                        insurableText = "Pending (purchase price needed)";
+                        insurableClass = "text-orange-600 border-orange-300";
+                        desc = "⚠️ When the current value is $1M or more, the original purchase price (or last refinance appraisal) is needed to decide. Please enter it above.";
+                    } else if (origPrice >= 1000000 && curValue >= 1000000) {
                         insurableText = "Uninsurable";
                         insurableClass = "text-red-600 border-red-300";
                         desc = "❌ Originated on or after Oct 17, 2016, and both original and current values are $1M+, making it Uninsurable.";
@@ -509,7 +513,7 @@
             
             const oldTermInterest = getInterestOverMonths(internalCalculatedCurrentBalance, r_m_old, internalOldMonthlyPmt, internalRemainingMonths);
 
-            const newTotalMonths = newAmzYears * 12;
+            const newTotalMonths = Math.round(newAmzYears * 12);
             const newMortgagePmt = internalCalculatedCurrentBalance * (r_m_new * Math.pow(1 + r_m_new, newTotalMonths)) / (Math.pow(1 + r_m_new, newTotalMonths) - 1);
             const newTermInterest = getInterestOverMonths(internalCalculatedCurrentBalance, r_m_new, newMortgagePmt, internalRemainingMonths);
 
@@ -535,7 +539,12 @@
             const netBenefitEl = document.getElementById('res-net-benefit');
             const resultMsgEl = document.getElementById('result-message');
             
-            if(netBenefit > 0) { 
+            if(internalRemainingMonths <= 0) {
+                netBenefitEl.innerText = formatCurrency(0);
+                netBenefitEl.className = "text-2xl md:text-3xl font-extrabold text-indigo-600";
+                resultMsgEl.className = "text-center font-bold text-lg p-4 rounded-xl bg-indigo-50 text-indigo-800 border border-indigo-200 mt-6";
+                resultMsgEl.innerText = `✅ Your current term has already matured, so you can move without a penalty. Compare renewal rates across lenders.`;
+            } else if(netBenefit > 0) { 
                 netBenefitEl.innerText = `+${formatCurrency(netBenefit)}`; 
                 netBenefitEl.className = "text-2xl md:text-3xl font-extrabold text-indigo-600"; 
                 resultMsgEl.className = "text-center font-bold text-lg p-4 rounded-xl bg-indigo-50 text-indigo-800 border border-indigo-200 mt-6";

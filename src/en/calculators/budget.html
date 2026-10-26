@@ -280,6 +280,7 @@
             const homeType = document.getElementById('bg-home-type').value;
             const isFthb = document.getElementById('bg-fthb').checked;
             const isOwner = document.getElementById('bg-owner').checked;
+            const isCitizen = document.getElementById('bg-citizen').checked;
             
             const guideText = document.getElementById('price-guide');
             const netBox = document.getElementById('net-price-box');
@@ -295,7 +296,7 @@
             if (homeType === 'new') {
                 netBox.classList.remove('hidden');
                 
-                if (isFthb) {
+                if (isFthb && isCitizen && isOwner) {
                     gstMethodContainer.classList.remove('hidden');
                     gstAdviceBox.classList.remove('hidden');
                     
@@ -333,7 +334,7 @@
                     gstAdviceBox.classList.add('hidden');
                     guideText.innerText = "* Enter the [Total Purchase Price] including 5% GST.";
                     globalNetPrice = price / 1.05;
-                    netDescEl.innerText = `Not FTHB, no rebate. GST reverse-calculated.`;
+                    netDescEl.innerText = `GST rebate conditions (first-time buyer, citizen/PR, owner-occupied) not met. GST reverse-calculated.`;
                 }
             } else {
                 gstMethodContainer.classList.add('hidden');
@@ -399,6 +400,7 @@
             const isOwner = document.getElementById('bg-owner').checked;
             const amz = parseInt(document.getElementById('bg-amz').value);
             const rate = parseFloat(document.getElementById('bg-rate').value) || 0;
+            if (rate <= 0) { alert('Please enter an interest rate.'); return; }
 
             const isInsuredPossible = (price < 1500000) && isOwner;
             const requiredDown = isInsuredPossible ? (price <= 500000 ? price * 0.05 : 25000 + (price - 500000) * 0.10) : price * 0.20;

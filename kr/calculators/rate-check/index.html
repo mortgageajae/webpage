@@ -68,7 +68,7 @@
                     </div>
                     <div>
                         <label class="block text-sm font-bold text-gray-700 mb-1">이메일 주소(리포트전송용)</label>
-                        <input type="text" id="emailInput" name="이메일 주소" required class="w-full border border-gray-300 focus:border-brand focus:ring-brand rounded-lg p-2 text-sm outline-none" placeholder="example@email.com">
+                        <input type="email" id="emailInput" name="이메일 주소" required class="w-full border border-gray-300 focus:border-brand focus:ring-brand rounded-lg p-2 text-sm outline-none" placeholder="example@email.com">
                     </div>
                 </div>
 
@@ -223,12 +223,14 @@
             e.preventDefault();
             const email = document.getElementById('emailInput').value;
             if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { alert("정확한 이메일 형식을 입력해주세요."); return; }
+            if (!['rate3F','rate5F','rate5V'].some(id => document.getElementById(id).value.trim())) { alert("최소 1개 이상의 제안 금리를 입력해 주세요."); return; }
             if (e.target.querySelector('[name="website"]').value) { return; } // 스팸 방지 (서버에서도 website 값 확인)
             const btn = e.target.querySelector('button[type="submit"]');
             btn.innerHTML = '분석 진행 중... ⏳'; btn.disabled = true; btn.classList.add('opacity-75', 'cursor-not-allowed');
 
             fetch(e.target.action, { method: 'POST', body: new FormData(e.target) })
-            .then(response => { 
+            .then(response => {
+                if (!response.ok) throw new Error('HTTP ' + response.status);
                 e.target.classList.add('hidden'); 
                 document.getElementById('successMessage').classList.remove('hidden'); 
                 notifyHeightChange(); // 결과창 뜬 후 높이 업데이트

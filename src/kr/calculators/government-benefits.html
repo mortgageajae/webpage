@@ -13,7 +13,7 @@
                         <h3 class="font-bold text-brand text-lg mb-1">1. BC 취득세 면제 (생애최초)</h3>
                         <div class="mb-3 mt-4">
                             <label class="block text-xs font-bold text-gray-700 mb-1">주택구입 예상가격 ($)</label>
-                            <input type="number" id="price-ptt-fthb" class="w-full border border-gray-300 focus:border-brand focus:ring-brand rounded p-2 text-sm outline-none" placeholder="예: 800000" onkeyup="checkBenefit('ptt-fthb', 3)">
+                            <input type="number" id="price-ptt-fthb" class="w-full border border-gray-300 focus:border-brand focus:ring-brand rounded p-2 text-sm outline-none" placeholder="예: 800000" oninput="checkBenefit('ptt-fthb', 3)">
                         </div>
                         <div class="space-y-2 text-sm text-gray-700 mb-4">
                             <label class="flex items-start space-x-2 cursor-pointer">
@@ -39,7 +39,7 @@
                         <h3 class="font-bold text-brand text-lg mb-1">2. BC 취득세 면제 (신축주택)</h3>
                         <div class="mb-3 mt-4">
                             <label class="block text-xs font-bold text-gray-700 mb-1">신축주택구입 예상가격 ($)</label>
-                            <input type="number" id="price-ptt-new" class="w-full border border-gray-300 focus:border-brand focus:ring-brand rounded p-2 text-sm outline-none" placeholder="예: 1000000" onkeyup="checkBenefit('ptt-new', 3)">
+                            <input type="number" id="price-ptt-new" class="w-full border border-gray-300 focus:border-brand focus:ring-brand rounded p-2 text-sm outline-none" placeholder="예: 1000000" oninput="checkBenefit('ptt-new', 3)">
                         </div>
                         <div class="space-y-2 text-sm text-gray-700 mb-4">
                             <label class="flex items-start space-x-2 cursor-pointer">
@@ -65,7 +65,7 @@
                         <h3 class="font-bold text-brand text-lg mb-1">3. 신축 GST 리베이트</h3>
                         <div class="mb-3 mt-4">
                             <label class="block text-xs font-bold text-gray-700 mb-1">신축주택구입 예상가격 ($)</label>
-                            <input type="number" id="price-gst" class="w-full border border-gray-300 focus:border-brand focus:ring-brand rounded p-2 text-sm outline-none" placeholder="예: 1000000" onkeyup="checkBenefit('gst', 4)">
+                            <input type="number" id="price-gst" class="w-full border border-gray-300 focus:border-brand focus:ring-brand rounded p-2 text-sm outline-none" placeholder="예: 1000000" oninput="checkBenefit('gst', 4)">
                         </div>
                         <div class="space-y-2 text-sm text-gray-700 mb-4">
                             <label class="flex items-start space-x-2 cursor-pointer">
@@ -214,7 +214,7 @@
                                 resultDiv.innerHTML = `🎉 연방 GST ${rebateType} 신청 가능:<br><span class="text-xl font-extrabold text-brand">${formatCurrency(rebate)}</span><br><span class="text-xs font-normal mt-1 text-gray-600 block">(납부해야 할 연방 GST 5%: ${formatCurrency(gstPaid)})</span>`;
                                 resultDiv.classList.add('bg-green-50', 'text-green-800', 'border-green-200');
                             } else {
-                                resultDiv.innerHTML = `❌ 입력하신 가격(${formatCurrency(price)})은 $1.5M 한도를 초과하여 리베이트 대상이 아닙니다.<br><span class="text-xs font-normal mt-1 block">(납부해야 할 연방 GST 5%: ${formatCurrency(gstPaid)})</span>`;
+                                resultDiv.innerHTML = `❌ 입력하신 가격(${formatCurrency(price)})은 $1.5M 이상이므로 리베이트 대상이 아닙니다.<br><span class="text-xs font-normal mt-1 block">(납부해야 할 연방 GST 5%: ${formatCurrency(gstPaid)})</span>`;
                                 resultDiv.classList.add('bg-red-50', 'text-red-800', 'border-red-200');
                             }
                         } else {

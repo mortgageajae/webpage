@@ -210,6 +210,8 @@
             const gdsPercent = isNaN(gdsInput) ? 39 : gdsInput;
             const tdsPercent = isNaN(tdsInput) ? 44 : tdsInput;
 
+            document.getElementById('calc1-result').classList.add('hidden');
+
             if (!income || !rate) return alert("연 소득과 현재 예상 금리를 입력해주세요.");
 
             const stressRate = Math.max(rate + 2.0, 5.25) / 100;
@@ -249,6 +251,8 @@
             const amzYears = parseInt(document.getElementById('calc2-amortization').value);
             const termYears = parseInt(document.getElementById('calc2-term').value);
             const frequency = document.getElementById('calc2-frequency').value;
+
+            document.getElementById('calc2-result').classList.add('hidden');
 
             if (!principal || !rate || !amzYears) return alert("대출 금액, 금리, 상환기간을 입력해주세요.");
 

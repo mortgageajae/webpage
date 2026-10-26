@@ -301,7 +301,7 @@
             
             const stressIncrements = [0.25, 0.50, 0.75, 1.00, 1.50, 2.00];
             stressIncrements.forEach(inc => {
-                const testRate = varRate + inc;
+                const testRate = Math.max(0, varRate + inc);
                 const testPMT = calcPMT(principal, getVarMonthlyRate(testRate), amortMonths);
                 tableHTML += `
                     <tr class="hover:bg-gray-50 transition">
@@ -338,7 +338,7 @@
             intVarBase += iVb;
 
             if (scenMap[m]) {
-                currentVarRate += scenMap[m];
+                currentVarRate = Math.max(0, currentVarRate + scenMap[m]);
                 if (varType === 'ARM') {
                     currentVarScenPMT = calcPMT(balVarScen, getVarMonthlyRate(currentVarRate), amortMonths - m + 1);
                 }

@@ -225,6 +225,7 @@
             const email = document.getElementById('emailInput').value;
             if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { alert("Please enter a valid email address."); return; }
             
+            if (!['rate3F','rate5F','rate5V'].some(id => document.getElementById(id).value.trim())) { alert("Please enter at least one offered rate."); return; }
             if (e.target.querySelector('[name="website"]').value) { return; } // spam protection (the server checks "website" too)
             const btn = e.target.querySelector('button[type="submit"]');
             btn.innerHTML = 'Processing... ⏳'; 
@@ -232,7 +233,8 @@
             btn.classList.add('opacity-75', 'cursor-not-allowed');
 
             fetch(e.target.action, { method: 'POST', body: new FormData(e.target) })
-            .then(response => { 
+            .then(response => {
+                if (!response.ok) throw new Error('HTTP ' + response.status);
                 e.target.classList.add('hidden'); 
                 document.getElementById('successMessage').classList.remove('hidden'); 
                 notifyHeightChange(); 

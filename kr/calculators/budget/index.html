@@ -325,6 +325,7 @@
             const homeType = document.getElementById('bg-home-type').value;
             const isFthb = document.getElementById('bg-fthb').checked;
             const isOwner = document.getElementById('bg-owner').checked;
+            const isCitizen = document.getElementById('bg-citizen').checked;
             
             const guideText = document.getElementById('price-guide');
             const netBox = document.getElementById('net-price-box');
@@ -340,7 +341,7 @@
             if (homeType === 'new') {
                 netBox.classList.remove('hidden');
                 
-                if (isFthb) {
+                if (isFthb && isCitizen && isOwner) {
                     gstMethodContainer.classList.remove('hidden');
                     gstAdviceBox.classList.remove('hidden');
                     
@@ -378,7 +379,7 @@
                     gstAdviceBox.classList.add('hidden');
                     guideText.innerText = "* GST 5%가 포함된 [전체구매가격]을 입력하세요.";
                     globalNetPrice = price / 1.05;
-                    netDescEl.innerText = `FTHB가 아니므로 환급없음. GST 역산 제외됨.`;
+                    netDescEl.innerText = `GST 환급 조건(생애최초·시민권/영주권·본인 거주) 미충족. GST 역산 제외됨.`;
                 }
             } else {
                 gstMethodContainer.classList.add('hidden');
@@ -444,6 +445,7 @@
             const isOwner = document.getElementById('bg-owner').checked;
             const amz = parseInt(document.getElementById('bg-amz').value);
             const rate = parseFloat(document.getElementById('bg-rate').value) || 0;
+            if (rate <= 0) { alert('금리를 입력해 주세요.'); return; }
 
             const isInsuredPossible = (price < 1500000) && isOwner;
             const requiredDown = isInsuredPossible ? (price <= 500000 ? price * 0.05 : 25000 + (price - 500000) * 0.10) : price * 0.20;

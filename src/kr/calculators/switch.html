@@ -319,7 +319,11 @@
                 if (!isGrandfathered) {
                     // 2016년 10월 17일 이후인 경우: 구매가/최종 리파이낸스가가 1M 이상 'AND' 현재 가치가 1M 이상이면 Uninsurable
                     // 즉, 둘 중 하나라도 1M 미만이면 Insurable 유지
-                    if (origPrice >= 1000000 && curValue >= 1000000) {
+                    if (origPrice === 0 && curValue >= 1000000) {
+                        insurableText = "판정 보류 (구매가 필요)";
+                        insurableClass = "text-orange-600 border-orange-300";
+                        desc = "⚠️ 현재 가치가 $1M 이상이면 최초 구매가(또는 마지막 리파이낸스 감정가)가 있어야 판정할 수 있습니다. 위에 입력해 주세요.";
+                    } else if (origPrice >= 1000000 && curValue >= 1000000) {
                         insurableText = "Uninsurable (비보험)";
                         insurableClass = "text-red-600 border-red-300";
                         desc = "❌ 2016년 10월 17일 이후 계약건이며, 최초 가치와 현재 가치 모두 $1M 이상이므로 Uninsurable 대상입니다.";
@@ -469,7 +473,7 @@
             const oldTermInterest = getInterestOverMonths(internalCalculatedCurrentBalance, r_m_old, internalOldMonthlyPmt, internalRemainingMonths);
 
             // 2. 새 모기지 남은 기간 동안의 이자 (동일한 원금 조건 하에서 비교)
-            const newTotalMonths = newAmzYears * 12;
+            const newTotalMonths = Math.round(newAmzYears * 12);
             const newMortgagePmt = internalCalculatedCurrentBalance * (r_m_new * Math.pow(1 + r_m_new, newTotalMonths)) / (Math.pow(1 + r_m_new, newTotalMonths) - 1);
             const newTermInterest = getInterestOverMonths(internalCalculatedCurrentBalance, r_m_new, newMortgagePmt, internalRemainingMonths);
 
@@ -496,7 +500,12 @@
             const netBenefitEl = document.getElementById('res-net-benefit');
             const resultMsgEl = document.getElementById('result-message');
             
-            if(netBenefit > 0) { 
+            if(internalRemainingMonths <= 0) {
+                netBenefitEl.innerText = formatCurrency(0);
+                netBenefitEl.className = "text-2xl md:text-3xl font-extrabold text-indigo-600";
+                resultMsgEl.className = "text-center font-bold text-lg p-4 rounded-xl bg-indigo-50 text-indigo-800 border border-indigo-200 mt-6";
+                resultMsgEl.innerText = `✅ 현재 텀이 이미 만기되어 페널티 없이 이동할 수 있습니다. 갱신 금리를 여러 렌더와 비교해 보세요.`;
+            } else if(netBenefit > 0) { 
                 netBenefitEl.innerText = `+${formatCurrency(netBenefit)}`; 
                 netBenefitEl.className = "text-2xl md:text-3xl font-extrabold text-indigo-600"; 
                 resultMsgEl.className = "text-center font-bold text-lg p-4 rounded-xl bg-indigo-50 text-indigo-800 border border-indigo-200 mt-6";
