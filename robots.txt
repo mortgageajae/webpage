@@ -1,0 +1,5 @@
+# 모기지아재 mortgageajae.ca — 검색엔진·AI 검색 모두 허용
+User-agent: *
+Allow: /
+
+Sitemap: https://mortgageajae.ca/sitemap.xml

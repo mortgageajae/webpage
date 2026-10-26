@@ -1,0 +1,18 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+        html { scroll-behavior: smooth; }
+        .fade-in { animation: fadeIn 0.4s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .card-header { @apply bg-brand p-8 text-center text-white; }
+        .card-title { @apply text-2xl font-extrabold; }
+        .input-group { @apply bg-white p-4 rounded-xl border border-gray-200 shadow-sm transition-all duration-200; }
+        .input-group:focus-within { @apply border-brand ring-1 ring-brand/30; }
+        .label-style { @apply block font-bold text-gray-700 text-sm mb-2; }
+        .input-style { @apply w-full border border-gray-300 focus:border-brand rounded-md p-2 text-sm outline-none font-bold text-gray-800 bg-white; }
+        
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    

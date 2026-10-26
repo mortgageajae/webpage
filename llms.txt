@@ -1,0 +1,26 @@
+# 모기지아재 (Mortgageajae)
+
+> Korean-language mortgage information and free calculators for British Columbia, Canada, by Justin Bae, M.Sc., P.Eng., Mortgage Broker (BCFSA MB610304), Huntington Cross Mortgage. Content is general information, dated, and not personal advice.
+
+## Calculators (BC rules)
+- [Home purchase budget](https://mortgageajae.ca/kr/calculators/budget/): down payment, BC property transfer tax, CMHC premium, closing cash
+- [Affordability & payments](https://mortgageajae.ca/kr/calculators/affordability/): GDS/TDS, stress test (greater of contract rate + 2% or 5.25%)
+- [Government benefits check](https://mortgageajae.ca/kr/calculators/government-benefits/): BC PTT exemptions, new-home GST rebate, FHSA, RRSP HBP
+- [Insured vs conventional](https://mortgageajae.ca/kr/calculators/insured-vs-conventional/)
+- [Rate check](https://mortgageajae.ca/kr/calculators/rate-check/)
+- [Fixed vs variable](https://mortgageajae.ca/kr/calculators/fixed-vs-variable/)
+- [Mortgage switch analysis](https://mortgageajae.ca/kr/calculators/switch/)
+- [Debt consolidation](https://mortgageajae.ca/kr/calculators/debt-consolidation/)
+- [Retirement planning](https://mortgageajae.ca/kr/calculators/retirement/)
+
+## English pages
+- [Home](https://mortgageajae.ca/en/) · [Calculators](https://mortgageajae.ca/en/#tools) — the same calculators in English (e.g. https://mortgageajae.ca/en/calculators/budget/)
+- [Book a consultation](https://mortgageajae.ca/en/consultation/) · [Privacy policy](https://mortgageajae.ca/en/privacy/)
+
+## Weekly newsletter
+- [English edition](https://mortgageajae.ca/en/newsletter/): translated from the Korean original.
+- [Newsletter archive](https://mortgageajae.ca/kr/newsletter/): weekly notes on Bank of Canada, bond yields, rates and BC housing policy; each issue is dated and reflects conditions on its publication date.
+
+## Contact
+- [1:1 consultation](https://mortgageajae.ca/kr/consultation/) · mortgageajae@gmail.com · 250-581-6862
+- [Privacy policy](https://mortgageajae.ca/kr/privacy/)

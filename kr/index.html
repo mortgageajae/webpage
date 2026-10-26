@@ -1,301 +1,179 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://mortgageajae.ca/kr/">
-    <meta property="og:title" content="모기지아재 - BC 레지덴셜 모기지 브로커">
-    <meta property="og:description" content="맞춤형 모기지전략. 금리진단, 종합예산, 부채통합 등 다양한 계산기 툴을 무료로 이용해 보세요.">
-    <meta property="og:image" content="https://mortgageajae.ca/images/thumbnail_kr.png"> <meta property="og:site_name" content="mortgageajae">
-
-    <title>모기지아재 - BC 레지덴셜 모기지 브로커</title>
-
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-LPHD8XR0XD"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-LPHD8XR0XD');
-    </script>
-    
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        brand: { light: '#f0f3fa', DEFAULT: '#334da9', dark: '#253880' }
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        html { scroll-behavior: smooth; }
-        .gradient-bg { background: linear-gradient(135deg, #0f172a 0%, #334da9 100%); }
-        .tool-card { transition: all 0.3s ease; }
-        .tool-card:hover { transform: translateY(-5px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); border-color: #334da9; }
-        .fade-in { animation: fadeIn 0.4s ease-in-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        
-        /* 스크롤바 숨기기 (모바일 및 데스크탑 탭 메뉴용) */
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        
-        /* 활성화된 탭 스타일 */
-        .tab-active { border-bottom: 3px solid #334da9; color: #334da9; font-weight: 800; }
-        .tab-inactive { color: #6b7280; font-weight: 600; }
-        
-        /* 드래그 스크롤 중 텍스트 선택 방지 */
-        .drag-scroll { cursor: grab; user-select: none; }
-        .drag-scroll:active { cursor: grabbing; }
-    </style>
-    <script>
-        function adjustHeaderPadding() {
-            const header = document.querySelector('header');
-            if (!header) return;
-            const headerHeight = header.offsetHeight;
-            const subNav = document.getElementById('sub-nav');
-            const mainContent = document.getElementById('main-content');
-            if (subNav) subNav.style.top = headerHeight + 'px';
-            if (mainContent && subNav) mainContent.style.paddingTop = (headerHeight + subNav.offsetHeight) + 'px';
-        }
-        window.addEventListener('resize', adjustHeaderPadding);
-        window.addEventListener('load', adjustHeaderPadding);
-    </script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>모기지아재 | BC 모기지 브로커 Justin Bae, P.Eng.</title>
+<meta name="description" content="엔지니어 출신 BC주 모기지 브로커 모기지아재(Justin Bae, P.Eng.). 주택구매 예산·대출한도·정부혜택·금리진단 등 무료 모기지 계산기와 매주 금리·정책 뉴스레터, 1:1 화상상담.">
+<link rel="canonical" href="https://mortgageajae.ca/kr/">
+<link rel="alternate" hreflang="ko" href="https://mortgageajae.ca/kr/">
+<link rel="alternate" hreflang="en" href="https://mortgageajae.ca/en/">
+<link rel="alternate" hreflang="x-default" href="https://mortgageajae.ca/en/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://mortgageajae.ca/kr/">
+<meta property="og:title" content="모기지아재 | BC 모기지 브로커 Justin Bae, P.Eng.">
+<meta property="og:description" content="엔지니어 출신 BC주 모기지 브로커 모기지아재(Justin Bae, P.Eng.). 주택구매 예산·대출한도·정부혜택·금리진단 등 무료 모기지 계산기와 매주 금리·정책 뉴스레터, 1:1 화상상담.">
+<meta property="og:image" content="https://mortgageajae.ca/images/og/og-kr.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="모기지아재 | BC 모기지 브로커 Justin Bae, P.Eng.">
+<meta property="og:locale" content="ko_KR">
+<meta name="twitter:card" content="summary_large_image">
+<meta property="og:site_name" content="모기지아재">
+<link rel="icon" href="/images/logo-face-160.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Gowun+Dodum&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/site.css?v=4e285990">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-LPHD8XR0XD"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-LPHD8XR0XD');</script>
 </head>
-<body class="bg-gray-50 text-gray-800 font-sans flex flex-col min-h-screen">
+<body>
+<header class="site-header">
+  <div class="wrap nav">
+    <a class="brand" href="/kr/"><img src="/images/logo-face-160.png" alt="" width="31" height="44"><span>모기지아재</span></a>
+    <nav class="nav-links" aria-label="주요 메뉴">
+      <a href="/kr/#tools">계산기</a>
+      <a href="/kr/newsletter/">뉴스레터</a>
+      <a href="/kr/#insights">카드뉴스</a>
+    </nav>
+    <div class="lang"><a class="on" href="/kr/">KOR</a><a href="/en/">ENG</a></div>
+    <a class="pill" href="/kr/consultation/">상담 예약</a>
+  </div>
+</header>
+<main>
+<script>
+// 옛 주소(?tool=...) 호환: 해당 계산기 주소로 이동
+(function () {
+  var map = { discovery: '/kr/consultation/', rate: '/kr/calculators/rate-check/', budget: '/kr/calculators/budget/' };
+  var t = new URLSearchParams(location.search).get('tool');
+  if (t && map[t]) location.replace(map[t]);
+  else if (location.hash === '#discovery') location.replace('/kr/consultation/');
+})();
+</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[
+ {"@type":"WebSite","@id":"https://mortgageajae.ca/#site","url":"https://mortgageajae.ca/","name":"모기지아재 Mortgageajae","inLanguage":["ko","en"],"publisher":{"@id":"https://mortgageajae.ca/#justin"}},
+ {"@type":"Person","@id":"https://mortgageajae.ca/#justin","name":"Justin Bae","alternateName":"모기지아재","honorificSuffix":"M.Sc., P.Eng.","jobTitle":"Mortgage Broker","url":"https://mortgageajae.ca/kr/","image":"https://mortgageajae.ca/images/profile-1000.jpg","email":"mailto:mortgageajae@gmail.com","telephone":"+1-250-581-6862","knowsLanguage":["ko","en"],"areaServed":{"@type":"AdministrativeArea","name":"British Columbia, Canada"},"hasCredential":{"@type":"EducationalOccupationalCredential","credentialCategory":"license","name":"Mortgage Broker registration (BCFSA) MB610304","recognizedBy":{"@type":"Organization","name":"BC Financial Services Authority","url":"https://www.bcfsa.ca"}},"worksFor":{"@type":"Organization","name":"Huntington Cross Mortgage"}}
+]}</script>
 
-    <header class="bg-white shadow-sm fixed w-full z-30 top-0">
-        <div class="w-full max-w-6xl mx-auto flex justify-center bg-white h-full items-center py-2 md:py-0">
-            <a href="javascript:void(0)" onclick="showDashboard()" class="w-[80%] md:w-full block">
-                <img src="/images/mortgageajae-banner.jpg" alt="MortgageAjae Logo Banner" class="w-full h-auto object-cover md:hidden" onerror="this.style.display='none'">
-                <img src="/images/mortgageajae-banner-web.jpg" alt="MortgageAjae Desktop Banner" class="hidden md:block w-full h-auto object-cover" onerror="this.style.display='none'">
-            </a>
-        </div>
-    </header>
-
-    <div id="sub-nav" class="fixed w-full z-20 bg-white border-b border-gray-200 shadow-md top-[auto] fade-in"> 
-        <!-- lg:justify-center를 제거하고 justify-start로 통일하여 넘치는 메뉴의 좌우 스크롤 확보 -->
-        <div id="nav-scroll-container" class="max-w-6xl mx-auto px-4 flex justify-start gap-4 md:gap-6 lg:gap-8 overflow-x-auto no-scrollbar whitespace-nowrap pt-3 pb-1 text-[13px] md:text-sm lg:text-[15px] drag-scroll">
-            <button onclick="showDashboard()" class="pb-3 px-1 md:px-2 tab-active hover:text-brand transition flex-shrink-0" id="btn-main-dash">메인대시보드</button>
-            <button onclick="loadTool('rate-diagnosis.html', this, 1)" class="calc-tab pb-3 px-1 md:px-2 tab-inactive hover:text-brand transition flex-shrink-0">금리진단</button>
-            <button onclick="loadTool('budget-calculator.html', this, 2)" class="calc-tab pb-3 px-1 md:px-2 tab-inactive hover:text-brand transition flex-shrink-0">종합예산</button>
-            <button onclick="loadTool('benefit-diagnosis.html', this, 3)" class="calc-tab pb-3 px-1 md:px-2 tab-inactive hover:text-brand transition flex-shrink-0">정부혜택진단</button>
-            <button onclick="loadTool('debt-consolidation.html', this, 4)" class="calc-tab pb-3 px-1 md:px-2 tab-inactive hover:text-brand transition flex-shrink-0">부채통합분석</button>
-            <button onclick="loadTool('switch.html', this, 5)" class="calc-tab pb-3 px-1 md:px-2 tab-inactive hover:text-brand transition flex-shrink-0">모기지환승</button>
-            <button onclick="loadTool('core-tools.html', this, 6)" class="calc-tab pb-3 px-1 md:px-2 tab-inactive hover:text-brand transition flex-shrink-0">한도/페이먼트</button>
-            <button onclick="loadTool('insured-analysis.html', this, 7)" class="calc-tab pb-3 px-1 md:px-2 tab-inactive hover:text-brand transition flex-shrink-0">Insured 수익성</button>
-            <button onclick="loadTool('retirement.html', this, 8)" class="calc-tab pb-3 px-1 md:px-2 tab-inactive hover:text-brand transition flex-shrink-0">은퇴재정설계</button>
-            <button onclick="loadTool('varvsfix.html', this, 9)" class="calc-tab pb-3 px-1 md:px-2 tab-inactive hover:text-brand transition flex-shrink-0">변동고정비교</button>
-            <button onclick="loadTool('board.html', this, 10)" class="calc-tab pb-3 px-1 md:px-2 tab-inactive hover:text-brand transition flex-shrink-0">정보보드</button>
-            <button onclick="loadTool('discovery.html', this, 11)" class="calc-tab pb-3 px-2 md:px-3 tab-inactive hover:text-brand transition flex-shrink-0 bg-blue-50/80 rounded-t-lg font-bold text-blue-700">📅 1:1 상담예약</button>
-        </div>
+<section class="heroC">
+  <div class="wrap heroC-grid">
+    <div>
+      <h1 class="disp">엔지니어의<br><span class="b">꼼꼼함으로</span><br>분석해드리는<br>최적의 솔루션</h1>
+      <p class="sub">복잡한 숫자와 약관, <span class="y">정밀하게 검토</span>해 드립니다.<br>무료 계산기로 먼저 확인하고, 필요하면 1:1로 상담하세요.</p>
+      <div class="ctas">
+        <a class="pill" href="/kr/consultation/">1:1 상담 예약</a>
+        <a class="pill ghost" href="#tools">무료 계산기 →</a>
+      </div>
     </div>
+    <div class="heroC-photo">
+      <img src="/images/profile-1000.jpg" alt="모기지 브로커 Justin Bae" width="800" height="1000" fetchpriority="high">
+      <div class="name">
+        <div class="nm">Justin Bae<span>, M.Sc., P.Eng.</span></div>
+        <div class="ttl">Mortgage Broker (BCFSA MB610304)</div>
+        <div class="org">Huntington Cross Mortgage</div>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <main class="flex-grow pt-[120px] md:pt-[180px]" id="main-content">
-        
-        <div id="dashboard-view" class="fade-in">
-            <section class="pt-3 pb-0 px-4">
-                <div class="relative max-w-6xl mx-auto gradient-bg rounded-3xl overflow-hidden shadow-xl flex flex-col md:flex-row items-center justify-center gap-8 p-8 md:p-12 text-white">
-                    
-                    <div class="absolute top-4 right-4 md:top-6 md:right-6 z-40 flex bg-white/10 backdrop-blur-sm rounded-full p-1 border border-white/20 shadow-sm text-xs font-semibold">
-                        <button class="px-3 py-1 rounded-full bg-white shadow text-brand cursor-default">KOR</button>
-                        <button onclick="window.location.href='/en/'" class="px-3 py-1 rounded-full transition text-blue-100 hover:text-white hover:bg-white/20">ENG</button>
-                    </div>
+<nav class="situ" aria-label="상황별 바로가기">
+  <div class="wrap">
+    <div class="situ-h disp">어떤 상황이세요?</div>
+    <div class="situ-grid">
+      <a href="#buy"><span class="n">01</span>집 구매 준비</a>
+      <a href="#rates"><span class="n">02</span>금리·상품 비교</a>
+      <a href="#existing"><span class="n">03</span>갱신·환승</a>
+      <a href="#grow"><span class="n">04</span>자산 늘리기</a>
+    </div>
+  </div>
+</nav>
 
-                    <div class="flex flex-col items-center flex-shrink-0">
-                        <img src="/images/profile.jpg" alt="Justin Bae P.Eng" class="h-48 w-48 md:h-64 md:w-64 rounded-full border-4 border-white shadow-2xl object-cover" onerror="this.style.display='none'">
-                    </div>
-                    <div class="text-center md:text-left flex flex-col justify-center">
-                        <span class="bg-brand-dark text-white text-xs font-bold px-3 py-1 rounded-full mb-4 inline-block border border-brand-light/30 self-center md:self-start">P.Eng & BCFSA Registered Broker</span>
-                        <h1 class="text-2xl md:text-4xl font-extrabold mb-4 leading-tight tracking-tight">엔지니어의 꼼꼼함으로<br>분석해드리는 최적의 솔루션</h1>
-                        <p class="text-sm md:text-base text-blue-100 max-w-md mx-auto md:mx-0">복잡한 숫자와 약관, 정밀하게 검토해 드립니다. 원하시는 분석 도구를 선택해 주세요.</p>
-                    </div>
-                </div>
-            </section>
-
-            <section class="py-10 pb-4 px-4 max-w-6xl mx-auto">
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <div onclick="loadTool('rate-diagnosis.html', null, 1)" class="tool-card bg-white p-8 rounded-2xl border border-gray-200 shadow-sm flex flex-col h-full cursor-pointer">
-                        <h3 class="text-xl md:text-2xl font-extrabold text-gray-800 mb-3">모기지 금리진단</h3>
-                        <p class="text-gray-500 text-sm md:text-base mb-6 flex-grow leading-relaxed">현재 제안받으신 금리 조건들을 입력하시면, 최신의 BC주 시장 데이터와 대조하여 최적의 오퍼인지 분석해 드립니다.</p>
-                        <div class="font-bold text-brand flex items-center mt-auto">진단 시작하기 <span>→</span></div>
-                    </div>
-                    <div onclick="loadTool('budget-calculator.html', null, 2)" class="tool-card bg-white p-8 rounded-2xl border border-gray-200 shadow-sm flex flex-col h-full cursor-pointer">
-                        <h3 class="text-xl md:text-2xl font-extrabold text-gray-800 mb-3">주택구매 종합 예산</h3>
-                        <p class="text-gray-500 text-sm md:text-base mb-6 flex-grow leading-relaxed">다운페이, 취득세(PTT), 모기지 보험료 및 제반 비용을 종합하여 클로징 시점에 당장 필요한 총 현금을 계산합니다.</p>
-                        <div class="font-bold text-brand flex items-center mt-auto">예산 계산하기 <span>→</span></div>
-                    </div>
-                    <div onclick="loadTool('benefit-diagnosis.html', null, 3)" class="tool-card bg-white p-8 rounded-2xl border border-gray-200 shadow-sm flex flex-col h-full cursor-pointer">
-                        <h3 class="text-xl md:text-2xl font-extrabold text-gray-800 mb-3">정부혜택 자격진단</h3>
-                        <p class="text-gray-500 text-sm md:text-base mb-6 flex-grow leading-relaxed">취득세 면제, 신축 GST 환급, Eco Plus 25% 환급, FHSA, RRSP 인출 등 놓치기 쉬운 필수 혜택들의 자격을 점검합니다.</p>
-                        <div class="font-bold text-brand flex items-center mt-auto">자격 진단하기 <span>→</span></div>
-                    </div>
-                    <div onclick="loadTool('debt-consolidation.html', null, 4)" class="tool-card bg-white p-8 rounded-2xl border border-gray-200 shadow-sm flex flex-col h-full cursor-pointer">
-                        <h3 class="text-xl md:text-2xl font-extrabold text-gray-800 mb-3">부채통합 분석</h3>
-                        <p class="text-gray-500 text-sm md:text-base mb-6 flex-grow leading-relaxed">기존 모기지 해지 페널티를 감수하더라도, 고금리 부채(신용카드, 자동차 할부)를 통합하는 것이 매월 현금 흐름에 유리한지 계산합니다.</p>
-                        <div class="font-bold text-brand flex items-center mt-auto">부채통합 계산하기 <span>→</span></div>
-                    </div>
-                    <div onclick="loadTool('switch.html', null, 5)" class="tool-card bg-white p-8 rounded-2xl border border-gray-200 shadow-sm flex flex-col h-full cursor-pointer">
-                        <h3 class="text-xl md:text-2xl font-extrabold text-gray-800 mb-3">모기지 환승분석</h3>
-                        <p class="text-gray-500 text-sm md:text-base mb-6 flex-grow leading-relaxed">기존 모기지를 타 금융기관으로 이동할 때 발생하는 페널티와 잔여기간 이자 절감액을 비교하여, 환승의 타당성을 진단해 드립니다.</p>
-                        <div class="font-bold text-brand flex items-center mt-auto">환승분석 시작하기 <span>→</span></div>
-                    </div>
-                    <div onclick="loadTool('core-tools.html', null, 6)" class="tool-card bg-white p-8 rounded-2xl border border-gray-200 shadow-sm flex flex-col h-full cursor-pointer">
-                        <h3 class="text-xl md:text-2xl font-extrabold text-gray-800 mb-3">대출한도 및 페이먼트</h3>
-                        <p class="text-gray-500 text-sm md:text-base mb-6 flex-grow leading-relaxed">GDS/TDS 기준에 따른 최대한도 산출 및 상환 주기(월납, 격주납 등)별 페이먼트와 장기 이자 비용을 계산합니다.</p>
-                        <div class="font-bold text-brand flex items-center mt-auto">도구 실행하기 <span>→</span></div>
-                    </div>
-                    <div onclick="loadTool('insured-analysis.html', null, 7)" class="tool-card bg-white p-8 rounded-2xl border border-gray-200 shadow-sm flex flex-col h-full cursor-pointer">
-                        <h3 class="text-xl md:text-2xl font-extrabold text-gray-800 mb-3">Insured 수익성분석</h3>
-                        <p class="text-gray-500 text-sm md:text-base mb-6 flex-grow leading-relaxed">20% 이상 다운페이가 가능하더라도, 일부러 20% 미만으로 맞추어 Insured 금리 할인을 받는 것이 유리한지 비교 분석합니다.</p>
-                        <div class="font-bold text-brand flex items-center mt-auto">수익성 분석하기 <span>→</span></div>
-                    </div>
-                    <div onclick="loadTool('retirement.html', null, 8)" class="tool-card bg-white p-8 rounded-2xl border border-gray-200 shadow-sm flex flex-col h-full cursor-pointer">
-                        <h3 class="text-xl md:text-2xl font-extrabold text-gray-800 mb-3">은퇴 재정설계</h3>
-                        <p class="text-gray-500 text-sm md:text-base mb-6 flex-grow leading-relaxed">모기지 상환 계획, 주택 자산 가치, 개인 연금 등을 종합적으로 고려하여 은퇴 후 안정적인 현금흐름을 위한 재정 전략을 세워 드립니다.</p>
-                        <div class="font-bold text-brand flex items-center mt-auto">재정설계 시작하기 <span>→</span></div>
-                    </div>
-                    <!-- 새로 추가된 다이나믹 시뮬레이터 카드 -->
-                    <div onclick="loadTool('varvsfix.html', null, 9)" class="tool-card bg-white p-8 rounded-2xl border border-gray-200 shadow-sm flex flex-col h-full cursor-pointer">
-                        <h3 class="text-xl md:text-2xl font-extrabold text-gray-800 mb-3">변동 vs 고정 비교</h3>
-                        <p class="text-gray-500 text-sm md:text-base mb-6 flex-grow leading-relaxed">금리변동시 페이먼트 비교와 프라임금리 변화 시나리오를 적용하여 총 이자비용을 고정금리와 비교합니다.</p>
-                        <div class="font-bold text-brand flex items-center mt-auto">비교분석 시작하기 <span>→</span></div>
-                    </div>
-                    <div onclick="loadTool('board.html', null, 10)" class="tool-card bg-white p-8 rounded-2xl border border-gray-200 shadow-sm flex flex-col h-full cursor-pointer">
-                        <h3 class="text-xl md:text-2xl font-extrabold text-gray-800 mb-3">모기지 정보보드</h3>
-                        <p class="text-gray-500 text-sm md:text-base mb-6 flex-grow leading-relaxed">전문 브로커가 직접 전하는 BC주 부동산 시장 동향, 최신 모기지 뉴스 및 유용한 내집마련 팁을 확인하세요.</p>
-                        <div class="font-bold text-brand flex items-center mt-auto">칼럼 읽기 <span>→</span></div>
-                    </div>
-                </div>
-            </section>
+<section class="block" id="tools">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><span class="chip">무료 계산기</span><h2 class="disp">상황에 맞는<br>도구를 고르세요</h2></div>
+      <p>BC주 기준으로 만든 계산기입니다. 결과를 보고 궁금한 점은 상담으로 이어서 물어보세요.</p>
+    </div>
+    <div class="groups">
+      <div class="group" id="buy">
+        <h3 class="disp">집을 사기 전</h3>
+        <div class="grid">
+          <a class="tool" href="/kr/calculators/budget/"><span class="n">01</span><h4>주택구매 종합 예산</h4><p>다운페이, 취득세(PTT), 모기지 보험료까지 클로징에 필요한 총 현금.</p><span class="go">계산하기 →</span></a>
+          <a class="tool" href="/kr/calculators/affordability/"><span class="n">02</span><h4>대출한도·페이먼트</h4><p>GDS/TDS 기준 최대 한도와 상환 주기별 페이먼트.</p><span class="go">계산하기 →</span></a>
+          <a class="tool" href="/kr/calculators/government-benefits/"><span class="n">03</span><h4>정부혜택 자격진단</h4><p>취득세 면제, 신축 GST 환급, FHSA, RRSP 인출 자격 점검.</p><span class="go">진단하기 →</span></a>
+          <a class="tool" href="/kr/calculators/insured-vs-conventional/"><span class="n">04</span><h4>Insured 수익성</h4><p>다운페이를 일부러 20% 미만으로 맞추는 게 유리한지 비교.</p><span class="go">분석하기 →</span></a>
         </div>
-
-        <div id="calculator-view" class="hidden fade-in max-w-6xl mx-auto w-full px-2 md:px-4 pt-4 md:pt-6">
-            <iframe id="tool-frame" src="" class="w-full border-none overflow-hidden" scrolling="no"></iframe>
+      </div>
+      <div class="group" id="rates">
+        <h3 class="disp">금리·상품 고르기 <span class="grp-note">신규 구매 · 갱신 모두</span></h3>
+        <div class="grid">
+          <a class="tool" href="/kr/calculators/rate-check/"><span class="n">05</span><h4>모기지 금리진단</h4><p>제안받은 금리가 BC 시장 데이터와 비교해 좋은 조건인지.</p><span class="go">진단하기 →</span></a>
+          <a class="tool" href="/kr/calculators/fixed-vs-variable/"><span class="n">06</span><h4>변동 vs 고정</h4><p>프라임 금리 시나리오별 총 이자비용 비교.</p><span class="go">비교하기 →</span></a>
         </div>
-    </main>
-
-    <section class="pb-4 px-4 w-full max-w-6xl mx-auto mt-2">
-        <div class="bg-brand border-2 border-brand-dark rounded-2xl p-4 md:p-6 text-center shadow-xl text-white">
-            <h3 class="text-2xl md:text-2xl font-extrabold mb-3">상담이 필요하신가요?</h3>
-            <p class="text-blue-100 mb-8 text-sm md:text-base">매의 눈으로 고객님의 상황을 분석하여<br class="inline md:hidden"> 단 1%의 혜택도 놓치지않는 맞춤전략을 세워드립니다.<br>계산결과가 복잡하시다면<br class="inline md:hidden"> 언제든 1:1 화상상담을 신청해 주세요.</p>
-            <button onclick="loadTool('discovery.html', null, 11)" class="inline-block bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-extrabold text-base md:text-lg py-4 px-10 rounded-full transition shadow-xl transform hover:-translate-y-0.5 cursor-pointer border-none outline-none">
-                🎥 1:1 맞춤 사전상담 신청하기
-            </button>
+      </div>
+      <div class="group" id="existing">
+        <h3 class="disp">지금 모기지가 있다면</h3>
+        <div class="grid">
+          <a class="tool" href="/kr/calculators/switch/"><span class="n">07</span><h4>모기지 환승분석</h4><p>페널티와 남은 기간 이자 절감액을 비교해 환승 타당성 진단.</p><span class="go">분석하기 →</span></a>
+          <a class="tool" href="/kr/calculators/debt-consolidation/"><span class="n">08</span><h4>부채통합 분석</h4><p>고금리 부채를 모기지로 합치는 게 월 현금흐름에 유리한지.</p><span class="go">분석하기 →</span></a>
         </div>
-    </section>
+      </div>
+      <div class="group" id="grow">
+        <h3 class="disp">자산을 키울 때</h3>
+        <div class="grid">
+          <a class="tool" href="/kr/calculators/retirement/"><span class="n">09</span><h4>은퇴 재정설계</h4><p>상환 계획, 주택 자산, 연금을 합쳐 은퇴 후 현금흐름 설계.</p><span class="go">설계하기 →</span></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <footer class="bg-gray-900 text-gray-400 py-8 text-center text-sm w-full mt-auto">
-        <p>Justin Bae | M.Sc. P.Eng Registered Mortgage Broker (BCFSA)</p>
-        <p class="mt-2">Email: mortgageajae@gmail.com | Phone: 250-581-6862 | KakaoTalk: mortgageajae</p>
-        <p class="mt-2 text-xs text-gray-600">&copy; 2026 Mortgageajae. All rights reserved.</p>
-    </footer>
+<section class="block" id="insights">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><span class="chip">카드뉴스</span><h2 class="disp">한 장씩 넘기며<br>이해하는 모기지</h2></div>
+      <a class="pill ghost" href="https://www.instagram.com/mortgageajae/" rel="noopener" target="_blank">인스타그램에서 보기 →</a>
+    </div>
+    <div class="cards">
+      <a class="cn" href="https://www.instagram.com/mortgageajae/" rel="noopener" target="_blank"><img src="/images/cardnews/fhsa-1-open-early.png" alt="FHSA, 지금 열어야 하는 이유" width="576" height="720" loading="lazy"><div class="meta">FHSA 1탄</div><div class="t">FHSA, 지금 열어야 하는 이유</div></a>
+      <a class="cn" href="https://www.instagram.com/mortgageajae/" rel="noopener" target="_blank"><img src="/images/cardnews/mortgage-choice-1-fixed-vs-variable.png" alt="고정·변동금리 1% 가까이 벌어졌어요" width="576" height="720" loading="lazy"><div class="meta">모기지 선택 1탄</div><div class="t">고정·변동금리 1% 가까이 벌어졌어요</div></a>
+      <a class="cn" href="https://www.instagram.com/mortgageajae/" rel="noopener" target="_blank"><img src="/images/cardnews/gov-benefits-2-new-build.png" alt="새집이면 세금이 달라져요" width="576" height="720" loading="lazy"><div class="meta">정부혜택 2탄</div><div class="t">새집이면 세금이 달라져요</div></a>
+    </div>
+  </div>
+</section>
 
-    <script>
-        // 헤더 여백 조절 함수
-        function adjustHeaderPadding() {
-            const header = document.querySelector('header');
-            const headerHeight = header.offsetHeight;
-            const subNav = document.getElementById('sub-nav');
-            const mainContent = document.getElementById('main-content');
-            subNav.style.top = headerHeight + 'px';
-            mainContent.style.paddingTop = (headerHeight + subNav.offsetHeight) + 'px';
-        }
-
-        window.addEventListener('resize', adjustHeaderPadding);
-        window.addEventListener('load', adjustHeaderPadding);
-
-        // 데스크탑 메뉴 마우스 드래그 스크롤 기능
-        const slider = document.getElementById('nav-scroll-container');
-        let isDown = false;
-        let startX;
-        let scrollLeft;
-
-        slider.addEventListener('mousedown', (e) => {
-            isDown = true;
-            startX = e.pageX - slider.offsetLeft;
-            scrollLeft = slider.scrollLeft;
-        });
-        slider.addEventListener('mouseleave', () => { isDown = false; });
-        slider.addEventListener('mouseup', () => { isDown = false; });
-        slider.addEventListener('mousemove', (e) => {
-            if (!isDown) return;
-            e.preventDefault();
-            const x = e.pageX - slider.offsetLeft;
-            const walk = (x - startX) * 1.5; // 스크롤 민감도
-            slider.scrollLeft = scrollLeft - walk;
-        });
-
-        // 탭 동작 및 iframe 컨트롤
-        function showDashboard() {
-            document.getElementById('dashboard-view').classList.remove('hidden');
-            document.getElementById('calculator-view').classList.add('hidden');
-            document.getElementById('tool-frame').src = ""; 
-            
-            const tabs = document.querySelectorAll('.calc-tab');
-            tabs.forEach(tab => {
-                tab.classList.remove('tab-active');
-                tab.classList.add('tab-inactive');
-            });
-            document.getElementById('btn-main-dash').classList.add('tab-active');
-            document.getElementById('btn-main-dash').classList.remove('tab-inactive');
-
-            window.scrollTo(0, 0); 
-            adjustHeaderPadding();
-        }
-
-        function loadTool(htmlFileName, clickedTabBtn = null, tabIndex = null) {
-            document.getElementById('dashboard-view').classList.add('hidden');
-            document.getElementById('calculator-view').classList.remove('hidden');
-            document.getElementById('tool-frame').src = htmlFileName;
-            
-            document.getElementById('btn-main-dash').classList.remove('tab-active');
-            document.getElementById('btn-main-dash').classList.add('tab-inactive');
-            
-            const tabs = document.querySelectorAll('.calc-tab');
-            tabs.forEach(tab => {
-                tab.classList.remove('tab-active');
-                tab.classList.add('tab-inactive');
-            });
-
-            if(clickedTabBtn) {
-                clickedTabBtn.classList.remove('tab-inactive');
-                clickedTabBtn.classList.add('tab-active');
-            } else if(tabIndex !== null) {
-                const targetTab = tabs[tabIndex - 1]; 
-                if(targetTab) {
-                    targetTab.classList.remove('tab-inactive');
-                    targetTab.classList.add('tab-active');
-                }
-            }
-            
-            adjustHeaderPadding(); 
-            window.scrollTo(0, 0);
-        }
-
-        // iframe 내부 요소 높이 변경 감지
-        window.addEventListener('message', function(event) {
-            if (event.data.type === 'resize') {
-                const iframe = document.getElementById('tool-frame');
-                if (iframe) {
-                    iframe.style.height = (event.data.height + 30) + 'px';
-                }
-            } else if (event.data.type === 'scrollToTop') {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            }
-        });
-
-        // URL 파라미터 또는 해시를 통한 직접 진입 지원 (예: ?tool=discovery)
-        document.addEventListener('DOMContentLoaded', () => {
-            const params = new URLSearchParams(window.location.search);
-            const tool = params.get('tool');
-            if (tool === 'discovery' || window.location.hash === '#discovery') {
-                loadTool('discovery.html', null, 11);
-            }
-        });
-    </script>
+<section class="block" id="newsletter">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><span class="chip">주간 뉴스레터</span><h2 class="disp">금리·정책 변화,<br>매주 정리해 드려요</h2></div>
+      <a class="pill ghost" href="/kr/newsletter/">전체 보기 →</a>
+    </div>
+    <ul class="home-nl">
+<li><a href="/kr/newsletter/2026-10-22/"><span class="d">2026.10.22</span><span class="t">10월 28일 BoC 회의를 앞두고 선회하는 주요 기관들: 기대 인플레이션 상승과 엇갈리는 전망</span></a></li>
+<li><a href="/kr/newsletter/2026-10-21/"><span class="d">2026.10.21</span><span class="t">2분기 GDP 3년 만에 최고 성장…그런데 모기지 금리는 왜 안 내릴까</span></a></li>
+<li><a href="/kr/newsletter/2026-10-19/"><span class="d">2026.10.19</span><span class="t">CREA, 올해 주택 거래 전망 세 번째 하향…&quot;롤러코스터 한 해&quot;</span></a></li>
+</ul>
+  </div>
+</section>
+</main>
+<section class="cta">
+  <div class="wrap">
+    <div>
+      <h2 class="disp">계산 결과가 복잡하다면?</h2>
+      <p>고객님 상황을 꼼꼼히 분석해, 놓치기 쉬운 혜택까지 챙긴 맞춤 전략을 세워드립니다.</p>
+    </div>
+    <a class="pill yellow" href="/kr/consultation/">1:1 화상상담 신청하기 →</a>
+  </div>
+</section>
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="rule">
+      <div><strong>Justin Bae, M.Sc., P.Eng.</strong><br>Mortgage Broker (BCFSA MB610304)<br>Huntington Cross Mortgage</div>
+      <div>Email: mortgageajae@gmail.com · Phone: 250-581-6862<br>KakaoTalk: mortgageajae · @mortgageajae<br><a href="/kr/privacy/">개인정보 처리방침</a></div>
+    </div>
+    <p class="note">일반 정보 제공 목적이며 개인 상담을 대체하지 않습니다. © 2026 Mortgageajae</p>
+  </div>
+</footer>
 </body>
 </html>

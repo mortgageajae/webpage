@@ -1,0 +1,97 @@
+<!--meta {"out": "en/index.html", "lang": "en", "path": "/en/", "title": "Mortgageajae | BC Mortgage Broker Justin Bae, P.Eng.", "description": "Justin Bae, P.Eng., BC mortgage broker. Free BC calculators for purchase budget, affordability, government benefits and rate checks, plus 1:1 video consultations.", "alternates": {"ko": "/kr/", "en": "/en/"}, "og_image": "/images/og/og-en.png"} -->
+<script>
+// Old links (?tool=...) → new pages
+(function () {
+  var map = { discovery: '/en/consultation/', rate: '/en/calculators/rate-check/', budget: '/en/calculators/budget/' };
+  var t = new URLSearchParams(location.search).get('tool');
+  if (t && map[t]) location.replace(map[t]);
+  else if (location.hash === '#discovery') location.replace('/en/consultation/');
+})();
+</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[
+ {"@type":"WebSite","@id":"https://mortgageajae.ca/#site","url":"https://mortgageajae.ca/","name":"모기지아재 Mortgageajae","inLanguage":["ko","en"],"publisher":{"@id":"https://mortgageajae.ca/#justin"}},
+ {"@type":"Person","@id":"https://mortgageajae.ca/#justin","name":"Justin Bae","alternateName":"Mortgageajae","honorificSuffix":"M.Sc., P.Eng.","jobTitle":"Mortgage Broker","url":"https://mortgageajae.ca/en/","image":"https://mortgageajae.ca/images/profile-1000.jpg","email":"mailto:mortgageajae@gmail.com","telephone":"+1-250-581-6862","knowsLanguage":["en","ko"],"areaServed":{"@type":"AdministrativeArea","name":"British Columbia, Canada"},"hasCredential":{"@type":"EducationalOccupationalCredential","credentialCategory":"license","name":"Mortgage Broker registration (BCFSA) MB610304","recognizedBy":{"@type":"Organization","name":"BC Financial Services Authority","url":"https://www.bcfsa.ca"}},"worksFor":{"@type":"Organization","name":"Huntington Cross Mortgage"}}
+]}</script>
+
+<section class="heroC">
+  <div class="wrap heroC-grid">
+    <div>
+      <h1 class="disp">Smart mortgage <span class="b">strategies</span>, built with an engineer's precision</h1>
+      <p class="sub">Complex numbers and fine print, <span class="y">carefully reviewed</span>.<br>Start with the free calculators, then book a 1:1 call if you need help.</p>
+      <div class="ctas">
+        <a class="pill" href="/en/consultation/">Book a 1:1 call</a>
+        <a class="pill ghost" href="#tools">Free calculators →</a>
+      </div>
+    </div>
+    <div class="heroC-photo">
+      <img src="/images/profile-1000.jpg" alt="Mortgage broker Justin Bae" width="800" height="1000" fetchpriority="high">
+      <div class="name">
+        <div class="nm">Justin Bae<span>, M.Sc., P.Eng.</span></div>
+        <div class="ttl">Mortgage Broker (BCFSA MB610304)</div>
+        <div class="org">Huntington Cross Mortgage</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<nav class="situ" aria-label="Jump to your situation">
+  <div class="wrap">
+    <div class="situ-h disp">Where are you at?</div>
+    <div class="situ-grid">
+      <a href="#buy"><span class="n">01</span>Buying a home</a>
+      <a href="#rates"><span class="n">02</span>Comparing rates</a>
+      <a href="#existing"><span class="n">03</span>Renewal or switch</a>
+      <a href="#grow"><span class="n">04</span>Growing wealth</a>
+    </div>
+  </div>
+</nav>
+
+<section class="block" id="tools">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><span class="chip">Free calculators</span><h2 class="disp">Pick the tool<br>for your situation</h2></div>
+      <p>Built for BC rules. If the results raise questions, bring them to a 1:1 call.</p>
+    </div>
+    <div class="groups">
+      <div class="group" id="buy">
+        <h3 class="disp">Before you buy</h3>
+        <div class="grid">
+          <a class="tool" href="/en/calculators/budget/"><span class="n">01</span><h4>Purchase budget</h4><p>Down payment, property transfer tax and CMHC premium: the total cash you need to close.</p><span class="go">Calculate →</span></a>
+          <a class="tool" href="/en/calculators/affordability/"><span class="n">02</span><h4>Affordability &amp; payments</h4><p>Maximum mortgage under GDS/TDS and payments by frequency.</p><span class="go">Calculate →</span></a>
+          <a class="tool" href="/en/calculators/government-benefits/"><span class="n">03</span><h4>Government benefits</h4><p>PTT exemptions, new-home GST rebate, FHSA and RRSP Home Buyers' Plan.</p><span class="go">Check →</span></a>
+          <a class="tool" href="/en/calculators/insured-vs-conventional/"><span class="n">04</span><h4>Insured vs conventional</h4><p>Is putting less than 20% down for an insured rate worth it?</p><span class="go">Compare →</span></a>
+        </div>
+      </div>
+      <div class="group" id="rates">
+        <h3 class="disp">Choosing a rate <span class="grp-note">new purchase or renewal</span></h3>
+        <div class="grid">
+          <a class="tool" href="/en/calculators/rate-check/"><span class="n">05</span><h4>Rate check</h4><p>Is the rate you were offered competitive for BC?</p><span class="go">Check →</span></a>
+          <a class="tool" href="/en/calculators/fixed-vs-variable/"><span class="n">06</span><h4>Fixed vs variable</h4><p>Total interest under different prime-rate scenarios.</p><span class="go">Compare →</span></a>
+        </div>
+      </div>
+      <div class="group" id="existing">
+        <h3 class="disp">If you already have a mortgage</h3>
+        <div class="grid">
+          <a class="tool" href="/en/calculators/switch/"><span class="n">07</span><h4>Mortgage switch</h4><p>Penalty vs interest saved when moving to another lender.</p><span class="go">Analyze →</span></a>
+          <a class="tool" href="/en/calculators/debt-consolidation/"><span class="n">08</span><h4>Debt consolidation</h4><p>Does rolling high-interest debt into your mortgage help your cash flow?</p><span class="go">Analyze →</span></a>
+        </div>
+      </div>
+      <div class="group" id="grow">
+        <h3 class="disp">Growing your wealth</h3>
+        <div class="grid">
+          <a class="tool" href="/en/calculators/retirement/"><span class="n">09</span><h4>Retirement planning</h4><p>Mortgage payoff, home equity and pensions combined into a retirement cash-flow plan.</p><span class="go">Plan →</span></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="newsletter">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><span class="chip">Weekly newsletter</span><h2 class="disp">Rates and policy,<br>every week</h2></div>
+      <a class="pill ghost" href="/en/newsletter/">All issues →</a>
+    </div>
+    {{latest_newsletters}}
+  </div>
+</section>

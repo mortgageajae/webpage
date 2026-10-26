@@ -1,0 +1,43 @@
+# 배포(Cloudflare Workers static assets)에서 제외할 파일 — 저장소에는 남음
+.git
+.gitignore
+.assetsignore
+wrangler.jsonc
+dev-server.js
+CLAUDE*.md
+.claude
+tools
+src
+# 공개하지 않는 페이지 (검증 전·옛 페이지)
+kr/smith.html
+kr/multi-property.html
+kr/index_old.html
+kr/index_en.html
+kr/retirement_old.html
+kr/check.html
+# 새 주소로 옮긴 옛 계산기 파일 (_redirects 로 이동)
+kr/budget-calculator.html
+kr/core-tools.html
+kr/benefit-diagnosis.html
+kr/insured-analysis.html
+kr/rate-diagnosis.html
+kr/varvsfix.html
+kr/switch.html
+kr/debt-consolidation.html
+kr/retirement.html
+kr/discovery.html
+kr/board.html
+kr/bank-links.html
+# 새 주소로 옮긴 옛 영문 파일
+en/budget-calculator.html
+en/core-tools.html
+en/benefit-diagnosis.html
+en/insured-analysis.html
+en/rate-diagnosis.html
+en/varvsfix.html
+en/switch.html
+en/debt-consolidation.html
+en/retirement.html
+en/discovery.html
+en/board.html
+en/bank-links.html

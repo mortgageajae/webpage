@@ -1,0 +1,111 @@
+<!--meta {"out": "kr/index.html", "lang": "kr", "path": "/kr/", "title": "모기지아재 | BC 모기지 브로커 Justin Bae, P.Eng.", "description": "엔지니어 출신 BC주 모기지 브로커 모기지아재(Justin Bae, P.Eng.). 주택구매 예산·대출한도·정부혜택·금리진단 등 무료 모기지 계산기와 매주 금리·정책 뉴스레터, 1:1 화상상담.", "alternates": {"ko": "/kr/", "en": "/en/"}} -->
+<script>
+// 옛 주소(?tool=...) 호환: 해당 계산기 주소로 이동
+(function () {
+  var map = { discovery: '/kr/consultation/', rate: '/kr/calculators/rate-check/', budget: '/kr/calculators/budget/' };
+  var t = new URLSearchParams(location.search).get('tool');
+  if (t && map[t]) location.replace(map[t]);
+  else if (location.hash === '#discovery') location.replace('/kr/consultation/');
+})();
+</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[
+ {"@type":"WebSite","@id":"https://mortgageajae.ca/#site","url":"https://mortgageajae.ca/","name":"모기지아재 Mortgageajae","inLanguage":["ko","en"],"publisher":{"@id":"https://mortgageajae.ca/#justin"}},
+ {"@type":"Person","@id":"https://mortgageajae.ca/#justin","name":"Justin Bae","alternateName":"모기지아재","honorificSuffix":"M.Sc., P.Eng.","jobTitle":"Mortgage Broker","url":"https://mortgageajae.ca/kr/","image":"https://mortgageajae.ca/images/profile-1000.jpg","email":"mailto:mortgageajae@gmail.com","telephone":"+1-250-581-6862","knowsLanguage":["ko","en"],"areaServed":{"@type":"AdministrativeArea","name":"British Columbia, Canada"},"hasCredential":{"@type":"EducationalOccupationalCredential","credentialCategory":"license","name":"Mortgage Broker registration (BCFSA) MB610304","recognizedBy":{"@type":"Organization","name":"BC Financial Services Authority","url":"https://www.bcfsa.ca"}},"worksFor":{"@type":"Organization","name":"Huntington Cross Mortgage"}}
+]}</script>
+
+<section class="heroC">
+  <div class="wrap heroC-grid">
+    <div>
+      <h1 class="disp">엔지니어의<br><span class="b">꼼꼼함으로</span><br>분석해드리는<br>최적의 솔루션</h1>
+      <p class="sub">복잡한 숫자와 약관, <span class="y">정밀하게 검토</span>해 드립니다.<br>무료 계산기로 먼저 확인하고, 필요하면 1:1로 상담하세요.</p>
+      <div class="ctas">
+        <a class="pill" href="/kr/consultation/">1:1 상담 예약</a>
+        <a class="pill ghost" href="#tools">무료 계산기 →</a>
+      </div>
+    </div>
+    <div class="heroC-photo">
+      <img src="/images/profile-1000.jpg" alt="모기지 브로커 Justin Bae" width="800" height="1000" fetchpriority="high">
+      <div class="name">
+        <div class="nm">Justin Bae<span>, M.Sc., P.Eng.</span></div>
+        <div class="ttl">Mortgage Broker (BCFSA MB610304)</div>
+        <div class="org">Huntington Cross Mortgage</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<nav class="situ" aria-label="상황별 바로가기">
+  <div class="wrap">
+    <div class="situ-h disp">어떤 상황이세요?</div>
+    <div class="situ-grid">
+      <a href="#buy"><span class="n">01</span>집 구매 준비</a>
+      <a href="#rates"><span class="n">02</span>금리·상품 비교</a>
+      <a href="#existing"><span class="n">03</span>갱신·환승</a>
+      <a href="#grow"><span class="n">04</span>자산 늘리기</a>
+    </div>
+  </div>
+</nav>
+
+<section class="block" id="tools">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><span class="chip">무료 계산기</span><h2 class="disp">상황에 맞는<br>도구를 고르세요</h2></div>
+      <p>BC주 기준으로 만든 계산기입니다. 결과를 보고 궁금한 점은 상담으로 이어서 물어보세요.</p>
+    </div>
+    <div class="groups">
+      <div class="group" id="buy">
+        <h3 class="disp">집을 사기 전</h3>
+        <div class="grid">
+          <a class="tool" href="/kr/calculators/budget/"><span class="n">01</span><h4>주택구매 종합 예산</h4><p>다운페이, 취득세(PTT), 모기지 보험료까지 클로징에 필요한 총 현금.</p><span class="go">계산하기 →</span></a>
+          <a class="tool" href="/kr/calculators/affordability/"><span class="n">02</span><h4>대출한도·페이먼트</h4><p>GDS/TDS 기준 최대 한도와 상환 주기별 페이먼트.</p><span class="go">계산하기 →</span></a>
+          <a class="tool" href="/kr/calculators/government-benefits/"><span class="n">03</span><h4>정부혜택 자격진단</h4><p>취득세 면제, 신축 GST 환급, FHSA, RRSP 인출 자격 점검.</p><span class="go">진단하기 →</span></a>
+          <a class="tool" href="/kr/calculators/insured-vs-conventional/"><span class="n">04</span><h4>Insured 수익성</h4><p>다운페이를 일부러 20% 미만으로 맞추는 게 유리한지 비교.</p><span class="go">분석하기 →</span></a>
+        </div>
+      </div>
+      <div class="group" id="rates">
+        <h3 class="disp">금리·상품 고르기 <span class="grp-note">신규 구매 · 갱신 모두</span></h3>
+        <div class="grid">
+          <a class="tool" href="/kr/calculators/rate-check/"><span class="n">05</span><h4>모기지 금리진단</h4><p>제안받은 금리가 BC 시장 데이터와 비교해 좋은 조건인지.</p><span class="go">진단하기 →</span></a>
+          <a class="tool" href="/kr/calculators/fixed-vs-variable/"><span class="n">06</span><h4>변동 vs 고정</h4><p>프라임 금리 시나리오별 총 이자비용 비교.</p><span class="go">비교하기 →</span></a>
+        </div>
+      </div>
+      <div class="group" id="existing">
+        <h3 class="disp">지금 모기지가 있다면</h3>
+        <div class="grid">
+          <a class="tool" href="/kr/calculators/switch/"><span class="n">07</span><h4>모기지 환승분석</h4><p>페널티와 남은 기간 이자 절감액을 비교해 환승 타당성 진단.</p><span class="go">분석하기 →</span></a>
+          <a class="tool" href="/kr/calculators/debt-consolidation/"><span class="n">08</span><h4>부채통합 분석</h4><p>고금리 부채를 모기지로 합치는 게 월 현금흐름에 유리한지.</p><span class="go">분석하기 →</span></a>
+        </div>
+      </div>
+      <div class="group" id="grow">
+        <h3 class="disp">자산을 키울 때</h3>
+        <div class="grid">
+          <a class="tool" href="/kr/calculators/retirement/"><span class="n">09</span><h4>은퇴 재정설계</h4><p>상환 계획, 주택 자산, 연금을 합쳐 은퇴 후 현금흐름 설계.</p><span class="go">설계하기 →</span></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="insights">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><span class="chip">카드뉴스</span><h2 class="disp">한 장씩 넘기며<br>이해하는 모기지</h2></div>
+      <a class="pill ghost" href="https://www.instagram.com/mortgageajae/" rel="noopener" target="_blank">인스타그램에서 보기 →</a>
+    </div>
+    <div class="cards">
+      <a class="cn" href="https://www.instagram.com/mortgageajae/" rel="noopener" target="_blank"><img src="/images/cardnews/fhsa-1-open-early.png" alt="FHSA, 지금 열어야 하는 이유" width="576" height="720" loading="lazy"><div class="meta">FHSA 1탄</div><div class="t">FHSA, 지금 열어야 하는 이유</div></a>
+      <a class="cn" href="https://www.instagram.com/mortgageajae/" rel="noopener" target="_blank"><img src="/images/cardnews/mortgage-choice-1-fixed-vs-variable.png" alt="고정·변동금리 1% 가까이 벌어졌어요" width="576" height="720" loading="lazy"><div class="meta">모기지 선택 1탄</div><div class="t">고정·변동금리 1% 가까이 벌어졌어요</div></a>
+      <a class="cn" href="https://www.instagram.com/mortgageajae/" rel="noopener" target="_blank"><img src="/images/cardnews/gov-benefits-2-new-build.png" alt="새집이면 세금이 달라져요" width="576" height="720" loading="lazy"><div class="meta">정부혜택 2탄</div><div class="t">새집이면 세금이 달라져요</div></a>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="newsletter">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><span class="chip">주간 뉴스레터</span><h2 class="disp">금리·정책 변화,<br>매주 정리해 드려요</h2></div>
+      <a class="pill ghost" href="/kr/newsletter/">전체 보기 →</a>
+    </div>
+    {{latest_newsletters}}
+  </div>
+</section>
