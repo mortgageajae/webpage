@@ -334,7 +334,7 @@
 
     function calcMonthlyCPP(years, percent, startAge) {
         startAge = clampCppStart(startAge);
-        let base = CPP_MAX_65 * (Math.min(years, 40) / 40) * (percent / 100);
+        let base = CPP_MAX_65 * (Math.min(years, 39) / 39) * (percent / 100);
         let adj = startAge < 65 ? (startAge - 65) * 0.006 : (startAge - 65) * 0.007; 
         return Math.max(0, base * (1 + (adj * 12))); 
     }
@@ -401,13 +401,20 @@
         }
         return tax;
     }
-    function calculateIndividualTax(income) {
+    // Age 65+ credits (2026): federal age amount $9,208 (reduced by 15% of net income over $46,432), BC age amount $5,927 (reduced by 15% over $44,119)
+    // Pension income amount: federal $2,000, BC $1,000 (RRIF withdrawals and DB pension at 65+; not CPP/OAS)
+    // Sources: canada.ca 2026 indexation page, gov.bc.ca B.C. basic tax credits (verified 2026-10-26)
+    function calculateIndividualTax(income, age = 0, pensionIncome = 0) {
         income = Math.max(0, income);
-        let fedBPA = 16452;
-        if (income > 181440) fedBPA -= (16452 - 14829) * Math.min(1, (income - 181440) / (258482 - 181440));
-        let bcBPA = 13216;
-        let fedTax = Math.max(0, bracketTax(income, FED_BRACKETS) - fedBPA * 0.14);
-        let bcTax = Math.max(0, bracketTax(income, BC_BRACKETS) - bcBPA * 0.056);
+        let fedCredits = 16452;
+        if (income > 181440) fedCredits -= (16452 - 14829) * Math.min(1, (income - 181440) / (258482 - 181440));
+        let bcCredits = 13216;
+        if (age >= 65) {
+            fedCredits += Math.max(0, 9208 - Math.max(0, income - 46432) * 0.15) + Math.min(2000, pensionIncome);
+            bcCredits += Math.max(0, 5927 - Math.max(0, income - 44119) * 0.15) + Math.min(1000, pensionIncome);
+        }
+        let fedTax = Math.max(0, bracketTax(income, FED_BRACKETS) - fedCredits * 0.14);
+        let bcTax = Math.max(0, bracketTax(income, BC_BRACKETS) - bcCredits * 0.056);
         return fedTax + bcTax;
     }
 
@@ -658,10 +665,13 @@
             p1Taxable += (drawn.p1_rrsp / pvDisc) + ((drawn.p1_non / pvDisc) * 0.5);
             p2Taxable += (drawn.p2_rrsp / pvDisc) + ((drawn.p2_non / pvDisc) * 0.5);
 
-            let p1Tax = p1Alive ? calculateIndividualTax(p1Taxable) : 0;
-            let p2Tax = p2Alive ? calculateIndividualTax(p2Taxable) : 0;
+            // OAS repayment is deducted from net income, so compute it first
             let p1Claw = p1Alive ? calcClawback(yOas1, p1Taxable) : 0;
             let p2Claw = p2Alive ? calcClawback(yOas2, p2Taxable) : 0;
+            let p1Pension = yDb1 + drawn.p1_rrsp / pvDisc;
+            let p2Pension = yDb2 + drawn.p2_rrsp / pvDisc;
+            let p1Tax = p1Alive ? calculateIndividualTax(p1Taxable - p1Claw, age1, p1Pension) : 0;
+            let p2Tax = p2Alive ? calculateIndividualTax(p2Taxable - p2Claw, age2, p2Pension) : 0;
             let totTaxPV = p1Tax + p2Tax + p1Claw + p2Claw;
 
             let grossIncomePV = yCpp1 + yCpp2 + yOas1 + yOas2 + yDb1 + yDb2 + yRent + 

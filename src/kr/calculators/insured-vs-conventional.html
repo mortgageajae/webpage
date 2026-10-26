@@ -1,4 +1,4 @@
-<!--meta {"out": "kr/calculators/insured-vs-conventional/index.html", "lang": "kr", "path": "/kr/calculators/insured-vs-conventional/", "title": "Insured 수익성 분석 | 모기지아재", "description": "다운페이 20% 이상이 가능해도 Insured(보험) 모기지로 낮은 금리를 받는 것이 유리한지 보험료와 이자를 비교합니다.", "head": "<link rel=\"stylesheet\" href=\"/assets/css/calc/insured-vs-conventional.css\">\n<style>\n        html { scroll-behavior: smooth; }\n        .fade-in { animation: fadeIn 0.4s ease-in-out; }\n        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }\n        \n        .card-header { @apply bg-brand p-8 text-center text-white; }\n        .card-title { @apply text-3xl md:text-3xl font-extrabold; }\n        .btn-primary { @apply w-full bg-brand hover:bg-brand-dark text-white font-bold text-lg md:text-xl py-4 rounded-xl transition shadow-xl mt-4 block text-center cursor-pointer border-none outline-none; }\n        \n        /* 스크롤바 커스텀 (테이블용) */\n        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }\n        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }\n        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }\n        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }\n        .no-scrollbar::-webkit-scrollbar { display: none; }\n        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }\n    </style>\n", "calc_css": "insured-vs-conventional", "alternates": {"ko": "/kr/calculators/insured-vs-conventional/", "en": "/en/calculators/insured-vs-conventional/"}} -->
+<!--meta {"out": "kr/calculators/insured-vs-conventional/index.html", "lang": "kr", "path": "/kr/calculators/insured-vs-conventional/", "title": "Insured 수익성 분석 | 모기지아재", "description": "Insured(보험) 모기지의 낮은 금리로 아끼는 이자가 보험료보다 큰지, 같은 대출원금 기준으로 비교합니다.", "head": "<link rel=\"stylesheet\" href=\"/assets/css/calc/insured-vs-conventional.css\">\n<style>\n        html { scroll-behavior: smooth; }\n        .fade-in { animation: fadeIn 0.4s ease-in-out; }\n        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }\n        \n        .card-header { @apply bg-brand p-8 text-center text-white; }\n        .card-title { @apply text-3xl md:text-3xl font-extrabold; }\n        .btn-primary { @apply w-full bg-brand hover:bg-brand-dark text-white font-bold text-lg md:text-xl py-4 rounded-xl transition shadow-xl mt-4 block text-center cursor-pointer border-none outline-none; }\n        \n        /* 스크롤바 커스텀 (테이블용) */\n        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }\n        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }\n        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }\n        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }\n        .no-scrollbar::-webkit-scrollbar { display: none; }\n        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }\n    </style>\n", "calc_css": "insured-vs-conventional", "alternates": {"ko": "/kr/calculators/insured-vs-conventional/", "en": "/en/calculators/insured-vs-conventional/"}} -->
 <div class="calc-page">
 <section class="px-2 md:px-0 max-w-6xl mx-auto relative z-10 fade-in">
         
@@ -98,7 +98,7 @@
                         </div>
                         
                         <div class="bg-gray-50 p-4 rounded-xl border border-gray-200">
-                            <h4 class="font-bold text-gray-800 text-sm mb-3">금리차이 (Insured vs 20% 다운 Conventional)</h4>
+                            <h4 class="font-bold text-gray-800 text-sm mb-3">금리차이 (Insured vs Conventional, 같은 대출원금)</h4>
                             <div class="grid grid-cols-2 gap-3 mb-3">
                                 <div>
                                     <label class="block text-xs font-bold text-gray-600 mb-1">현재 Insured 금리 (%)</label>
@@ -110,7 +110,7 @@
                                 </div>
                             </div>
                             <p class="text-xs text-gray-500 leading-tight">* Insured 모기지는 렌더의 리스크가 적어 다운페이가 20% 이상인 Conventional(Uninsured) 모기지보다 금리가 보통 0.2%~0.5% 저렴합니다.</p>
-                            <p class="text-xs text-gray-500 leading-tight mt-1">* 비교 대상: 같은 집을 다운페이 20%로 사는 Conventional 모기지 (대출 = 집값의 80%, 같은 상환기간). 다운페이 20% 미만이면서 보험 없는 일반 대출은 은행에서 받을 수 없기 때문입니다.</p>
+                            <p class="text-xs text-gray-500 leading-tight mt-1">* 비교 방식: 같은 대출원금을 Insured 금리(+보험료)와 Conventional 금리로 빌린다고 보고, 낮은 금리로 아끼는 이자가 보험료보다 큰지 봅니다. 실제로 은행 Conventional은 다운페이 20% 이상이 필요합니다.</p>
                         </div>
                     </div>
 
@@ -128,7 +128,7 @@
                             <div class="bg-indigo-50 p-4 rounded-xl border border-indigo-200 shadow-sm flex flex-col justify-center">
                                 <p class="text-sm text-indigo-500 font-bold mb-1">상환기간 내 총 절감 이자</p>
                                 <p class="text-xl font-extrabold text-indigo-700" id="final-interest-saving">+$0</p>
-                                <p class="text-xs text-indigo-400 mt-1">(20% 다운 Conventional 대비 이자 차액)</p>
+                                <p class="text-xs text-indigo-400 mt-1">(같은 원금 Conventional 대비 이자 차액)</p>
                             </div>
                             <div class="bg-brand text-white p-4 rounded-xl shadow-md border border-brand-dark flex flex-col justify-center">
                                 <p class="text-sm text-brand-light font-bold mb-1">손익분기점 (Break-even)</p>
@@ -163,7 +163,7 @@
                                                     <span class="text-[10px] font-normal opacity-80" id="table-head-insured"></span>
                                                 </th>
                                                 <th colspan="4" class="py-1 px-2 border border-indigo-200 font-bold text-indigo-700 bg-indigo-50">
-                                                    Conventional 모기지 (20% 다운)<br>
+                                                    Conventional 모기지 (같은 원금)<br>
                                                     <span class="text-[10px] font-normal opacity-80" id="table-head-uninsured"></span>
                                                 </th>
                                             </tr>
@@ -405,11 +405,10 @@
 
             // Insured: 보험료 전액을 대출에 포함 (Eco Plus 환급은 나중에 현금으로 받음)
             const totalLoanInsured = globalLoanAmount + globalGrossPremium; 
-            // 비교 대상: 다운페이 20% Conventional (대출 = 집값의 80%)
+            // 비교 대상: 같은 대출원금을 Conventional 금리로 빌리는 경우 (금리 차이와 보험료만 비교)
             const price = parseFloat(document.getElementById('ins-price').value) || 0;
-            const totalLoanUninsured = price * 0.80;
-            const extraCashKept = totalLoanUninsured < globalLoanAmount ? globalLoanAmount - totalLoanUninsured : 0;
-            document.getElementById('final-compare-basis').innerHTML = `비교 기준: Conventional은 다운페이 20% (${formatCurrency(price * 0.20)}), 대출 ${formatCurrency(totalLoanUninsured)} @ ${uninsRateAnnual.toFixed(2)}%. Insured로 가면 다운페이를 ${formatCurrency(extraCashKept)} 덜 내고 그만큼 현금을 남겨둘 수 있습니다 (그 현금의 투자수익은 계산에 포함하지 않음).` + (isEco ? `<br>Eco Plus 환급 ${formatCurrency(rebate)}은 대출 실행 후 현금으로 돌려받는 금액으로 반영했습니다.` : ``);
+            const totalLoanUninsured = globalLoanAmount;
+            document.getElementById('final-compare-basis').innerHTML = `비교 기준: 같은 대출원금 ${formatCurrency(totalLoanUninsured)}을 Conventional 금리 ${uninsRateAnnual.toFixed(2)}%로 빌린다고 보고, 금리 차이로 아끼는 이자와 보험료만 비교했습니다. 실제로 은행 Conventional은 다운페이 20%(${formatCurrency(price * 0.20)}) 이상이 필요합니다.` + (isEco ? `<br>Eco Plus 환급 ${formatCurrency(rebate)}은 대출 실행 후 현금으로 돌려받는 금액으로 반영했습니다.` : ``);
 
             const pmtInsured = totalLoanInsured * (r_m_ins * Math.pow(1 + r_m_ins, totalMonths)) / (Math.pow(1 + r_m_ins, totalMonths) - 1);
             const pmtUninsured = totalLoanUninsured * (r_m_unins * Math.pow(1 + r_m_unins, totalMonths)) / (Math.pow(1 + r_m_unins, totalMonths) - 1);
@@ -479,14 +478,14 @@
                     conclusionBox.className = "bg-green-50 border border-green-200 p-5 rounded-xl text-center shadow-sm text-green-800 font-medium";
                 } else {
                     breakevenEl.innerText = "상환 만기 초과";
-                    conclusionText.innerHTML = `⚠️ 금리 차이(${spread}%)로 발생하는 이자 절감액이 부족하여 모기지 완납 전까지 보험료를 전부 회수하지 못합니다. (총 절감 이자: ${formatCurrency(accumInterestSave)}) <br>다운페이 20% Conventional로 가는 것을 고려해 보세요.`;
+                    conclusionText.innerHTML = `⚠️ 금리 차이(${spread}%)로 발생하는 이자 절감액이 부족하여 모기지 완납 전까지 보험료를 전부 회수하지 못합니다. (총 절감 이자: ${formatCurrency(accumInterestSave)}) <br>다운페이를 20% 이상 할 수 있다면 Conventional을 고려해 보세요.`;
                     conclusionBox.className = "bg-yellow-50 border border-yellow-200 p-5 rounded-xl text-center shadow-sm text-yellow-800 font-medium";
                 }
             } else {
                 savingEl.innerText = `${formatCurrency(accumInterestSave)}`;
                 savingEl.className = "text-2xl font-extrabold text-red-600";
                 breakevenEl.innerText = "손해 발생";
-                conclusionText.innerHTML = `❌ 금리 차이가 작아 늘어난 대출원금(적은 다운페이 + 보험료)에 붙는 이자가 더 큽니다. Insured 진행 시 20% 다운 Conventional보다 이자 비용이 오히려 증가합니다.`;
+                conclusionText.innerHTML = `❌ 금리 차이(${spread}%)가 작아, 같은 원금이라도 보험료를 대출에 더해 붙는 이자가 금리로 아끼는 이자보다 큽니다. 보험료까지 더하면 Insured가 더 비쌉니다.`;
                 conclusionBox.className = "bg-red-50 border border-red-200 p-5 rounded-xl text-center shadow-sm text-red-800 font-medium";
             }
 

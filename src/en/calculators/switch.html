@@ -327,8 +327,8 @@
                     }
                 }
 
-                // Current remaining amortization over 25 years (not applied to Grandfathered cases)
-                if (!isGrandfathered && remAmz > 25) {
+                // Current remaining amortization over 25 years (not applied to Grandfathered cases or to high-ratio loans over 80% LTV, whose existing insurance carries over)
+                if (!isGrandfathered && ltv <= 80 && remAmz > 25) {
                     insurableText = "Uninsurable";
                     insurableClass = "text-red-600 border-red-300";
                     desc = "❌ The current remaining amortization exceeds 25 years, so it is Uninsurable. (Based on the time left now, not the original amortization)";

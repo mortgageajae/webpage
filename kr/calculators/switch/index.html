@@ -387,8 +387,8 @@
                     }
                 }
 
-                // 3. 현재 잔여 상환기간 25년 초과 체크 (Grandfathered 건은 제외)
-                if (!isGrandfathered && remAmz > 25) {
+                // 3. 현재 잔여 상환기간 25년 초과 체크 (Grandfathered 건과 기존 보험이 승계되는 LTV 80% 초과 건은 제외)
+                if (!isGrandfathered && ltv <= 80 && remAmz > 25) {
                     insurableText = "Uninsurable (비보험)";
                     insurableClass = "text-red-600 border-red-300";
                     desc = "❌ 현재 잔여 상환기간이 25년을 초과하여 Uninsurable 대상입니다. (최초 상환기간이 아니라 지금 남은 기간 기준)";

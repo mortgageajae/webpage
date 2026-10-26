@@ -1,4 +1,4 @@
-<!--meta {"out": "en/calculators/insured-vs-conventional/index.html", "lang": "en", "path": "/en/calculators/insured-vs-conventional/", "title": "Insured vs Conventional Mortgage Analysis | Mortgageajae", "description": "Even with 20% down available, see whether an insured mortgage at a lower rate beats a 20%-down conventional mortgage after the premium.", "head": "<link rel=\"stylesheet\" href=\"/assets/css/calc/insured-vs-conventional.css\">\n<style>\n        html { scroll-behavior: smooth; }\n        .fade-in { animation: fadeIn 0.4s ease-in-out; }\n        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }\n        \n        .card-header { @apply bg-brand p-8 text-center text-white; }\n        .card-title { @apply text-3xl md:text-3xl font-extrabold; }\n        .btn-primary { @apply w-full bg-brand hover:bg-brand-dark text-white font-bold text-lg md:text-xl py-4 rounded-xl transition shadow-xl mt-4 block text-center cursor-pointer border-none outline-none; }\n        \n        /* Custom scrollbar for tables */\n        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }\n        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }\n        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }\n        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }\n        .no-scrollbar::-webkit-scrollbar { display: none; }\n        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }\n    </style>\n", "calc_css": "insured-vs-conventional", "alternates": {"ko": "/kr/calculators/insured-vs-conventional/", "en": "/en/calculators/insured-vs-conventional/"}} -->
+<!--meta {"out": "en/calculators/insured-vs-conventional/index.html", "lang": "en", "path": "/en/calculators/insured-vs-conventional/", "title": "Insured vs Conventional Mortgage Analysis | Mortgageajae", "description": "See whether the interest saved by an insured mortgage's lower rate is more than the insurance premium, on the same loan amount.", "head": "<link rel=\"stylesheet\" href=\"/assets/css/calc/insured-vs-conventional.css\">\n<style>\n        html { scroll-behavior: smooth; }\n        .fade-in { animation: fadeIn 0.4s ease-in-out; }\n        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }\n        \n        .card-header { @apply bg-brand p-8 text-center text-white; }\n        .card-title { @apply text-3xl md:text-3xl font-extrabold; }\n        .btn-primary { @apply w-full bg-brand hover:bg-brand-dark text-white font-bold text-lg md:text-xl py-4 rounded-xl transition shadow-xl mt-4 block text-center cursor-pointer border-none outline-none; }\n        \n        /* Custom scrollbar for tables */\n        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }\n        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }\n        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }\n        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }\n        .no-scrollbar::-webkit-scrollbar { display: none; }\n        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }\n    </style>\n", "calc_css": "insured-vs-conventional", "alternates": {"ko": "/kr/calculators/insured-vs-conventional/", "en": "/en/calculators/insured-vs-conventional/"}} -->
 <div class="calc-page">
 <section class="px-2 md:px-0 max-w-6xl mx-auto relative z-10 fade-in">
         
@@ -98,7 +98,7 @@
                         </div>
                         
                         <div class="bg-gray-50 p-4 rounded-xl border border-gray-200">
-                            <h4 class="font-bold text-gray-800 text-sm mb-3">Rate Spread (Insured vs 20% Down Conventional)</h4>
+                            <h4 class="font-bold text-gray-800 text-sm mb-3">Rate Spread (Insured vs Conventional, same loan amount)</h4>
                             <div class="grid grid-cols-2 gap-3 mb-3">
                                 <div>
                                     <label class="block text-xs font-bold text-gray-600 mb-1">Current Insured Rate (%)</label>
@@ -110,7 +110,7 @@
                                 </div>
                             </div>
                             <p class="text-xs text-gray-500 leading-tight">* Insured mortgages have lower lender risk, typically offering rates 0.2%~0.5% lower than Conventional (Uninsured) mortgages (which require 20%+ down payment).</p>
-                            <p class="text-xs text-gray-500 leading-tight mt-1">* Compared against: a Conventional mortgage on the same home with 20% down (loan = 80% of the price, same amortization). This is because banks do not offer uninsured mortgages with less than 20% down.</p>
+                            <p class="text-xs text-gray-500 leading-tight mt-1">* How it compares: the same loan amount is borrowed at the Insured rate (plus premium) and at the Conventional rate, to see whether the interest saved by the lower rate exceeds the premium. In practice, bank Conventional mortgages need at least 20% down.</p>
                         </div>
                     </div>
 
@@ -128,7 +128,7 @@
                             <div class="bg-indigo-50 p-4 rounded-xl border border-indigo-200 shadow-sm flex flex-col justify-center">
                                 <p class="text-sm text-indigo-500 font-bold mb-1">Total Interest Saved over Amortization</p>
                                 <p class="text-xl font-extrabold text-indigo-700" id="final-interest-saving">+$0</p>
-                                <p class="text-xs text-indigo-400 mt-1">(Interest difference vs 20% Down Conventional)</p>
+                                <p class="text-xs text-indigo-400 mt-1">(Interest difference vs Conventional, same loan amount)</p>
                             </div>
                             <div class="bg-brand text-white p-4 rounded-xl shadow-md border border-brand-dark flex flex-col justify-center">
                                 <p class="text-sm text-brand-light font-bold mb-1">Break-even Point</p>
@@ -163,7 +163,7 @@
                                                     <span class="text-[10px] font-normal opacity-80" id="table-head-insured"></span>
                                                 </th>
                                                 <th colspan="4" class="py-1 px-2 border border-indigo-200 font-bold text-indigo-700 bg-indigo-50">
-                                                    Conventional Mortgage (20% Down)<br>
+                                                    Conventional Mortgage (same loan amount)<br>
                                                     <span class="text-[10px] font-normal opacity-80" id="table-head-uninsured"></span>
                                                 </th>
                                             </tr>
@@ -405,11 +405,10 @@
 
             // Insured: the full premium is added to the loan (Eco Plus refund is received later in cash)
             const totalLoanInsured = globalLoanAmount + globalGrossPremium; 
-            // Comparison: 20% down Conventional (loan = 80% of the price)
+            // Comparison: the same loan amount at the Conventional rate (compares only the rate spread and the premium)
             const price = parseFloat(document.getElementById('ins-price').value) || 0;
-            const totalLoanUninsured = price * 0.80;
-            const extraCashKept = totalLoanUninsured < globalLoanAmount ? globalLoanAmount - totalLoanUninsured : 0;
-            document.getElementById('final-compare-basis').innerHTML = `Comparison basis: Conventional with 20% down (${formatCurrency(price * 0.20)}), loan of ${formatCurrency(totalLoanUninsured)} @ ${uninsRateAnnual.toFixed(2)}%. Going Insured lets you put ${formatCurrency(extraCashKept)} less down and keep that cash on hand (any investment return on that cash is not included).` + (isEco ? `<br>The Eco Plus refund of ${formatCurrency(rebate)} is treated as cash you receive back after funding.` : ``);
+            const totalLoanUninsured = globalLoanAmount;
+            document.getElementById('final-compare-basis').innerHTML = `Comparison basis: the same loan amount of ${formatCurrency(totalLoanUninsured)} borrowed at the Conventional rate of ${uninsRateAnnual.toFixed(2)}%, comparing only the interest saved by the rate spread against the premium. In practice, bank Conventional mortgages need at least 20% down (${formatCurrency(price * 0.20)}).` + (isEco ? `<br>The Eco Plus refund of ${formatCurrency(rebate)} is treated as cash you receive back after funding.` : ``);
 
             const pmtInsured = totalLoanInsured * (r_m_ins * Math.pow(1 + r_m_ins, totalMonths)) / (Math.pow(1 + r_m_ins, totalMonths) - 1);
             const pmtUninsured = totalLoanUninsured * (r_m_unins * Math.pow(1 + r_m_unins, totalMonths)) / (Math.pow(1 + r_m_unins, totalMonths) - 1);
@@ -479,14 +478,14 @@
                     conclusionBox.className = "bg-green-50 border border-green-200 p-5 rounded-xl text-center shadow-sm text-green-800 font-medium";
                 } else {
                     breakevenEl.innerText = "Exceeds Amortization";
-                    conclusionText.innerHTML = `⚠️ The interest savings from the rate spread (${spread}%) are insufficient to recover the premium before the mortgage is fully paid off. (Total Interest Saved: ${formatCurrency(accumInterestSave)})<br>Consider going Conventional with 20% down instead.`;
+                    conclusionText.innerHTML = `⚠️ The interest savings from the rate spread (${spread}%) are insufficient to recover the premium before the mortgage is fully paid off. (Total Interest Saved: ${formatCurrency(accumInterestSave)})<br>If you can put 20% or more down, consider a Conventional mortgage.`;
                     conclusionBox.className = "bg-yellow-50 border border-yellow-200 p-5 rounded-xl text-center shadow-sm text-yellow-800 font-medium";
                 }
             } else {
                 savingEl.innerText = `${formatCurrency(accumInterestSave)}`;
                 savingEl.className = "text-2xl font-extrabold text-red-600";
                 breakevenEl.innerText = "Net Loss";
-                conclusionText.innerHTML = `❌ The rate spread is too small; the interest on the larger loan (smaller down payment + premium) is higher. Proceeding as Insured will increase your overall interest costs compared to a 20% down Conventional mortgage.`;
+                conclusionText.innerHTML = `❌ The rate spread (${spread}%) is too small: even on the same loan amount, the interest on the premium added to the loan is more than the interest saved by the lower rate. Including the premium, Insured costs more.`;
                 conclusionBox.className = "bg-red-50 border border-red-200 p-5 rounded-xl text-center shadow-sm text-red-800 font-medium";
             }
 
