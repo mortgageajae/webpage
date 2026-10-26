@@ -229,3 +229,8 @@ html[lang=en] .calc-page h3{font-size:clamp(1.05rem,1.8vw,1.3rem) !important;lin
 html[lang=en] .chip{font-size:19px}
 html[lang=en] .nl-item a{grid-template-columns:140px 1fr}
 html[lang=en] .home-nl a{grid-template-columns:130px 1fr}
+/* 예산·변동vs고정 계산기의 입력칸 (옛 테마 파일이 없어 여기서 정의) */
+.calc-page .input-group{display:block;border-width:1px;border-style:solid;border-radius:10px;padding:14px}
+.calc-page .label-style{display:block;font-weight:700;font-size:.875rem;color:#253880;margin-bottom:6px}
+.calc-page .input-style{display:block;width:100%;box-sizing:border-box;background:#fff;border:1px solid #d1d5db;border-radius:6px;padding:.6rem .75rem;font-size:.95rem;outline:none}
+.calc-page .input-style:focus{border-color:#334da9;box-shadow:0 0 0 2px rgba(51,77,169,.15)}
