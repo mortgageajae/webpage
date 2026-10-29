@@ -225,14 +225,11 @@
         let applicantCount = 0;
         let propertyCount = 0;
         let selectedTimeSlot = null;
+        let slotRequestId = 0;
 
-        // 만약 단독 페이지(/kr/discovery.html)로 직접 접근 시 메인 대시보드 프레임워크로 감싸서 리다이렉트
-        if (window.self === window.top) {
-            window.location.replace('/kr/index.html?tool=discovery');
-        }
-
-        // 부모 창(index.html)에 현재 높이를 알려주는 함수
+        // 예전 iframe 구조용: 부모 창에 높이를 알림 (단독 페이지에서는 아무것도 안 함)
         function notifyHeightChange() {
+            if (window.parent === window) return;
             setTimeout(() => {
                 const body = document.body;
                 const html = document.documentElement;
@@ -244,21 +241,11 @@
             }, 60);
         }
 
-        // ResizeObserver로 폼 높이 변화를 실시간 100% 감지
-        if (window.ResizeObserver) {
-            const ro = new ResizeObserver(() => {
-                notifyHeightChange();
-            });
-            ro.observe(document.body);
-        }
-
         document.addEventListener('DOMContentLoaded', () => {
             addInitialApplicant();
             initDatePicker();
             notifyHeightChange();
         });
-
-        window.onload = notifyHeightChange;
 
         // 날짜 선택기 초기화 (오늘부터 선택 가능, 기본값은 내일)
         function initDatePicker() {
@@ -280,7 +267,7 @@
             handleDateSelect(tomorrowStr);
         }
 
-        // 날짜 선택 시 0.01초 즉시 렌더링 + 백그라운드 캘린더 동기화
+        // 날짜 선택 시 구글 캘린더에서 빈 시간을 받아 표시
         function handleDateSelect(dateStr) {
             if (!dateStr) return;
             const container = document.getElementById('time-slots-container');
@@ -302,51 +289,33 @@
                 ? ["10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00"]
                 : ["17:00", "18:00", "19:00", "20:00", "21:00"];
 
-            // 2) 오늘 날짜인 경우 과거 시간 필터링
+            // 2) 오늘이면 지난 시간은 빼기
             const now = new Date();
             const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
             const isToday = (dateStr === todayStr);
+            const currentHour = now.getHours();
+            const notPast = s => !isToday || parseInt(s.split(':')[0], 10) > currentHour;
 
-            let initialSlots = baseSlots;
-            if (isToday) {
-                const currentHour = now.getHours();
-                initialSlots = baseSlots.filter(s => {
-                    const slotHour = parseInt(s.split(':')[0], 10);
-                    return slotHour > currentHour;
-                });
-            }
-
-            // 3) 화면에 0.01초 만에 즉각 렌더링 (답답함 제로)
-            renderTimeSlots(dateStr, initialSlots, container);
-            notifyHeightChange();
-
-            // 4) 백그라운드에서 구글 캘린더 실시간 충돌 일정 동기화 (JSONP 우선 시도)
+            // 3) 캘린더 확인이 끝난 뒤 한 번만 그림 (먼저 기본 시간을 그렸다 바꾸면 깜빡이고, 이미 잡힌 시간을 누를 수 있음)
+            const requestId = ++slotRequestId;
+            container.innerHTML = '<span class="text-xs text-gray-500 col-span-full text-center py-3">⏳ 예약 가능한 시간을 확인하고 있습니다...</span>';
             statusText.innerHTML = '<span class="text-brand animate-pulse">⏳ 캘린더 동기화 중...</span>';
-            
+
             fetchSlotsWithJsonp(dateStr)
+                .catch(() => fetch(`${BACKEND_ENDPOINT}?action=getSlots&date=${dateStr}&_t=${Date.now()}`).then(r => r.json()))
                 .then(data => {
-                    if (data && data.status === 'success' && Array.isArray(data.slots)) {
-                        renderTimeSlots(dateStr, data.slots, container);
-                        statusText.innerHTML = '<span class="w-2 h-2 rounded-full bg-green-500 inline-block mr-1"></span>실시간 캘린더 확인 완료';
-                        notifyHeightChange();
-                    } else {
-                        statusText.innerHTML = '<span class="text-gray-500">✓ 예약 가능 시간 표시됨</span>';
-                    }
+                    if (requestId !== slotRequestId) return; // 그사이 다른 날짜를 고름
+                    if (!(data && data.status === 'success' && Array.isArray(data.slots))) throw new Error('bad slots');
+                    renderTimeSlots(dateStr, data.slots.filter(notPast), container);
+                    statusText.innerHTML = '<span class="w-2 h-2 rounded-full bg-green-500 inline-block mr-1"></span>실시간 캘린더 확인 완료';
+                    notifyHeightChange();
                 })
-                .catch(err => {
-                    // Fallback to direct fetch
-                    fetch(`${BACKEND_ENDPOINT}?action=getSlots&date=${dateStr}&_t=${Date.now()}`)
-                        .then(r => r.json())
-                        .then(data => {
-                            if (data && data.status === 'success' && Array.isArray(data.slots)) {
-                                renderTimeSlots(dateStr, data.slots, container);
-                                statusText.innerHTML = '<span class="w-2 h-2 rounded-full bg-green-500 inline-block mr-1"></span>실시간 캘린더 확인 완료';
-                                notifyHeightChange();
-                            }
-                        })
-                        .catch(() => {
-                            statusText.innerHTML = '<span class="text-gray-500">✓ 예약 가능 시간 표시됨</span>';
-                        });
+                .catch(() => {
+                    if (requestId !== slotRequestId) return;
+                    // 캘린더 확인 실패 시 기본 시간 표시
+                    renderTimeSlots(dateStr, baseSlots.filter(notPast), container);
+                    statusText.innerHTML = '<span class="text-gray-500">✓ 예약 가능 시간 표시됨</span>';
+                    notifyHeightChange();
                 });
         }
 
@@ -360,12 +329,12 @@
                 let timeoutId = setTimeout(() => {
                     cleanup();
                     reject(new Error('JSONP Timeout'));
-                }, 4000);
+                }, 8000);
 
                 function cleanup() {
                     clearTimeout(timeoutId);
                     if (script.parentNode) script.parentNode.removeChild(script);
-                    delete window[callbackName];
+                    window[callbackName] = () => {}; // 늦게 온 응답이 오류를 내지 않게
                 }
 
                 window[callbackName] = function(data) {
@@ -812,7 +781,7 @@
             document.getElementById('res-applicant-email').textContent = primaryApp.email;
 
             notifyHeightChange();
-            window.parent.postMessage({ type: 'scrollToTop' }, '*');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function resetForm() {
@@ -822,7 +791,7 @@
             handlePurposeChange();
             initDatePicker();
             notifyHeightChange();
-            window.parent.postMessage({ type: 'scrollToTop' }, '*');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     </script>
 </div>

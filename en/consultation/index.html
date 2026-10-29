@@ -283,14 +283,11 @@
         let applicantCount = 0;
         let propertyCount = 0;
         let selectedTimeSlot = null;
+        let slotRequestId = 0;
 
-        // Auto redirect to index wrapper if opened standalone
-        if (window.self === window.top) {
-            window.location.replace('/en/index.html?tool=discovery');
-        }
-
-        // Notify parent iframe about height change
+        // Legacy iframe layout: tell the parent window the height (does nothing on the standalone page)
         function notifyHeightChange() {
+            if (window.parent === window) return;
             setTimeout(() => {
                 const body = document.body;
                 const html = document.documentElement;
@@ -302,21 +299,11 @@
             }, 60);
         }
 
-        // Real-time ResizeObserver
-        if (window.ResizeObserver) {
-            const ro = new ResizeObserver(() => {
-                notifyHeightChange();
-            });
-            ro.observe(document.body);
-        }
-
         document.addEventListener('DOMContentLoaded', () => {
             addInitialApplicant();
             initDatePicker();
             notifyHeightChange();
         });
-
-        window.onload = notifyHeightChange;
 
         // Initialize Date Picker
         function initDatePicker() {
@@ -338,7 +325,7 @@
             handleDateSelect(tomorrowStr);
         }
 
-        // Handle Date Selection with Instant Rendering & Calendar Sync
+        // On date change, load open times from Google Calendar
         function handleDateSelect(dateStr) {
             if (!dateStr) return;
             const container = document.getElementById('time-slots-container');
@@ -359,47 +346,33 @@
                 ? ["10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00"]
                 : ["17:00", "18:00", "19:00", "20:00", "21:00"];
 
+            // Skip past hours when the date is today
             const now = new Date();
             const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
             const isToday = (dateStr === todayStr);
+            const currentHour = now.getHours();
+            const notPast = s => !isToday || parseInt(s.split(':')[0], 10) > currentHour;
 
-            let initialSlots = baseSlots;
-            if (isToday) {
-                const currentHour = now.getHours();
-                initialSlots = baseSlots.filter(s => {
-                    const slotHour = parseInt(s.split(':')[0], 10);
-                    return slotHour > currentHour;
-                });
-            }
-
-            renderTimeSlots(dateStr, initialSlots, container);
-            notifyHeightChange();
-
+            // Draw once, after the calendar check (drawing default times first and swapping them flickers and lets people click booked times)
+            const requestId = ++slotRequestId;
+            container.innerHTML = '<span class="text-xs text-gray-500 col-span-full text-center py-3">⏳ Checking available times...</span>';
             statusText.innerHTML = '<span class="text-brand animate-pulse">⏳ Syncing calendar...</span>';
-            
+
             fetchSlotsWithJsonp(dateStr)
+                .catch(() => fetch(`${BACKEND_ENDPOINT}?action=getSlots&date=${dateStr}&_t=${Date.now()}`).then(r => r.json()))
                 .then(data => {
-                    if (data && data.status === 'success' && Array.isArray(data.slots)) {
-                        renderTimeSlots(dateStr, data.slots, container);
-                        statusText.innerHTML = '<span class="w-2 h-2 rounded-full bg-green-500 inline-block mr-1"></span>Live Calendar Synced';
-                        notifyHeightChange();
-                    } else {
-                        statusText.innerHTML = '<span class="text-gray-500">✓ Available Slots Shown</span>';
-                    }
+                    if (requestId !== slotRequestId) return; // another date was picked meanwhile
+                    if (!(data && data.status === 'success' && Array.isArray(data.slots))) throw new Error('bad slots');
+                    renderTimeSlots(dateStr, data.slots.filter(notPast), container);
+                    statusText.innerHTML = '<span class="w-2 h-2 rounded-full bg-green-500 inline-block mr-1"></span>Live Calendar Synced';
+                    notifyHeightChange();
                 })
-                .catch(err => {
-                    fetch(`${BACKEND_ENDPOINT}?action=getSlots&date=${dateStr}&_t=${Date.now()}`)
-                        .then(r => r.json())
-                        .then(data => {
-                            if (data && data.status === 'success' && Array.isArray(data.slots)) {
-                                renderTimeSlots(dateStr, data.slots, container);
-                                statusText.innerHTML = '<span class="w-2 h-2 rounded-full bg-green-500 inline-block mr-1"></span>Live Calendar Synced';
-                                notifyHeightChange();
-                            }
-                        })
-                        .catch(() => {
-                            statusText.innerHTML = '<span class="text-gray-500">✓ Available Slots Shown</span>';
-                        });
+                .catch(() => {
+                    if (requestId !== slotRequestId) return;
+                    // calendar check failed: show default times
+                    renderTimeSlots(dateStr, baseSlots.filter(notPast), container);
+                    statusText.innerHTML = '<span class="text-gray-500">✓ Available Slots Shown</span>';
+                    notifyHeightChange();
                 });
         }
 
@@ -413,12 +386,12 @@
                 let timeoutId = setTimeout(() => {
                     cleanup();
                     reject(new Error('JSONP Timeout'));
-                }, 4000);
+                }, 8000);
 
                 function cleanup() {
                     clearTimeout(timeoutId);
                     if (script.parentNode) script.parentNode.removeChild(script);
-                    delete window[callbackName];
+                    window[callbackName] = () => {}; // ignore a response that arrives late
                 }
 
                 window[callbackName] = function(data) {
@@ -863,7 +836,7 @@
             document.getElementById('res-applicant-email').textContent = primaryApp.email;
 
             notifyHeightChange();
-            window.parent.postMessage({ type: 'scrollToTop' }, '*');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function resetForm() {
@@ -873,7 +846,7 @@
             handlePurposeChange();
             initDatePicker();
             notifyHeightChange();
-            window.parent.postMessage({ type: 'scrollToTop' }, '*');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
     </script>
 </div>
