@@ -95,6 +95,7 @@ def shell(*, lang, title, description, path, body, alternates=None, extra_head='
 <meta property="og:locale" content="{'ko_KR' if lang == 'kr' else 'en_CA'}">
 <meta name="twitter:card" content="summary_large_image">
 <meta property="og:site_name" content="{'모기지아재' if lang == 'kr' else 'Mortgageajae'}">
+<meta name="naver-site-verification" content="928bbd9eb3aa41d9a8620c20ba16c5bfa2009ebf">
 <link rel="icon" href="/favicon.ico" sizes="48x48">
 <link rel="icon" href="/images/logo-face-160.png" type="image/png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
