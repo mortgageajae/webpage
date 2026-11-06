@@ -1,5 +1,6 @@
 # 배포(Cloudflare Workers static assets)에서 제외할 파일 — 저장소에는 남음
 .git
+.github
 .gitignore
 .assetsignore
 wrangler.jsonc

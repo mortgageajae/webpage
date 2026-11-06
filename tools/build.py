@@ -72,14 +72,30 @@ def build():
     write_sitemap(pages)
 
 
+def lastmod(path, old, today):
+    """내용이 마지막 커밋과 같으면 이전 날짜 유지, 바뀌었거나 새 페이지면 오늘 (검색엔진이 실제 변경만 보게)."""
+    import subprocess
+    f = path.strip('/') + '/index.html'
+    head = subprocess.run(['git', '-C', ROOT, 'show', f'HEAD:{f}'], capture_output=True).stdout
+    cur = open(os.path.join(ROOT, f), 'rb').read() if os.path.exists(os.path.join(ROOT, f)) else b''
+    if not head or head != cur:
+        return today
+    if path in old:
+        return old[path]
+    date = subprocess.run(['git', '-C', ROOT, 'log', '-1', '--format=%cs', '--', f], capture_output=True, text=True).stdout.strip()
+    return date or today
+
+
 def write_sitemap(pages):
     import datetime
     today = datetime.date.today().isoformat()
-    urls = [(p, today) for p in pages] + [('/kr/newsletter/', today)]
+    sm = os.path.join(ROOT, 'sitemap.xml')
+    old = dict(re.findall(r'<loc>https://mortgageajae\.ca([^<]+)</loc><lastmod>([^<]+)</lastmod>', open(sm, encoding='utf-8').read())) if os.path.exists(sm) else {}
+    urls = [(p, lastmod(p, old, today)) for p in pages] + [('/kr/newsletter/', lastmod('/kr/newsletter/', old, today))]
     for lang, fn in (('kr', 'newsletters.json'), ('en', 'newsletters-en.json')):
         p = os.path.join(ROOT, 'tools', 'data', fn)
         if os.path.exists(p):
-            urls += [(f'/{lang}/newsletter/', today)] if lang == 'en' else []
+            urls += [(f'/{lang}/newsletter/', lastmod(f'/{lang}/newsletter/', old, today))] if lang == 'en' else []
             urls += [(f'/{lang}/newsletter/{m["date"]}/', m['date']) for m in json.load(open(p, encoding='utf-8'))]
     body = '\n'.join(f'  <url><loc>https://mortgageajae.ca{u}</loc><lastmod>{d}</lastmod></url>' for u, d in urls)
     with open(os.path.join(ROOT, 'sitemap.xml'), 'w', encoding='utf-8') as f:

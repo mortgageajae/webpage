@@ -1,0 +1,23 @@
+# main 에 push 되면, 바뀐 공개 페이지만 IndexNow 로 Bing·Naver 에 알림.
+# Cloudflare 배포(보통 1분 안팎)가 끝난 뒤 보내도록 잠시 기다림. 비밀값 없음 (IndexNow 키는 공개 파일).
+name: IndexNow
+
+on:
+  push:
+    branches: [main]
+    paths: ['**/index.html', 'sitemap.xml']
+
+permissions:
+  contents: read
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Wait for Cloudflare deploy
+        run: sleep 120
+      - name: Send changed pages
+        run: python3 -I tools/indexnow.py --changed "${{ github.event.before }}" "${{ github.sha }}"
