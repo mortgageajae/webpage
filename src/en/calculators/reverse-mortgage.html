@@ -1,0 +1,96 @@
+<!--meta {"out": "en/calculators/reverse-mortgage/index.html", "lang": "en", "path": "/en/calculators/reverse-mortgage/", "title": "Reverse Mortgage Estimate Calculator (BC) | Mortgageajae", "description": "Estimate your BC reverse mortgage limit by age, city, home type and value, plus cash left after your mortgage and the balance over 20 years.", "head": "<link rel=\"stylesheet\" href=\"/assets/css/calc/reverse-mortgage.css\">\n<script src=\"/assets/js/reverse-mortgage.js\" defer></script>\n<style>\n.rm-box{background:#EEF0F8;border:1px solid rgba(50,76,168,.2);border-radius:12px;padding:16px 18px;margin-top:14px}\n.rm-net{background:#FFF8DB;border-color:#F3D86B}\n.rm-k{font-size:14px;color:#4b5563;margin:0}\n.rm-v{font-size:clamp(1.4rem,4vw,2rem);font-weight:700;color:#324CA8;margin:6px 0 2px}\n.rm-net .rm-v{color:#14161F}\n.rm-s{font-size:13px;color:#6b7280;margin:4px 0 0;line-height:1.55}\n.rm-warn{background:#FEF2F2;border:1px solid #FECACA;color:#991B1B;border-radius:12px;padding:14px 16px;margin-top:14px;font-size:14px;line-height:1.6}\n.rm-h{font-size:1.15rem;margin:26px 0 8px;color:#14161F}\n.rm-chart{width:100%;height:auto;display:block}\n.rm-legend{font-size:13px;color:#555;margin:2px 0 8px}\n.rm-legend span{display:inline-block;width:12px;height:12px;border-radius:2px;margin:0 4px 0 10px;vertical-align:-1px}\n.rm-table{width:100%;border-collapse:collapse;font-size:14px;margin-top:6px}\n.rm-table th,.rm-table td{border-bottom:1px solid #e5e7eb;padding:8px 6px;text-align:right}\n.rm-table th:first-child,.rm-table td:first-child{text-align:left}\n</style>\n", "calc_css": "reverse-mortgage", "reviewed": "2026-11-07", "alternates": {"ko": "/kr/calculators/reverse-mortgage/", "en": "/en/calculators/reverse-mortgage/"}} -->
+<div class="calc-page">
+<section class="px-2 md:px-0 max-w-6xl mx-auto">
+  <div class="grid md:grid-cols-2 gap-8">
+
+    <div class="bg-white p-6 md:p-8 rounded-xl shadow-md border border-gray-200">
+      <div class="bg-brand rounded-xl py-6 mb-6">
+        <h1 class="text-2xl md:text-3xl font-extrabold text-white text-center">Reverse Mortgage Estimate</h1>
+      </div>
+      <form id="rm-form" class="space-y-4 text-sm">
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label for="rm-age1" class="block font-bold text-gray-700">Age (owner 1)</label>
+            <input type="number" id="rm-age1" min="55" max="110" required class="mt-1 block w-full border border-gray-300 rounded-md p-2 outline-none focus:border-brand" placeholder="e.g. 70">
+          </div>
+          <div>
+            <label for="rm-age2" class="block font-medium text-gray-700">Age (owner 2, if a couple)</label>
+            <input type="number" id="rm-age2" min="55" max="110" class="mt-1 block w-full border border-gray-300 rounded-md p-2 outline-none focus:border-brand" placeholder="Leave blank if none">
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label for="rm-value" class="block font-bold text-gray-700">Home value ($)</label>
+            <input type="number" id="rm-value" min="0" step="1000" required class="mt-1 block w-full border border-gray-300 rounded-md p-2 outline-none focus:border-brand" placeholder="e.g. 1200000">
+          </div>
+          <div>
+            <label for="rm-mortgage" class="block font-medium text-gray-700">Mortgage / secured debt owing ($)</label>
+            <input type="number" id="rm-mortgage" min="0" step="1000" class="mt-1 block w-full border border-gray-300 rounded-md p-2 outline-none focus:border-brand" placeholder="0 if none" value="0">
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label for="rm-city" class="block font-bold text-gray-700">City</label>
+            <select id="rm-city" class="mt-1 block w-full border border-gray-300 rounded-md p-2 outline-none bg-white focus:border-brand"></select>
+          </div>
+          <div>
+            <label for="rm-type" class="block font-bold text-gray-700">Home type</label>
+            <select id="rm-type" class="mt-1 block w-full border border-gray-300 rounded-md p-2 outline-none bg-white focus:border-brand">
+              <option value="house">Detached / duplex / semi</option>
+              <option value="town">Townhouse</option>
+              <option value="condo">Condo apartment</option>
+            </select>
+          </div>
+        </div>
+        <div class="grid grid-cols-3 gap-3 bg-gray-50 p-3 rounded-lg border border-gray-200">
+          <div>
+            <label for="rm-taken" class="block font-medium text-gray-700">Amount taken ($)</label>
+            <input type="number" id="rm-taken" min="0" step="1000" class="mt-1 block w-full border border-gray-300 rounded-md p-2 outline-none bg-white" placeholder="Auto">
+          </div>
+          <div>
+            <label for="rm-rate" class="block font-medium text-gray-700">Rate (%)</label>
+            <input type="number" id="rm-rate" step="0.05" value="6.3" class="mt-1 block w-full border border-gray-300 rounded-md p-2 outline-none bg-white">
+          </div>
+          <div>
+            <label for="rm-growth" class="block font-medium text-gray-700">Home growth (%/yr)</label>
+            <input type="number" id="rm-growth" step="0.5" value="3" class="mt-1 block w-full border border-gray-300 rounded-md p-2 outline-none bg-white">
+          </div>
+        </div>
+        <p class="text-xs text-gray-500 leading-relaxed">If the amount is blank, the low end of the estimate is used. The 6.3% default is about where major lenders' 5-year fixed reverse mortgage rates sat in November 2026; higher-limit products for 70+ usually start around 7.4%.</p>
+        <div class="text-center pt-2">
+          <button type="submit" class="inline-block bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-extrabold text-lg py-4 px-12 rounded-full shadow-xl transition cursor-pointer border-none">Estimate my limit</button>
+        </div>
+      </form>
+      <div id="rm-result" hidden aria-live="polite"></div>
+    </div>
+
+    <div class="bg-white p-6 md:p-8 rounded-xl shadow-md border border-gray-200 text-sm leading-relaxed text-gray-700">
+      <h2 class="text-xl text-brand mb-3">How the estimate works</h2>
+      <ul class="list-disc pl-5 space-y-2">
+        <li><b>Age:</b> the youngest owner's age sets the limit. It rises with age and usually levels off around 55% of home value by 75 to 80. Higher-limit products for 70+ go to 59 to 60%.</li>
+        <li><b>Location:</b> lenders grade cities by size. Metro Vancouver, Greater Victoria and Kelowna get the highest limits, then mid-size cities, small towns, and the north and rural areas. Few lenders serve rural areas.</li>
+        <li><b>Home type:</b> some lenders lend slightly less on townhouses and condos than on detached homes.</li>
+        <li><b>Home value:</b> at least $250,000; above $2M the percentage gradually drops.</li>
+        <li><b>Couples:</b> both owners must be 55+, and a large age gap pulls the result toward the younger owner.</li>
+      </ul>
+      <h2 class="text-xl text-brand mt-6 mb-3">Costs to expect</h2>
+      <ul class="list-disc pl-5 space-y-2">
+        <li>Lender set-up fee about $995 (taken from the advance)</li>
+        <li>Legal about $1,500: registration about $1,000 + independent legal advice (ILA, required) about $500</li>
+        <li>Appraisal extra</li>
+        <li>Prepayment charges are usually a few months' interest in the early years and shrink over time.</li>
+      </ul>
+      <h2 class="text-xl text-brand mt-6 mb-3">Before you decide</h2>
+      <ul class="list-disc pl-5 space-y-2">
+        <li>No payments are required, but interest keeps adding to the balance.</li>
+        <li>You must keep paying property tax and home insurance and maintain the home.</li>
+        <li>It is repaid when you sell, when the last owner dies, or when you move into care.</li>
+        <li><b>The bank does not get your home.</b> Title stays in your name, and whatever is left after the balance is repaid goes to your heirs. They can also repay the balance and keep the home.</li>
+        <li>The money is a loan, not income, so it does not affect OAS or GIS.</li>
+      </ul>
+      <p class="mt-6"><a class="text-brand font-bold" href="/en/reverse-mortgage/">See the reverse mortgage guide by life situation →</a></p>
+      <p class="mt-4 text-xs text-gray-500">This estimate is based on a November 2026 review of the broker calculators of four major reverse mortgage lenders in BC. Actual limits and rates are set by appraisal and underwriting.</p>
+    </div>
+  </div>
+</section>
+</div>

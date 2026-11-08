@@ -30,15 +30,16 @@ REVIEWED = '2026-10-25'  # 계산기 규정·수치를 마지막으로 공식 �
 def calculator_extras(meta, body):
     """계산기 페이지: 확인 기준일 표시 + 검색엔진·AI용 구조화 정보(WebApplication)."""
     ko = meta['lang'] == 'kr'
-    y, mo, d = REVIEWED.split('-')
+    reviewed = meta.get('reviewed', REVIEWED)  # 페이지별로 따로 확인한 날이 있으면 그 날짜
+    y, mo, d = reviewed.split('-')
     note = (f'<p class="reviewed">계산 기준: {y}년 {int(mo)}월 {int(d)}일 공식 자료(CRA·CMHC·BC 정부 등)와 대조해 확인했습니다. '
             '결과는 참고용 추정치이며 실제 승인 조건은 금융기관마다 다릅니다.</p>' if ko else
             f'<p class="reviewed">Rules and figures last checked against official sources (CRA, CMHC, BC government) on '
-            f'{REVIEWED}. Results are estimates for reference only; actual approval terms vary by lender.</p>')
+            f'{reviewed}. Results are estimates for reference only; actual approval terms vary by lender.</p>')
     ld = {'@context': 'https://schema.org', '@type': 'WebApplication', 'name': meta['title'].split(' | ')[0],
           'description': meta['description'], 'url': 'https://mortgageajae.ca' + meta['path'],
           'applicationCategory': 'FinanceApplication', 'operatingSystem': 'Any', 'browserRequirements': 'Requires JavaScript',
-          'inLanguage': 'ko' if ko else 'en', 'isAccessibleForFree': True, 'dateModified': REVIEWED,
+          'inLanguage': 'ko' if ko else 'en', 'isAccessibleForFree': True, 'dateModified': reviewed,
           'offers': {'@type': 'Offer', 'price': '0', 'priceCurrency': 'CAD'},
           'areaServed': {'@type': 'AdministrativeArea', 'name': 'British Columbia, Canada'},
           'author': {'@id': 'https://mortgageajae.ca/#justin', '@type': 'Person', 'name': 'Justin Bae'}}

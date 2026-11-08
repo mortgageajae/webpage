@@ -25,14 +25,14 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 def bust(page):
-    """/assets/css/*.css 링크에 내용 해시를 붙여 캐시된 옛 CSS가 쓰이지 않게 한다."""
+    """/assets/css/*.css 와 /assets/js/*.js 링크에 내용 해시를 붙여 캐시된 옛 파일이 쓰이지 않게 한다."""
     def rep(m):
-        f = os.path.join(ROOT, m.group(1).lstrip('/'))
+        f = os.path.join(ROOT, m.group(2).lstrip('/'))
         if not os.path.exists(f):
             return m.group(0)
         h = hashlib.md5(open(f, 'rb').read()).hexdigest()[:8]
-        return f'href="{m.group(1)}?v={h}"'
-    return re.sub(r'href="(/assets/css/[^"?]+\.css)"', rep, page)
+        return f'{m.group(1)}="{m.group(2)}?v={h}"'
+    return re.sub(r'(href|src)="(/assets/(?:css/[^"?]+\.css|js/[^"?]+\.js))"', rep, page)
 
 
 def esc(s):

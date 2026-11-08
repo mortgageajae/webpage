@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>리버스모기지 예상 한도 계산기 | 모기지아재</title>
+<meta name="description" content="나이·BC 지역·주택 유형·주택가로 리버스모기지 예상 한도 범위와 기존 모기지 상환 후 손에 남는 돈, 5~20년 뒤 잔액과 남는 자산을 계산합니다.">
+<link rel="canonical" href="https://mortgageajae.ca/kr/calculators/reverse-mortgage/">
+<link rel="alternate" hreflang="ko" href="https://mortgageajae.ca/kr/calculators/reverse-mortgage/">
+<link rel="alternate" hreflang="en" href="https://mortgageajae.ca/en/calculators/reverse-mortgage/">
+<link rel="alternate" hreflang="x-default" href="https://mortgageajae.ca/en/calculators/reverse-mortgage/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://mortgageajae.ca/kr/calculators/reverse-mortgage/">
+<meta property="og:title" content="리버스모기지 예상 한도 계산기 | 모기지아재">
+<meta property="og:description" content="나이·BC 지역·주택 유형·주택가로 리버스모기지 예상 한도 범위와 기존 모기지 상환 후 손에 남는 돈, 5~20년 뒤 잔액과 남는 자산을 계산합니다.">
+<meta property="og:image" content="https://mortgageajae.ca/images/og/og-kr.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="리버스모기지 예상 한도 계산기 | 모기지아재">
+<meta property="og:locale" content="ko_KR">
+<meta name="twitter:card" content="summary_large_image">
+<meta property="og:site_name" content="모기지아재">
+<meta name="naver-site-verification" content="928bbd9eb3aa41d9a8620c20ba16c5bfa2009ebf">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" href="/images/logo-face-160.png" type="image/png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Gowun+Dodum&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/site.css?v=6807440f">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-LPHD8XR0XD"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-LPHD8XR0XD');</script>
+<link rel="stylesheet" href="/assets/css/calc/reverse-mortgage.css?v=a9d2edcc">
+<script src="/assets/js/reverse-mortgage.js?v=0f3645e4" defer></script>
+<style>
+.rm-box{background:#EEF0F8;border:1px solid rgba(50,76,168,.2);border-radius:12px;padding:16px 18px;margin-top:14px}
+.rm-net{background:#FFF8DB;border-color:#F3D86B}
+.rm-k{font-size:14px;color:#4b5563;margin:0}
+.rm-v{font-size:clamp(1.4rem,4vw,2rem);font-weight:700;color:#324CA8;margin:6px 0 2px}
+.rm-net .rm-v{color:#14161F}
+.rm-s{font-size:13px;color:#6b7280;margin:4px 0 0;line-height:1.55}
+.rm-warn{background:#FEF2F2;border:1px solid #FECACA;color:#991B1B;border-radius:12px;padding:14px 16px;margin-top:14px;font-size:14px;line-height:1.6}
+.rm-h{font-size:1.15rem;margin:26px 0 8px;color:#14161F}
+.rm-chart{width:100%;height:auto;display:block}
+.rm-legend{font-size:13px;color:#555;margin:2px 0 8px}
+.rm-legend span{display:inline-block;width:12px;height:12px;border-radius:2px;margin:0 4px 0 10px;vertical-align:-1px}
+.rm-table{width:100%;border-collapse:collapse;font-size:14px;margin-top:6px}
+.rm-table th,.rm-table td{border-bottom:1px solid #e5e7eb;padding:8px 6px;text-align:right}
+.rm-table th:first-child,.rm-table td:first-child{text-align:left}
+</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap nav">
+    <a class="brand" href="/kr/"><img src="/images/logo-face-160.png" alt="" width="31" height="44"><span>모기지아재</span></a>
+    <nav class="nav-links" aria-label="주요 메뉴">
+      <a href="/kr/#tools">계산기</a>
+      <a href="/kr/newsletter/">뉴스레터</a>
+      <a href="/kr/#insights">카드뉴스</a>
+    </nav>
+    <div class="lang"><a class="on" href="/kr/calculators/reverse-mortgage/">KOR</a><a href="/en/calculators/reverse-mortgage/">ENG</a></div>
+    <a class="pill" href="/kr/consultation/">상담 예약</a>
+  </div>
+</header>
+<main>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebApplication", "name": "리버스모기지 예상 한도 계산기", "description": "나이·BC 지역·주택 유형·주택가로 리버스모기지 예상 한도 범위와 기존 모기지 상환 후 손에 남는 돈, 5~20년 뒤 잔액과 남는 자산을 계산합니다.", "url": "https://mortgageajae.ca/kr/calculators/reverse-mortgage/", "applicationCategory": "FinanceApplication", "operatingSystem": "Any", "browserRequirements": "Requires JavaScript", "inLanguage": "ko", "isAccessibleForFree": true, "dateModified": "2026-11-07", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "CAD"}, "areaServed": {"@type": "AdministrativeArea", "name": "British Columbia, Canada"}, "author": {"@id": "https://mortgageajae.ca/#justin", "@type": "Person", "name": "Justin Bae"}}</script>
+<div class="calc-page">
+<section class="px-2 md:px-0 max-w-6xl mx-auto">
+  <div class="grid md:grid-cols-2 gap-8">
+
+    <div class="bg-white p-6 md:p-8 rounded-xl shadow-md border border-gray-200">
+      <div class="bg-brand rounded-xl py-6 mb-6">
+        <h1 class="text-2xl md:text-3xl font-extrabold text-white text-center">리버스모기지 예상 한도</h1>
+      </div>
+      <form id="rm-form" class="space-y-4 text-sm">
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label for="rm-age1" class="block font-bold text-gray-700">나이 (명의자 1)</label>
+            <input type="number" id="rm-age1" min="55" max="110" required class="mt-1 block w-full border border-gray-300 rounded-md p-2 outline-none focus:border-brand" placeholder="예: 70">
+          </div>
+          <div>
+            <label for="rm-age2" class="block font-medium text-gray-700">나이 (명의자 2, 부부면)</label>
+            <input type="number" id="rm-age2" min="55" max="110" class="mt-1 block w-full border border-gray-300 rounded-md p-2 outline-none focus:border-brand" placeholder="없으면 비워두기">
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label for="rm-value" class="block font-bold text-gray-700">예상 집값 ($)</label>
+            <input type="number" id="rm-value" min="0" step="1000" required class="mt-1 block w-full border border-gray-300 rounded-md p-2 outline-none focus:border-brand" placeholder="예: 1200000">
+          </div>
+          <div>
+            <label for="rm-mortgage" class="block font-medium text-gray-700">남은 모기지·담보대출 ($)</label>
+            <input type="number" id="rm-mortgage" min="0" step="1000" class="mt-1 block w-full border border-gray-300 rounded-md p-2 outline-none focus:border-brand" placeholder="없으면 0" value="0">
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label for="rm-city" class="block font-bold text-gray-700">집이 있는 도시</label>
+            <select id="rm-city" class="mt-1 block w-full border border-gray-300 rounded-md p-2 outline-none bg-white focus:border-brand"></select>
+          </div>
+          <div>
+            <label for="rm-type" class="block font-bold text-gray-700">주택 유형</label>
+            <select id="rm-type" class="mt-1 block w-full border border-gray-300 rounded-md p-2 outline-none bg-white focus:border-brand">
+              <option value="house">단독·듀플렉스·세미</option>
+              <option value="town">타운하우스</option>
+              <option value="condo">콘도(아파트)</option>
+            </select>
+          </div>
+        </div>
+        <div class="grid grid-cols-3 gap-3 bg-gray-50 p-3 rounded-lg border border-gray-200">
+          <div>
+            <label for="rm-taken" class="block font-medium text-gray-700">받을 금액 ($)</label>
+            <input type="number" id="rm-taken" min="0" step="1000" class="mt-1 block w-full border border-gray-300 rounded-md p-2 outline-none bg-white" placeholder="자동">
+          </div>
+          <div>
+            <label for="rm-rate" class="block font-medium text-gray-700">금리 (%)</label>
+            <input type="number" id="rm-rate" step="0.05" value="6.3" class="mt-1 block w-full border border-gray-300 rounded-md p-2 outline-none bg-white">
+          </div>
+          <div>
+            <label for="rm-growth" class="block font-medium text-gray-700">집값 상승률 (%/년)</label>
+            <input type="number" id="rm-growth" step="0.5" value="3" class="mt-1 block w-full border border-gray-300 rounded-md p-2 outline-none bg-white">
+          </div>
+        </div>
+        <p class="text-xs text-gray-500 leading-relaxed">받을 금액을 비우면 예상 한도의 낮은 쪽으로 계산합니다. 금리 기본값 6.3%는 2026년 11월 주요 렌더의 5년 고정 수준이며, 70세 이상 고한도 상품은 보통 7.4% 이상입니다.</p>
+        <div class="text-center pt-2">
+          <button type="submit" class="inline-block bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-extrabold text-lg py-4 px-12 rounded-full shadow-xl transition cursor-pointer border-none">예상 한도 계산하기</button>
+        </div>
+      </form>
+      <div id="rm-result" hidden aria-live="polite"></div>
+    </div>
+
+    <div class="bg-white p-6 md:p-8 rounded-xl shadow-md border border-gray-200 text-sm leading-relaxed text-gray-700">
+      <h2 class="text-xl text-brand mb-3">이렇게 계산합니다</h2>
+      <ul class="list-disc pl-5 space-y-2">
+        <li><b>나이:</b> 가장 어린 명의자의 나이가 기준입니다. 나이가 많을수록 한도가 커지고, 보통 75~80세에 집값의 55% 안팎에서 멈춥니다. 70세 이상 전용 고한도 상품은 59~60%까지 갑니다.</li>
+        <li><b>지역:</b> 렌더들은 도시 규모에 따라 지역 등급을 나눕니다. 메트로 밴쿠버·빅토리아·켈로나가 가장 높고, 중견 도시 → 소도시 → 북부·시골 순으로 낮아집니다. 시골은 취급하는 렌더 자체가 적습니다.</li>
+        <li><b>주택 유형:</b> 일부 렌더는 타운하우스와 콘도를 단독주택보다 조금 낮게 봅니다.</li>
+        <li><b>주택가:</b> $250,000 이상이어야 하고, $2M을 넘으면 비율이 조금씩 줄어듭니다.</li>
+        <li><b>부부:</b> 두 사람 모두 만 55세 이상이어야 하고, 나이 차가 크면 어린 사람 쪽에 가깝게 계산됩니다.</li>
+      </ul>
+      <h2 class="text-xl text-brand mt-6 mb-3">알아둘 비용</h2>
+      <ul class="list-disc pl-5 space-y-2">
+        <li>렌더 셋업 수수료 약 $995 (대출금에서 차감)</li>
+        <li>법무비 약 $1,500: 등기 약 $1,000 + 독립 법률자문(ILA, 필수) 약 $500</li>
+        <li>감정평가비 별도</li>
+        <li>중도 상환 위약금은 보통 첫 몇 년간 몇 개월 치 이자이고, 시간이 지나며 줄어듭니다.</li>
+      </ul>
+      <h2 class="text-xl text-brand mt-6 mb-3">꼭 확인할 점</h2>
+      <ul class="list-disc pl-5 space-y-2">
+        <li>매달 갚을 의무는 없지만 이자가 잔액에 계속 더해집니다.</li>
+        <li>재산세·주택보험을 내고 집을 관리해야 합니다.</li>
+        <li>집을 팔거나, 마지막 명의자가 사망하거나, 요양시설로 옮기면 상환합니다.</li>
+        <li><b>집은 은행 것이 되지 않습니다.</b> 명의는 끝까지 내 이름이고, 대출 잔액을 갚고 남은 돈은 모두 상속인에게 갑니다. 상속인이 잔액을 갚고 집을 그대로 가질 수도 있습니다.</li>
+        <li>대출금은 소득이 아니라서 OAS·GIS에 영향을 주지 않습니다.</li>
+      </ul>
+      <p class="mt-6"><a class="text-brand font-bold" href="/kr/reverse-mortgage/">상황별 리버스모기지 활용 가이드 보기 →</a></p>
+      <p class="mt-4 text-xs text-gray-500">이 계산기는 BC에서 리버스모기지를 취급하는 주요 렌더 4곳의 브로커용 계산기를 2026년 11월 조사해 만든 추정치입니다. 실제 한도와 금리는 감정평가와 심사로 정해집니다.</p>
+    </div>
+  </div>
+</section>
+</div>
+<div class="wrap"><p class="reviewed">계산 기준: 2026년 11월 7일 공식 자료(CRA·CMHC·BC 정부 등)와 대조해 확인했습니다. 결과는 참고용 추정치이며 실제 승인 조건은 금융기관마다 다릅니다.</p></div>
+</main>
+<section class="cta">
+  <div class="wrap">
+    <div>
+      <h2 class="disp">계산 결과가 복잡하다면?</h2>
+      <p>고객님 상황을 꼼꼼히 분석해, 놓치기 쉬운 혜택까지 챙긴 맞춤 전략을 세워드립니다.</p>
+    </div>
+    <a class="pill yellow" href="/kr/consultation/">1:1 화상상담 신청하기 →</a>
+  </div>
+</section>
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="rule">
+      <div><strong>Justin Bae, M.Sc., P.Eng.</strong><br>Mortgage Broker (BCFSA MB610304)<br>Huntington Cross Mortgage</div>
+      <div>Email: mortgageajae@gmail.com · Phone: 250-581-6862<br>KakaoTalk: mortgageajae · @mortgageajae<br><a href="/kr/privacy/">개인정보 처리방침</a></div>
+    </div>
+    <p class="note">일반 정보 제공 목적이며 개인 상담을 대체하지 않습니다. © 2026 Mortgageajae</p>
+  </div>
+</footer>
+</body>
+</html>

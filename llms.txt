@@ -12,6 +12,8 @@
 - [Mortgage switch analysis](https://mortgageajae.ca/kr/calculators/switch/)
 - [Debt consolidation](https://mortgageajae.ca/kr/calculators/debt-consolidation/)
 - [Retirement planning](https://mortgageajae.ca/kr/calculators/retirement/)
+- [Reverse mortgage estimate](https://mortgageajae.ca/kr/calculators/reverse-mortgage/): estimated limit range by youngest owner's age, BC city tier, home type and value (based on a Nov 2026 review of major lenders' broker calculators); cash after payoff and costs; balance over 20 years
+- [Reverse mortgage guide by situation](https://mortgageajae.ca/kr/reverse-mortgage/): 8 retirement scenarios, comparison with HELOC, downsizing, selling and renting
 
 ## English pages
 - [Home](https://mortgageajae.ca/en/) · [Calculators](https://mortgageajae.ca/en/#tools) — the same calculators in English (e.g. https://mortgageajae.ca/en/calculators/budget/)
