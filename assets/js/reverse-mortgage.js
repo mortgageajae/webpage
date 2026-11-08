@@ -101,7 +101,7 @@
     netNote: '비용 약 $2,500(셋업 수수료 약 $995 + 법무비 약 $1,500) 차감, 감정비 별도',
     projTitle: '시간이 지나면 어떻게 될까', projYear: '년 후', bal: '대출 잔액', home: '예상 집값', eq: '남는 자산',
     projNote: '매달 갚지 않으면 이자가 잔액에 더해집니다(반기 복리). No negative equity 보장으로 집을 팔 때 갚을 금액은 그때 집값을 넘지 않고, 표의 "남는 자산"은 본인 또는 상속인의 몫입니다.',
-    taken: '받는 금액', calc: '예상 한도 계산하기'
+    taken: '받는 금액', guide: '8가지 상황별 활용법 보기 →', calc: '예상 한도 계산하기'
   } : {
     choose: 'Select a city', needAge: 'The youngest owner on title must be at least 55.',
     needValue: 'Most lenders require an appraised value of at least $250,000.', std: 'Estimated limit, standard products', plus: 'Higher-limit products for age 70+',
@@ -112,7 +112,7 @@
     netNote: 'About $2,500 in costs deducted (set-up fee ~$995 + legal ~$1,500); appraisal extra',
     projTitle: 'How it changes over time', projYear: ' yrs', bal: 'Loan balance', home: 'Home value', eq: 'Equity left',
     projNote: 'With no payments, interest is added to the balance (compounded semi-annually). The no negative equity guarantee means you never owe more than the home is worth when it is sold, and the equity left belongs to you or your heirs.',
-    taken: 'Amount taken', calc: 'Estimate my limit'
+    taken: 'Amount taken', guide: 'See 8 ways people use it →', calc: 'Estimate my limit'
   };
 
   function $(id) { return document.getElementById(id); }
@@ -176,7 +176,8 @@
     var taken = num('rm-taken') || r.std.loAmt;
     if (!$('rm-taken').value) $('rm-taken').value = r.std.loAmt;
     html += '<h3 class="rm-h">' + T.projTitle + ' (' + T.taken + ' ' + money(taken) + ')</h3>' +
-      projection(taken, inp.value, num('rm-rate') || 6.3, num('rm-growth')) + '<p class="rm-s">' + T.projNote + '</p>';
+      projection(taken, inp.value, num('rm-rate') || 6.3, num('rm-growth')) + '<p class="rm-s">' + T.projNote + '</p>' +
+      '<a class="rm-guide" href="' + (KO ? '/kr/reverse-mortgage/' : '/en/reverse-mortgage/') + '">' + T.guide + '</a>';
     out.innerHTML = html;
     out.hidden = false;
   }
